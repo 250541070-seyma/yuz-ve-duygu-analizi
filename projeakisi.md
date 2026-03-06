@@ -12,10 +12,10 @@ GERÇEK ZAMANLI YÜZ TANIMA VE DUYGU ANALİZ SİSTEMİ - Proje Analizi
 - API aracılığıyla sistem verilerinin diğer uygulamalarla paylaşılması
 
   # Temel Özellikler:
-  1. Yüz Tanıma ve Takip Modülü
+ 1. Yüz Tanıma ve Takip Modülü
 Bu modül kamera görüntüsünden yüzleri tespit eder ve tanınan yüzleri sistem içinde takip eder.
 
-  2. Duygu Analizi
+ 2. Duygu Analizi
 Sistem, yüz ifadelerini analiz ederek kişinin mutlu, üzgün, kızgın veya şaşkın gibi duygularını belirler.
 
  3. Web Tabanlı Yönetim Paneli
