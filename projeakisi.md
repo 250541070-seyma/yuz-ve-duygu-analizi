@@ -118,4 +118,30 @@ Sistem dört ana katman üzerinde kurgulanmıştır:
 
 
   ---
-  
+
+
+
+  ###  1.3. Teknoloji Seçimi ve Gerekçeleri (Mehmet Berat Uygur)
+
+Bu rapor, projenin teknik başarısını, geliştirme hızını ve sistem doğruluğunu optimize etmek amacıyla yapılan teknoloji fizibilitesini içerir.
+
+#### **1. Programlama Dili: Python**
+* **Seçim:** **Python**
+* **Gerekçe:** Yapay zeka ve bilgisayarla görme alanlarında dünya standardıdır. Kod yazımı hızlı ve anlaşılırdır; TensorFlow, PyTorch ve OpenCV gibi kütüphanelerle yerel entegrasyon sunar.
+* **Alternatif:** **C++** (Daha yüksek performans sunsa da geliştirme süreci çok daha uzun ve karmaşıktır).
+
+#### **2. Yüz Tanıma Kütüphanesi: Dlib + Face Recognition**
+* **Seçim:** **Dlib + Face Recognition (Python)**
+* **Gerekçe:** Dlib, yüz algılama ve landmark (yüz hatları) çıkarma konusunda oldukça güçlüdür. Face Recognition kütüphanesi, Dlib tabanlı çalışarak gerçek zamanlı uygulamalarda yüksek doğruluk ve kullanım kolaylığı sağlar.
+* **Alternatif:** **OpenCV Yüz Tanıma Modülü** (Manuel konfigürasyon gerektirir ve doğruluk oranı Dlib’e kıyasla daha düşüktür).
+
+#### **3. Duygu Analizi Kütüphanesi: PyTorch + CNN**
+* **Seçim:** **PyTorch + Önceden Eğitilmiş CNN Modelleri**
+* **Gerekçe:** PyTorch, derin öğrenme modellerinin geliştirilmesi için esnek ve dinamik bir platform sunar. Önceden eğitilmiş CNN modelleri kullanılarak geliştirme süresi kısaltılırken tahmin doğruluğu maksimize edilir.
+* **Alternatif:** **TensorFlow** (Model geliştirme ve konfigürasyon süreci PyTorch'a göre daha karmaşıktır).
+
+#### **4. Geliştirme ve İşbirliği Araçları**
+* **Geliştirme Ortamı (IDE):** **VS Code + Jupyter Notebook** (Güçlü kod yönetimi ve interaktif test süreçleri için).
+* **Sürüm Kontrolü:** **Git + GitHub** (Dosyaların merkezi bir konumda saklanması, sürüm geçmişinin takibi ve ekip içi senkronizasyon için).
+
+---
