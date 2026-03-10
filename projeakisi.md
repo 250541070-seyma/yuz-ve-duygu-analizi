@@ -145,3 +145,37 @@ Bu rapor, projenin teknik başarısını, geliştirme hızını ve sistem doğru
 * **Sürüm Kontrolü:** **Git + GitHub** (Dosyaların merkezi bir konumda saklanması, sürüm geçmişinin takibi ve ekip içi senkronizasyon için).
 
 ---
+
+
+
+### 1.4. İlk Prototip ve Algoritma Doğrulama (Eren Bilge Koçak)
+
+#### **1. Projenin Amacı ve Kapsamı**
+Bu projenin temel amacı, bilgisayar kamerası üzerinden alınan canlı video akışını işleyerek, çerçeve içerisindeki insan yüzlerini tespit etmek ve tespit edilen yüzlerdeki anlık mimikleri analiz ederek kişinin duygu durumunu (Mutlu, Üzgün, Kızgın, Şaşkın vb.) gerçek zamanlı olarak sınıflandırmaktır. Proje, insan-bilgisayar etkileşimini (HCI) artırmak ve derin öğrenme (Deep Learning) tabanlı görüntü işleme teknolojilerinin pratik bir uygulamasını geliştirmek amacıyla tasarlanmıştır.
+
+#### **2. Teknoloji Seçimi ve Mimari Optimizasyon**
+Projenin başlangıç fazında planlanan mimari ile uygulama fazında karşılaşılan donanımsal darboğazlar analiz edilmiş ve sistemin gerçek zamanlı (real-time) çalışabilmesi için mimaride optimizasyonlara gidilmiştir:
+
+* **Programlama Dili:** Python. Yapay zeka ve bilgisayarla görme alanlarında dünya standardı olduğu için tercih edilmiştir.
+* **Yüz Tanıma (Face Detection):** Başlangıçta planlanan Dlib kütüphanesi, yüksek işlemci yükü ve FPS düşüşü yarattığı için üretim (production) aşamasında yerini çok daha hafif ve anında tepki veren **OpenCV (Haar Cascade)** algoritmasına bırakmıştır.
+* **Duygu Analizi (Emotion Recognition):** Mimari plana sadık kalınarak derin öğrenme tabanlı **PyTorch** framework'ü kullanılmıştır. Hugging Face üzerinden alınan önceden eğitilmiş CNN modeli (`dima806/facial_emotions_image_detection`) entegre edilerek yüksek doğruluk oranlarına ulaşılmıştır.
+* **Geliştirme Ortamı:** Kod yönetimi ve entegre kütüphane desteği nedeniyle PyCharm tercih edilmiştir.
+
+#### **3. Karşılaşılan Zorluklar ve Geliştirilen Mühendislik Çözümleri**
+Geliştirme sürecinde sistemin kararlılığını ve performansını artırmak için iki kritik mühendislik müdahalesi yapılmıştır:
+
+ **A. İnce Mimiklerin Tespitinde Kontrast Optimizasyonu**
+Yapay zeka modelinin "Mutlu" veya "Şaşkın" gibi belirgin mimikleri kolayca tespit edebilirken, "Kızgın" veya "Üzgün" gibi ince kas hareketlerini ortam ışığına bağlı olarak kaçırdığı gözlemlenmiştir.
+* **Çözüm:** Görüntü işleme hattına `cv2.equalizeHist()` (**Histogram Eşitleme**) fonksiyonu entegre edilmiştir. Bu sayede gri tonlamalı görüntünün kontrastı artırılmış ve yapay zekanın mikro-mimikleri algılama oranı maksimize edilmiştir.
+
+ **B. PyTorch Modelinin Yarattığı FPS Darboğazı ve "Frame Skipping" Algoritması**
+PyTorch tabanlı ağır derin öğrenme modelinin saniyede 30 kare (30 FPS) işleme zorunluluğu, sistemde ciddi kasmalar ve donmalar yaratmıştır.
+* **Çözüm:** Video akışını akıcı tutmak ve işlemci (CPU) yükünü hafifletmek amacıyla **"Frame Skipping"** (Kare Atlama) mimarisi tasarlanmıştır. Sistemin her karede değil, **sadece her 5 karede bir** duygu analizi yapması sağlanmıştır. Arada kalan karelerde ise hesaplama yapılmayıp son bilinen duygu ekrana yansıtılarak sistem yükü %80 oranında azaltılmış ve pürüzsüz bir kamera deneyimi elde edilmiştir.
+
+#### **4. Sistem Testleri ve Çalışma Görüntüleri**
+Aşağıda, optimize edilmiş sistemin canlı ortamda yüzü tespit ettiği ve "Frame Skipping" mimarisiyle FPS kaybı yaşamadan anlık duygu durumunu sınıflandırdığı çalışma anına ait ekran görüntüsü yer almaktadır:
+
+*(Buraya Eren'in attığı ekran görüntüsünü ekleyebilirsin)*
+
+#### **5. Sonuç ve Değerlendirme**
+Geliştirilen sistem; OpenCV'nin hızını ve PyTorch'un derin öğrenme kapasitesini aynı potada eriterek başarılı bir hibrit mimari sunmuştur. Geliştirme aşamasında karşılaşılan donanım limitleri (FPS düşüşleri), yazılımsal optimizasyonlarla (Frame Skipping ve Histogram Eşitleme) aşılarak projenin "gerçek zamanlı çalışma" gereksinimi tam anlamıyla karşılanmıştır.
