@@ -175,7 +175,8 @@ PyTorch tabanlı ağır derin öğrenme modelinin saniyede 30 kare (30 FPS) işl
 #### **4. Sistem Testleri ve Çalışma Görüntüleri**
 Aşağıda, optimize edilmiş sistemin canlı ortamda yüzü tespit ettiği ve "Frame Skipping" mimarisiyle FPS kaybı yaşamadan anlık duygu durumunu sınıflandırdığı çalışma anına ait ekran görüntüsü yer almaktadır:
 
-*(Buraya Eren'in attığı ekran görüntüsünü ekleyebilirsin)*
+![IMG_0304](https://github.com/user-attachments/assets/2e9a4ca7-698a-48cc-a23d-37590fbe4c08)
+
 
 #### **5. Sonuç ve Değerlendirme**
 Geliştirilen sistem; OpenCV'nin hızını ve PyTorch'un derin öğrenme kapasitesini aynı potada eriterek başarılı bir hibrit mimari sunmuştur. Geliştirme aşamasında karşılaşılan donanım limitleri (FPS düşüşleri), yazılımsal optimizasyonlarla (Frame Skipping ve Histogram Eşitleme) aşılarak projenin "gerçek zamanlı çalışma" gereksinimi tam anlamıyla karşılanmıştır.
