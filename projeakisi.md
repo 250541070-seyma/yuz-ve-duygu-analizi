@@ -31,10 +31,9 @@ Proje süreci, **Scrum** metodolojisine uygun olarak rollerin ve sorumlulukları
 Projenin teknik bütünlüğü ve akademik gereksinimler doğrultusunda şu teknolojilerin kullanılması kararlaştırılmıştır:
 
 * **Ana Programlama Dili:** Python 3.9+
-* **Görüntü İşleme:** OpenCV (Open Source Computer Vision Library)
-* **Yapay Zeka & Derin Öğrenme:** DeepFace (VGG-Face, Facenet modelleri)
-* **Web Framework (Backend):** Flask
-* **Arayüz (Frontend):** JavaScript (Chart.js), HTML5, CSS3
+* **Görüntü İşleme:** OpenCV (Haar Cascade)
+* **Derin Öğrenme:** PyTorch (Hugging Face CNN Modelleri)
+* **Web Framework (Backend):** Flask & WebSockets
 * **Veritabanı:** SQLite (Hafif veri kaydı için)
 
 ---
