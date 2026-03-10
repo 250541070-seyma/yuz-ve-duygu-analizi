@@ -129,10 +129,11 @@ Bu rapor, projenin teknik başarısını, geliştirme hızını ve sistem doğru
 * **Gerekçe:** Yapay zeka ve bilgisayarla görme alanlarında dünya standardıdır. Kod yazımı hızlı ve anlaşılırdır; TensorFlow, PyTorch ve OpenCV gibi kütüphanelerle yerel entegrasyon sunar.
 * **Alternatif:** **C++** (Daha yüksek performans sunsa da geliştirme süreci çok daha uzun ve karmaşıktır).
 
-### **2. Yüz Tanıma Kütüphanesi: Dlib + Face Recognition**
-* **Seçim:** **Dlib + Face Recognition (Python)**
-* **Gerekçe:** Dlib, yüz algılama ve landmark (yüz hatları) çıkarma konusunda oldukça güçlüdür. Face Recognition kütüphanesi, Dlib tabanlı çalışarak gerçek zamanlı uygulamalarda yüksek doğruluk ve kullanım kolaylığı sağlar.
-* **Alternatif:** **OpenCV Yüz Tanıma Modülü** (Manuel konfigürasyon gerektirir ve doğruluk oranı Dlib’e kıyasla daha düşüktür).
+### **2. Yüz Tanıma Kütüphanesi: OpenCV (Haar Cascade)**
+* **Durum: Revize Edildi**
+* **İlk Planlanan: Dlib + Face Recognition**
+* **Nihai Seçim: OpenCV (Haar Cascade)**
+* **Gerekçe:** Başlangıçta yüksek doğruluk oranı nedeniyle Dlib kütüphanesi tercih edilmiştir. Ancak ilk prototip testlerinde Dlib'in işlemci (CPU) üzerinde yarattığı yoğun yükün saniyedeki kare sayısını (FPS) ciddi oranda düşürdüğü gözlemlenmiştir. Projenin "gerçek zamanlılık" kriterini korumak adına, çok daha hızlı ve düşük kaynak tüketen OpenCV (Haar Cascade) algoritmasına geçiş yapılmıştır. Bu sayede sistem akıcılığı hedeflenen 200ms gecikme süresinin altına çekilmiştir.
 
 ### **3. Duygu Analizi Kütüphanesi: PyTorch + CNN**
 * **Seçim:** **PyTorch + Önceden Eğitilmiş CNN Modelleri**
@@ -171,6 +172,10 @@ Yapay zeka modelinin "Mutlu" veya "Şaşkın" gibi belirgin mimikleri kolayca te
 PyTorch tabanlı ağır derin öğrenme modelinin saniyede 30 kare (30 FPS) işleme zorunluluğu, sistemde ciddi kasmalar ve donmalar yaratmıştır.
 * **Çözüm:** Video akışını akıcı tutmak ve işlemci (CPU) yükünü hafifletmek amacıyla **"Frame Skipping"** (Kare Atlama) mimarisi tasarlanmıştır. Sistemin her karede değil, **sadece her 5 karede bir** duygu analizi yapması sağlanmıştır. Arada kalan karelerde ise hesaplama yapılmayıp son bilinen duygu ekrana yansıtılarak sistem yükü %80 oranında azaltılmış ve pürüzsüz bir kamera deneyimi elde edilmiştir.
 
+ **C. Yüz Tespiti Algoritmasında Performans Odaklı Değişim**
+İlk prototip aşamasında kullanılan Dlib kütüphanesinin, her karede (frame) tüm yüz landmarklarını hesaplamaya çalışması CPU üzerinde %90’ın üzerinde bir doluluk yaratmıştır. Bu durum, özellikle düşük donanımlı cihazlarda sistemin kilitlenmesine neden olmuştur.
+* **Çözüm:** Bölüm 1.3’te detaylandırıldığı üzere; analiz derinliği ile hız arasındaki dengeyi kurmak amacıyla OpenCV (Haar Cascade) algoritmasına geçilmiştir. Bu sayede yüz tespit hızı milisaniyeler seviyesine indirilmiş ve sistemin genel akıcılığı korunmuştur.
+
 ### **4. Sistem Testleri ve Çalışma Görüntüleri**
 Aşağıda, optimize edilmiş sistemin canlı ortamda yüzü tespit ettiği ve "Frame Skipping" mimarisiyle FPS kaybı yaşamadan anlık duygu durumunu sınıflandırdığı çalışma anına ait ekran görüntüsü yer almaktadır:
 
@@ -179,3 +184,12 @@ Aşağıda, optimize edilmiş sistemin canlı ortamda yüzü tespit ettiği ve "
 
 ### **5. Sonuç ve Değerlendirme**
 Geliştirilen sistem; OpenCV'nin hızını ve PyTorch'un derin öğrenme kapasitesini aynı potada eriterek başarılı bir hibrit mimari sunmuştur. Geliştirme aşamasında karşılaşılan donanım limitleri (FPS düşüşleri), yazılımsal optimizasyonlarla (Frame Skipping ve Histogram Eşitleme) aşılarak projenin "gerçek zamanlı çalışma" gereksinimi tam anlamıyla karşılanmıştır.
+
+---
+
+## 1.5. GENEL DEĞERLENDİRME VE GELECEK ÇALIŞMALAR
+Bu proje; kısıtlı donanım kaynakları altında, Derin Öğrenme (Deep Learning) ve Bilgisayarlı Görme (Computer Vision) tekniklerinin hibrit bir mimariyle nasıl optimize edilebileceğini başarıyla kanıtlamıştır. Geliştirilen sistem, saniyede 30 kare (30 FPS) işleme kapasitesini zorlamadan, kullanıcıya akıcı ve doğru bir duygu analizi deneyimi sunmaktadır.
+Gelecek aşamalarda projenin şu yönlerde geliştirilmesi hedeflenmektedir:
+* **Model Hafifletme (Quantization):** PyTorch modelinin boyutu ve işlem yükü, "Model Quantization" teknikleriyle optimize edilerek sistemin mobil cihazlarda veya gömülü sistemlerde (Raspberry Pi vb.) çalışması sağlanabilir.
+* **Veri Seti Genişletme:** Daha geniş ve çeşitli (farklı yaş, etnik köken, ışık koşulları) veri setleriyle eğitim yapılarak "Kızgın" ve "Üzgün" gibi tespit edilmesi güç mikro-mimiklerin doğruluk oranı artırılabilir.
+* **Bulut Entegrasyonu:** Analiz edilen verilerin anonimleştirilerek bulut tabanlı bir veritabanında toplanması ve Büyük Veri (Big Data) analizi ile tüketici davranışları raporlama modülünün eklenmesi planlanmaktadır.
