@@ -370,6 +370,7 @@ Analiz Motoru: Yüz ve Duygu analizi sonuçlarını üretir.
 FastAPI Sunucusu: Gelen veriyi doğrular (API Key kontrolü).
 
 Dış Sistemler: Doğrulanmış JSON verisi ilgili birimlere (Güvenlik, İK vb.) iletilir.
+![Ekran Resmi 2026-04-09 00 06 36](https://github.com/user-attachments/assets/91e62a72-0b15-4265-a6c7-dabc624a4be0)
 
 
 ### 4. ÇALIŞAN SİSTEMİN KANITLARI VE TEST SONUÇLARI
@@ -380,6 +381,162 @@ B. Test Sonuçları
 Uvicorn Sunucusu: Yerel ortamda (localhost) başarıyla başlatıldı.
 
 Swagger UI (HTTP 200): Yapılan entegrasyon testlerinde yetkili erişim sağlanmış ve sistem "200 OK" yanıtı ile başarılı veri aktarımını doğrulamıştır.
+![Görüntü](https://github.com/user-attachments/assets/6f2d11c4-6386-4e58-b36d-87bc77719cae)
+
 
 ### 5. SONUÇ
 Yüz tanıma ve duygu analizi motorunun dış dünya ile haberleşmesini sağlayacak olan REST API altyapısı, güvenli ve yüksek performanslı bir şekilde çalışır durumda teslim edilmiştir.
+
+## WEB TABANLI YÖNETİM PANELİ TASARIM VE KULLANICI SENARYOLARI
+Hazırlayan: Mehmet Berat Uygur
+Proje: Yüz Tanıma ve Duygu Analizi Sistemi
+Proje Görevi: Web Tabanlı Yönetim Paneli Tasarımı
+
+### 1. PROJE TANIMI
+Bu proje, yüz tanıma ve duygu analizi yapan bir sistemin verilerini merkezi bir noktadan yönetmek ve izlemek amacıyla geliştirilecek web tabanlı bir yönetim panelini kapsamaktadır. Panel sayesinde yöneticiler sistemi gerçek zamanlı olarak izleyebilir, kullanıcı yetkilendirmelerini yönetebilir, analiz sonuçlarını detaylı olarak görüntüleyebilir ve stratejik raporlar oluşturabilir.
+
+### 2. PANELDE GÖRÜNTÜLENECEK BİLGİLER
+2.1. Dashboard (Ana Sayfa)
+Günlük tespit edilen toplam kişi sayısı.
+
+Duygu analizi dağılım verileri (mutlu, üzgün, nötr vb.).
+
+Sistem üzerinden gerçekleşen son aktiviteler ve bildirimler.
+
+Analiz motorunun güncel durumu (aktif/pasif kontrolü).
+
+#### 2.2. Yüz Tanıma Sonuçları
+Tanımlanan bireylerin isimleri veya benzersiz ID bilgileri.
+
+Verinin işlendiği tarih ve saat bilgisi.
+
+Kaynak kamera bilgisi.
+
+Algoritmanın doğruluk güven skoru (%).
+
+Tespit anına ait görüntü önizlemesi.
+
+#### 2.3. Duygu Analizi Sonuçları
+Tespit edilen temel duygu durumu.
+
+Yüz tespiti ile sağlanan eşleşme verisi.
+
+Analizin gerçekleştirildiği zaman dilimi.
+
+Tahmin güven oranı.
+
+Grafiksel gösterimler (pie chart / bar chart).
+
+#### 2.4. Sistem Logları
+Kritik hata ve istisna kayıtları.
+
+Kullanıcı sisteme giriş ve çıkış kayıtları.
+
+Sistem olayları ve olay bazlı log filtreleme özellikleri (tarih ve tür).
+
+### 3. KULLANICI İŞLEVLERİ
+3.1. Kullanıcı Yönetimi
+Yeni kullanıcı hesabı tanımlama.
+
+Mevcut kullanıcı kayıtlarını silme veya pasifize etme.
+
+Rol atama süreçleri (Admin / Operatör / İzleyici).
+
+Şifre sıfırlama ve hesap kurtarma işlemleri.
+
+#### 3.2. Sistem Ayarları
+Yeni kamera kaynağı ekleme veya mevcut kaynakları çıkarma.
+
+Yapay zeka model parametreleri ve eşik (threshold) ayarları.
+
+Kritik durum bildirim ve uyarı ayarları.
+
+Arayüz dil seçenekleri ve görsel tema (koyu/açık) tercihleri.
+
+#### 3.3. Raporlama
+Belirli tarih aralıklarına göre özelleştirilmiş rapor üretimi.
+
+Verilerin PDF veya Excel formatında dışa aktarımı.
+
+Periyodik duygu analizi istatistik raporları.
+
+Kişi veya grup bazlı analiz dökümleri.
+
+### 4. KULLANICI ROLLERİ VE YETKİLERİ
+Rol	Yetkiler
+Admin	Sistemdeki tüm yapılandırma, kullanıcı yönetimi ve veri işlemlerini gerçekleştirir.
+Operatör	Veri görüntüleme, analiz sonuçlarını inceleme ve rapor oluşturma yetkisine sahiptir.
+İzleyici	Sadece dashboard ve canlı verileri görüntüleme yetkisine sahiptir; işlem yetkisi yoktur.
+### 5. KULLANICI ARAYÜZÜ (UI) TASARIM ESASLARI
+Navigasyon: Hızlı erişim sağlayan sol menü (sidebar) yapısı.
+
+Üst Panel: Kullanıcı profili, bildirim merkezi ve sistem durumu göstergeleri.
+
+Veri Görselleştirme: Kart bazlı dashboard tasarımı ile modüler yapı.
+
+Görsel Tema: Kullanıcı konforu için koyu ve açık tema desteği.
+
+### 6. WIREFRAME (TEL ÇERÇEVE) TASARIMLARI
+#### 6.1. Dashboard Taslağı
+Plaintext
+-----------------------------------------------------------------------
+| LOGO | DASHBOARD | ANALİZ SONUÇLARI | KULLANICI YÖNETİMİ | AYARLAR  |
+-----------------------------------------------------------------------
+|        |   [ Toplam Kişi ]   |   [ Duygu Dağılım Grafiği ]          |
+|  MENÜ  |       2.450         |         (Pie Chart)                  |
+|        |------------------------------------------------------------|
+| SIDEBAR|               [ SON AKTİVİTE AKIŞI ]                       |
+|        | ID: 250 | İsim: Şeyma | Duygu: Mutlu | Saat: 10:45         |
+-----------------------------------------------------------------------
+#### 6.2. Kullanıcı Yönetimi Taslağı
+Plaintext
+-----------------------------------------------------------------------
+| [ KULLANICI LİSTESİ ]                                 [ + YENİ EKLE]|
+-----------------------------------------------------------------------
+| İSİM         | ROL       | DURUM    | İŞLEM                         |
+|--------------|-----------|----------|-------------------------------|
+| Ahmet Yılmaz | Admin     | Aktif    | [Düzenle] [Sil]               |
+| Ayşe Demir   | Operatör  | Aktif    | [Düzenle] [Sil]               |
+-----------------------------------------------------------------------
+### 7. KULLANICI AKIŞ ŞEMALARI
+#### 7.1. Sisteme Giriş Akışı
+Başla
+
+Giriş Ekranı (Kullanıcı Adı / Şifre)
+
+Kimlik Doğrulama (JWT Kontrolü)
+
+Dashboard Erişimi
+
+#### 7.2. Kullanıcı Ekleme Akışı
+Dashboard üzerinden Kullanıcı Yönetimi sekmesine geçiş
+
+"Yeni Kullanıcı Ekle" butonunun tetiklenmesi
+
+Form bilgilerinin girişi ve rol ataması
+
+Veritabanına kayıt ve işlem başarı mesajı
+
+#### 7.3. Rapor Oluşturma Akışı
+Dashboard üzerinden Raporlar sekmesine geçiş
+
+Filtreleme seçeneklerinin (Tarih / Kamera / Kişi) belirlenmesi
+
+"Rapor Oluştur" komutunun verilmesi
+
+PDF veya Excel çıktı dosyasının indirilmesi
+
+### 8. TEKNİK ÖNERİLER VE TEKNOLOJİ YIĞINI
+Frontend: React veya Vue.js (Dinamik ve hızlı arayüz performansı için).
+
+Backend: FastAPI (Python) veya Node.js (Asenkron veri işleme için).
+
+Veritabanı: PostgreSQL (İlişkisel veri güvenliği için).
+
+Grafik Kütüphanesi: Chart.js (Dinamik veri görselleştirme için).
+
+Kimlik Doğrulama: JWT (JSON Web Token) tabanlı güvenli oturum yönetimi.
+
+### 9. SONUÇ
+Tasarlanan bu yönetim paneli, sistemin ürettiği karmaşık verileri merkezi bir noktada toplayarak kullanım kolaylığı, anlık veri takibi ve derinlemesine analiz kabiliyeti sunacaktır. Modüler yapısı sayesinde gelecekteki yeni analiz gereksinimlerine göre kolayca genişletilebilir bir mimariye sahiptir.
+ 
