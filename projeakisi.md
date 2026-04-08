@@ -193,3 +193,193 @@ Gelecek aşamalarda projenin şu yönlerde geliştirilmesi hedeflenmektedir:
 * **Model Hafifletme (Quantization):** PyTorch modelinin boyutu ve işlem yükü, "Model Quantization" teknikleriyle optimize edilerek sistemin mobil cihazlarda veya gömülü sistemlerde (Raspberry Pi vb.) çalışması sağlanabilir.
 * **Veri Seti Genişletme:** Daha geniş ve çeşitli (farklı yaş, etnik köken, ışık koşulları) veri setleriyle eğitim yapılarak "Kızgın" ve "Üzgün" gibi tespit edilmesi güç mikro-mimiklerin doğruluk oranı artırılabilir.
 * **Bulut Entegrasyonu:** Analiz edilen verilerin anonimleştirilerek bulut tabanlı bir veritabanında toplanması ve Büyük Veri (Big Data) analizi ile tüketici davranışları raporlama modülünün eklenmesi planlanmaktadır.
+
+
+
+
+# YÜZ TANIMA VE DUYGU ANALİZİ SİSTEMİ: 2. HAFTA ANALİZ VE TASARIM DÖKÜMANTASYONU
+1. PROJE GENEL GİRİŞİ
+Bu döküman, Fırat Üniversitesi Yazılım Mühendisliği Bölümü bünyesinde yürütülen "Yüz Tanıma ve Duygu Analizi Sistemi" projesinin ikinci hafta çalışmalarını kapsamaktadır. Projenin temel amacı; kamera görüntüleri üzerinden gerçek zamanlı yüz tespiti yaparak, tespit edilen bireylerin duygusal durumlarını yapay zeka algoritmaları ile analiz eden entegre bir sistem geliştirmektir.
+
+İkinci hafta çalışmaları kapsamında, sistemin teknik mimarisi belirlenmiş, kullanılacak algoritmaların performans analizleri yapılmış ve modüller arası veri akışı şemalandırılmıştır. Bu süreçte hız, doğruluk ve düşük gecikme süresi (latency) temel mühendislik kriterleri olarak baz alınmıştır.
+## TEKNOLOJİ SEÇİMİ VE GEREKÇELENDİRME RAPORU (HAFTA 2)
+Hazırlayan: Şeyma Nur Katar
+Proje görevi : Teknoloji Seçimi & Gerekçelendirme
+Proje: Yüz Tanıma ve Duygu Analizi Sistemi
+
+### 1. GİRİŞ
+Bu döküman; sistemin geliştirilmesinde kullanılacak olan yazılım dillerinin, kütüphanelerin ve frameworklerin seçim süreçlerini, bu seçimlerin nedenlerini, avantajlarını ve olası risklere karşı geliştirilen çözüm önerilerini kapsamaktadır. Projenin teknik bütünlüğü ve akademik gereksinimler doğrultusunda belirlenen bu teknolojiler, tüm ekip üyeleri için bağlayıcıdır.
+
+
+ ### 2. TEKNOLOJİ ANALİZİ VE SEÇİM GEREKÇELERİ
+Teknoloji	Seçim Amacı	Avantajı	Dezavantajı / Risk
+Python 3.9+	Ana Programlama Dili	AI/ML kütüphane desteği, hızlı prototipleme ve geniş topluluk desteği.	C++'a göre daha yavaş çalışma hızı (GIL kısıtlaması).
+OpenCV	Görüntü İşleme	Gerçek zamanlı (Real-time) işlem hızı, düşük kaynak tüketimi.	Karmaşık ışıklandırma koşullarında doğruluk kaybı riski.
+DeepFace	Duygu Analizi Modeli	Birden fazla CNN modelini (VGG-Face, Facenet) tek çatıda desteklemesi.	Yüksek işlem yükü (CPU/GPU) gereksinimi.
+Flask	Backend Framework	Mikro-mimari yapısı sayesinde hafif, hızlı ve esnek entegrasyon.	Çok yüksek trafikli sistemlerde ek yapılandırma gerektirmesi.
+JavaScript	Frontend & Dashboard	Dinamik veri görselleştirme (Chart.js) ve zengin kullanıcı etkileşimi.	Tarayıcı uyumluluğu ve performans takibi gereksinimi.
+
+
+
+
+ ### 3. DERİNLEMESİNE DEĞERLENDİRME VE RİSK ANALİZİ
+3.1. Neden Python ve Flask?
+Projenin temelinde yer alan derin öğrenme modellerinin en kararlı performansı Python ekosisteminde (PyTorch/TensorFlow) vermesi nedeniyle Python ana dildir. Flask ise, projenin modüler yapısını korumak ve sistemler arası veri akışını (API katmanı) karmaşıklaştırmadan yönetmek için tercih edilmiştir.
+3.2. OpenCV (Haar Cascade) Tercih Nedeni
+Dlib veya MTCNN gibi ağır modeller yerine OpenCV Haar Cascade seçilmiştir.
+•	Gerekçe: Gerçek zamanlı analizde FPS değerini korumak, doğruluğu bir miktar feda edip akıcılığı artırmaktan geçmektedir.
+•	Risk Yönetimi: Düşük ışıkta yüz kaçırma ihtimaline karşı, görüntü ön işleme katmanında Histogram Eşitleme(Equalization) kullanılarak kontrast artırılacaktır.
+
+### 4. OLASI RİSKLER VE MÜHENDİSLİK ÇÖZÜMLERİ
+[!IMPORTANT] Projenin başarısı, aşağıdaki iki temel riskin yönetilmesine bağlıdır:
+Risk 1: Gecikme (Latency) Sorunu Derin öğrenme modelleri her karede analiz yaparsa sistem 30 FPS'den 5-10 FPS seviyelerine düşebilir.
+•	 Çözüm: "Frame Skipping" (Kare Atlama) mimarisi uygulanacaktır. Yüz tespiti her karede yapılırken, ağır duygu analizi işlemleri her 5 karede bir gerçekleştirilecektir.
+Risk 2: Donanım Yetersizliği ve FPS Darboğazı Sistemin düşük işlemci gücüne sahip cihazlarda (Laptop CPU) donma yapma ihtimali mevcuttur.
+•	 Çözüm: Model Quantization (Hafifletme) teknikleri ve ağırlık optimizasyonları kullanılarak model boyutu ve işlemci yükü minimuma indirilecektir.
+
+
+### 5. SONUÇ
+Seçilen hibrit teknoloji yığını; projenin gerçek zamanlı çalışma, düşük gecikme süresi ve web tabanlı izlenebilirlikhedeflerini karşılayacak en optimize yapıyı sunmaktadır. Grup yöneticisi olarak, tüm birimlerin (Analiz, Yazılım, UI/UX) bu teknik çerçeveye sadık kalarak 2. hafta görevlerini tamamlaması kararlaştırılmıştır.
+
+## KAMERA GÖRÜNTÜLERİNDEN YÜZ TANIMA VE TAKİP MODÜLÜ GEREKSİNİM ANALİZİ RAPORU
+ Hazırlayan: Hatice Kırmızıgül
+ Proje: Yüz Tanıma ve Duygu Analizi Sistemi
+ Görevi: Yüz Tanıma ve Takip Modülü Analizi
+
+### 1. Giriş
+Bu rapor, kamera görüntülerinden gerçek zamanlı yüz tanıma ve takip modülünde kullanılacak yöntemlerin belirlenmesi amacıyla hazırlanmıştır. Sistem tasarımında hem işlem hızı hem de doğruluk dikkate alınmıştır. Gerçek zamanlı çalışacak bir yapıda yüzün hızlı tespit edilmesi ve kareler arasında kaybolmadan takip edilmesi hedeflenmiştir.
+
+### 2. Yüz Tanıma Algoritması Seçimi
+Projede yüz tespiti için OpenCV içinde bulunan Haar Cascade algoritmasının kullanılması uygun görülmüştür.
+Seçilme nedenleri:
+•	Gerçek zamanlı çalışmada hızlı sonuç vermesi 
+•	CPU üzerinde düşük yük oluşturması 
+•	Hazır eğitimli veri setleri ile kolay uygulanabilmesi 
+Dezavantajı:
+•	Düşük ışıkta doğruluk düşebilir 
+•	Baş eğimlerinde hata yapabilir 
+Bu riskleri azaltmak için görüntü ön işleme aşamasında histogram eşitleme uygulanacaktır.
+Alternatif olarak HOG ve CNN tabanlı yöntemler değerlendirilmiştir. Ancak HOG daha fazla işlem yükü oluşturduğu, CNN tabanlı yöntemler ise donanım ihtiyacını artırdığı için başlangıç aşamasında tercih edilmemiştir.
+
+### 3. Takip Yöntemi Seçimi
+Yüz tespit edildikten sonra kareler arasında takibin sürdürülebilmesi için Kalman filtresi kullanılacaktır.
+Kullanım amacı:
+•	Yüz kısa süre kaybolduğunda tahmin yapabilmek 
+•	Hareketi daha kararlı izlemek 
+•	Titremeyi azaltmak 
+Kalman filtresi, tespit edilen yüz koordinatlarını kullanarak sonraki karede olası konumu hesaplayacaktır.
+MeanShift yöntemi de değerlendirilmiştir ancak renk değişimlerinden etkilenebildiği için ana yöntem olarak seçilmemiştir.
+
+### 4. Performans Gereksinimleri
+Sistemin minimum performans hedefleri aşağıdaki şekilde belirlenmiştir:
+•	Minimum 20 FPS 
+•	İdeal 25–30 FPS 
+•	Kontrollü ortamda %90 doğruluk 
+•	Düşük ışıkta %80 doğruluk 
+Duygu analizi gibi ağır işlemler her karede yapılmayacak, her 5 karede bir çalıştırılacaktır. Böylece işlem yükü azaltılacaktır.
+
+### 5. Sonuç
+Yapılan değerlendirme sonucunda sistem için en uygun yapı:
+•	Yüz tespiti: Haar Cascade 
+•	Takip: Kalman filtresi 
+•	Ağır analizler: Belirli aralıklı çalışma 
+Bu yapı hem gerçek zamanlı çalışma hem de donanım verimliliği açısından proje gereksinimlerine uygundur.
+
+## DUYGU ANALİZİ ALGORİTMASI ARAŞTIRMA VE KARŞILAŞTIRMA RAPORU
+Hazırlayan: Muhammed Taha Gökdere
+Proje: Yüz Tanıma ve Duygu Analizi Sistemi
+Görevi: Duygu Analizi Algoritma Araştırması ve Seçimi
+
+### 1. Derin Öğrenme Tabanlı Algoritmaların Analizi
+Duygu analizi sistemleri genellikle bir Yüz Tespiti (Detection) ve ardından bir Sınıflandırma (Classification) hattı üzerinden çalışır.
+
+A. DeepFace (Ensemble Framework)
+DeepFace; Google (FaceNet), Facebook (DeepFace) ve Oxford (VGG-Face) gibi devlerin modellerini tek çatıda toplayan bir kütüphanedir.
+
+Mimari: Birden fazla modelin ağırlıklarını kullanabilen hibrit bir yapı.
+
+Duygular: Mutluluk, üzüntü, korku, öfke, şaşkınlık, tiksinti, nötr.
+
+B. VGG-Face (VGG-16 Tabanlı)
+Aslen yüz tanıma için geliştirilmiş olsa da, Transfer Learning yöntemiyle duygu analizi için en sık özelleştirilen modeldir.
+
+Karakteristik: Yüzün geometrik özelliklerinden ziyade dokusal (texture) özelliklerine odaklanır.
+
+C. AffectNet (Veri Kümesi ve Model Standartı)
+1 milyondan fazla görüntüyü içeren dünyanın en büyük duygu veri kümesidir. Bu veri kümesiyle eğitilen modeller (genellikle ResNet tabanlı) literatürde altın standart kabul edilir.
+
+### 2. Teknik Karşılaştırma Tablosu
+Kriter	DeepFace (Default)	VGG-Face (Fine-tuned)	AffectNet Tabanlı ResNet
+Doğruluk (%)	~%91 - %93	~%88 - %90	~%60 - %70 (Vahşi Ortam)
+İşlem Hızı	Orta (15-20 FPS)	Yavaş (Yüksek Parametre)	Hızlı (Optimize edilirse)
+Duygu Etiketleri	7 Temel Duygu	7 Temel Duygu	8+ Duygu
+Kaynak (CPU)	Yüksek Kullanım	Çok Yüksek (Hantal)	Orta
+Kaynak (GPU)	4GB+ VRAM İdeal	8GB+ VRAM Önerilir	2GB+ VRAM Yeterli
+
+
+### 3. Proje Gereksinimlerine Göre Algoritma Seçimi
+Seçilen Algoritma: DeepFace Framework (Backend: RetinaFace + Model: ResNet)
+
+Seçim Gerekçeleri:
+Entegrasyon Kolaylığı: Python ortamında hazır fonksiyonlarla gelmesi geliştirme süresini ciddi oranda düşürür.
+
+Yüz Tespiti Üstünlüğü: İçerisindeki RetinaFace dedektörü, maskeli veya yan dönmüş yüzlerde bile %90+ doğruluk sunar.
+
+Çok Yönlülük: Sadece duygu değil; yaş, cinsiyet ve ırk gibi metrikleri de aynı anda analiz edebilir.
+
+Dinamik Donanım Desteği: Hem CPU'da stabil çalışır hem de NVIDIA GPU'larda CUDA desteğiyle gerçek zamanlı analiz yapabilir.
+
+### 4. Uygulama Stratejisi (Nasıl "Baya İyi" Olur?)
+Sistemin kararlılığını artırmak için şu iki yöntem uygulanacaktır:
+
+Zaman Damgalı Filtreleme (Sliding Window): Tek bir karede anlık hatalı tespitleri engellemek için son 10 karedeki sonuçların medyanı veya modu alınarak "duygusal süreklilik" sağlanacaktır.
+
+Aydınlatma Normalizasyonu: Görüntü modele girmeden önce Histogram Eşitleme (CLAHE) uygulanacaktır. Bu, karanlık ortamlarda kaş çatıklığı gibi mikro ifadelerin daha iyi seçilmesini sağlar.
+
+### 5. Sonuç
+Proje için DeepFace, sunduğu kütüphane desteği ve yüksek doğruluk oranıyla en rasyonel seçimdir. Ancak sistemin "gerçekten iyi" çalışması için sadece modele güvenilmemeli; görüntü ön işleme ve sonuçların zamansal filtrelenmesi teknikleri mutlaka tasarıma dahil edilmelidir.
+
+## API ENTEGRASYONU PLANLAMASI VE VERİ AKIŞI ŞEMASI
+Hazırlayan: Eren Bilge Koçak
+Proje: Yüz Tanıma ve Duygu Analizi Sistemi
+Görevi: API Entegrasyonu ve Sistemler Arası Veri Akışı
+
+### 1. GİRİŞ VE GÖREV AMACI
+Bu rapor, sistemin elde ettiği verilerin dış sistemlerle (Güvenlik, İK Yazılımları, Pazarlama Otomasyonu) gerçek zamanlı ve güvenli bir şekilde entegre edilebilmesi için tasarlanan API mimarisini kapsamaktadır. Tasarlanan mimari, FastAPI kullanılarak ayağa kaldırılmış ve başarıyla test edilmiştir.
+
+### 2. MİMARİ KARARLAR VE KULLANILAN TEKNOLOJİLER
+API Mimarisi: REST (Representational State Transfer)
+
+Neden: Günümüz modern web servislerinde standarttır. Mikroservis mimarisine uygun, bağımsız ve hızlı çalışmaya olanak tanır. Python tabanlı FastAPI framework'ü ile asenkron (hızlı) uç noktalar oluşturulmuştur.
+
+Veri Formatı: JSON (JavaScript Object Notation)
+
+Neden: Hafif, okunabilir ve minimum bant genişliği harcar. Python sözlük yapılarıyla (dictionary) doğrudan uyumludur.
+
+Kimlik Doğrulama: API Key (API Anahtarı)
+
+Neden: Sistemden sisteme (Server-to-Server) iletişimde OAuth gibi karmaşık süreçler yerine, düşük gecikme sağlayan ve güvenliği elden bırakmayan statik anahtar yöntemi tercih edilmiştir.
+
+### 3. SİSTEMLER ARASI VERİ AKIŞI ŞEMASI
+Sistemdeki veri trafiği şu hiyerarşi ile yönetilmektedir:
+
+Kamera Kaynağı: Görüntü frame'lerini yakalar.
+
+Analiz Motoru: Yüz ve Duygu analizi sonuçlarını üretir.
+
+FastAPI Sunucusu: Gelen veriyi doğrular (API Key kontrolü).
+
+Dış Sistemler: Doğrulanmış JSON verisi ilgili birimlere (Güvenlik, İK vb.) iletilir.
+
+
+### 4. ÇALIŞAN SİSTEMİN KANITLARI VE TEST SONUÇLARI
+A. API Kaynak Kodları (FastAPI Implementation)
+<img width="1470" height="956" alt="Ekran Resmi 2026-04-09 00 07 52" src="https://github.com/user-attachments/assets/b0a2481a-4c34-4cdb-a6f1-3bb3c076b718" />
+
+B. Test Sonuçları
+Uvicorn Sunucusu: Yerel ortamda (localhost) başarıyla başlatıldı.
+
+Swagger UI (HTTP 200): Yapılan entegrasyon testlerinde yetkili erişim sağlanmış ve sistem "200 OK" yanıtı ile başarılı veri aktarımını doğrulamıştır.
+
+### 5. SONUÇ
+Yüz tanıma ve duygu analizi motorunun dış dünya ile haberleşmesini sağlayacak olan REST API altyapısı, güvenli ve yüksek performanslı bir şekilde çalışır durumda teslim edilmiştir.
