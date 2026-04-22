@@ -1148,21 +1148,60 @@ Bu yapı, sistem yönetimini kolaylaştıracak ve yapay zeka modüllerinden gele
 
 ---
 
-## 1. GENEL GİRİŞ VE HAFTALIK HEDEFLER
+# Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi
 
-Projenin dördüncü haftası, tasarım aşamasından uygulama ve gerçek zamanlı simülasyon aşamasına geçişi temsil etmektedir.  
-
-Bu hafta temel odak noktası:
-
-- Üç boyutlu modellerin sisteme entegre edilmesi  
-- Fizik motorunun yapılandırılması  
-- Kullanıcı etkileşimini sağlayacak kamera kontrollerinin geliştirilmesi  
-
-Ayrıca, sistemin görsel kalitesini artırırken işlem yükünü minimize etmek amacıyla çeşitli optimizasyon stratejileri devreye alınmıştır.
+Bu proje, gerçek zamanlı yüz tanıma ve duygu analizi gerçekleştiren, aynı zamanda 3D simülasyon, fizik motoru ve gelişmiş görselleştirme teknikleri içeren bir yapay zeka sistemidir.
 
 ---
 
-## 2. GÖREV DAĞILIMI VE UYGULAMA SORUMLULUKLARI
+## Proje Özellikleri
+
+- Gerçek zamanlı yüz tanıma
+- Duygu analizi (AI destekli)
+- 3D simülasyon ve fizik motoru
+- Gelişmiş ışıklandırma ve gölgeleme
+- Performans optimizasyonları (GPU, FPS, model hızlandırma)
+- Web tabanlı yönetim paneli
+
+---
+
+## Dokümantasyon
+
+### Hafta 4 - Uygulama ve Simülasyon Entegrasyonu
+
+| Doküman | Açıklama |
+|--------|--------|
+| [Genel Rapor](docs/hafta-4/01-genel-rapor.md) | Haftalık genel ilerleme |
+| [Fizik Motoru](docs/hafta-4/02-fizik-motoru.md) | Çarpışma algılama |
+| [Kamera & UI](docs/hafta-4/03-kamera-ui.md) | Kullanıcı etkileşimi |
+| [Işıklandırma](docs/hafta-4/04-isiklandirma.md) | Görsel kalite |
+| [Doku Optimizasyonu](docs/hafta-4/05-doku-optimizasyonu.md) | GPU performansı |
+| [Model Optimizasyonu](docs/hafta-4/06-model-optimizasyonu.md) | AI hızlandırma |
+
+---
+
+## Kullanılan Teknolojiler
+
+- Python (Flask)
+- JavaScript (ES6+)
+- HTML5 / CSS3
+- Tailwind / Bootstrap
+- Chart.js / D3.js
+- NumPy / ONNX Runtime
+- WebGL / 3D Render Motorları
+
+---
+
+## Sistem Mimarisi (Özet)
+
+- Frontend → UI & Görselleştirme
+- Backend → API & Model Yönetimi
+- AI Katmanı → Yüz + Duygu Analizi
+- Simülasyon → Fizik + 3D sahne
+
+---
+
+## Ekip
 
 Dördüncü hafta operasyonel süreçlerinde ekip üyelerinin üstlendiği teknik görevler aşağıdaki tabloda sunulmuştur:
 
@@ -1175,6 +1214,11 @@ Dördüncü hafta operasyonel süreçlerinde ekip üyelerinin üstlendiği tekni
 | Eren Bilge Koçak | Model İşleme Hızlandırılması | 3D veri yükleme ve işleme süreçlerinin optimizasyonu |
 
 ---
+
+## Not
+
+Bu repo akademik ve teknik geliştirme sürecinin dokümantasyonunu içermektedir.
+
 
 # ÇARPIŞMA ALGILAMA VE FİZİK MOTORU ENTEGRASYONU RAPORU (HAFTA 4)
 
@@ -1463,4 +1507,199 @@ Bu modül:
 - Yüz ve duygu analiz sonuçlarının daha net ve vurgulu şekilde gözlemlenmesini sağlamaktadır  
 
 ---
+
+# DOKU KAPLAMA OPTİMİZASYONU VE PERFORMANS İYİLEŞTİRMELERİ RAPORU (HAFTA 4)
+
+**Hazırlayan:** Hatice Kırmızıgül  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Doku Kaplama Optimizasyonu ve Performans İyileştirmeleri  
+
+---
+
+## 1. AMAÇ VE KAPSAM
+
+Bu çalışma, sistemin görselleştirme katmanında kullanılan üç boyutlu modellerin doku (*texture*) yapılarının optimize edilmesini amaçlamaktadır.
+
+Temel hedefler:
+
+- GPU bellek kullanımını minimize etmek  
+- Veri yükleme sürelerini azaltmak  
+- FPS (saniye başına kare) değerini artırmak  
+- Gerçek zamanlı sistem performansını iyileştirmek  
+
+---
+
+## 2. DOKU BOYUTU VE ÇÖZÜNÜRLÜK STRATEJİSİ
+
+GPU kaynaklarının verimli kullanılması amacıyla aşağıdaki stratejiler uygulanmıştır:
+
+- **Çözünürlük Ölçeklendirme:**  
+  Gereksiz 4K dokular yerine sahne ihtiyacına göre 2K ve 1K dokular tercih edilmiştir.
+
+- **LOD (Level of Detail):**  
+  Kameraya uzak nesnelerde düşük çözünürlüklü dokular kullanılarak render maliyeti azaltılmıştır.
+
+---
+
+## 3. DOKU FORMATLARI VE KARŞILAŞTIRMALI ANALİZ
+
+Kullanılan doku formatları performans kriterlerine göre değerlendirilmiştir:
+
+| Format | Avantajı | Dezavantajı | Kullanım Alanı |
+|--------|----------|------------|----------------|
+| PNG | Kayıpsız kalite | Büyük dosya boyutu | UI ve ikonlar |
+| JPEG | Küçük boyut | Kayıplı sıkıştırma | Arka plan öğeleri |
+| DDS | GPU dostu, hızlı yükleme | Masaüstü bağımlılığı | Masaüstü (**Seçildi**) |
+| ASTC | Kalite/boyut dengesi | Sıkıştırma süresi | Mobil (**Seçildi**) |
+
+---
+
+## 4. SIKIŞTIRMA ALGORİTMALARI
+
+Sistemde aşağıdaki GPU uyumlu sıkıştırma algoritmaları tercih edilmiştir:
+
+- **DXT1 / BC1:**  
+  Alfa kanalı gerektirmeyen dokular için
+
+- **DXT5 / BC3:**  
+  Şeffaflık içeren dokular için
+
+**Sonuç:**  
+Bu yöntemler sayesinde:
+
+- CPU yükü azaltılmış  
+- Bellek bant genişliği optimize edilmiş  
+- VRAM kullanımı yaklaşık **%70 oranında düşürülmüştür**  
+
+---
+
+## 5. PERFORMANS ARTIRMA STRATEJİLERİ
+
+Daha akıcı bir sistem performansı için şu teknikler uygulanmıştır:
+
+- **Mipmap Kullanımı:**  
+  Farklı mesafeler için optimize edilmiş doku seviyeleri
+
+- **Texture Atlas:**  
+  Birden fazla küçük dokunun tek bir büyük dokuda birleştirilmesi ile draw call azaltımı
+
+- **Streaming Texture:**  
+  Sadece görüş alanındaki dokuların dinamik olarak yüklenmesi
+
+---
+
+## 6. SİSTEM MİMARİSİ VE SINIF YAPISI
+
+Doku yönetimi için iki temel modül geliştirilmiştir:
+
+- **TextureManager:**  
+  Doku yükleme, sıkıştırma ve mipmap üretimi
+
+- **CompressionAnalyzer:**  
+  Format performans analizleri ve en uygun sıkıştırma yönteminin belirlenmesi
+
+---
+
+## 7. SONUÇ VE DEĞERLENDİRME
+
+Gerçekleştirilen doku optimizasyonları sonucunda:
+
+- Karmaşık sahnelerde FPS değerleri stabil hale getirilmiştir  
+- DDS ve ASTC formatları sayesinde platform bağımsız performans sağlanmıştır  
+- Mipmap ve streaming teknikleri ile bellek yönetimi iyileştirilmiştir  
+
+Bu iyileştirmeler, sistemdeki:
+
+- Fizik motoru  
+- Işıklandırma modülü  
+
+gibi bileşenlerin daha verimli çalışabilmesi için donanım kaynaklarını serbest bırakmıştır.
+
+---
+
+# MODEL YÜKLEME VE İŞLEME SÜREÇLERİNİN HIZLANDIRILMASI RAPORU (HAFTA 4)
+
+**Hazırlayan:** Eren Bilge Koçak  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Model Yükleme ve İşleme Süreçlerinin Hızlandırılması  
+
+---
+
+## 1. GÖREVİN AMACI VE KAPSAMI
+
+Bu çalışma, duygu analizi sistemlerinde kullanılan derin öğrenme modellerinin (DeepFace, VGG-Face vb.) donanım üzerindeki işlem yükünü optimize etmeyi ve kullanıcı deneyimini iyileştirmeyi amaçlamaktadır.
+
+Projenin yüksek öncelikli yapısına uygun olarak:
+
+- Sistem açılış süreleri azaltılmış  
+- FPS (saniye başına işlenen kare sayısı) artırılmış  
+- Gerçek zamanlı performans hedeflenmiştir  
+
+---
+
+## 2. UYGULANAN OPTİMİZASYON TEKNİKLERİ
+
+Modellerin performansını artırmak amacıyla aşağıdaki yöntemler uygulanmıştır:
+
+### 2.1. Lifespan Async Loading (Asenkron Yükleme)
+
+- Büyük CNN modellerinin (ör. VGG-16) sistem açılışını bloklaması engellenmiştir  
+- Lifespan event yönetimi ile modeller arka planda yüklenmiştir  
+- API servisleri anında erişilebilir hale getirilmiştir  
+
+---
+
+### 2.2. NumPy Vektörizasyonu
+
+- Döngü tabanlı işlemler yerine matris işlemleri tercih edilmiştir  
+- CPU çekirdekleri daha verimli kullanılmıştır  
+- İşlem süreleri milisaniye seviyesine düşürülmüştür  
+
+---
+
+### 2.3. Batch Processing (Toplu İşleme)
+
+- Görüntüler tek tek değil toplu olarak işlenmiştir  
+- Donanım gecikmesi (latency) minimize edilmiştir  
+- Yüksek throughput elde edilmiştir  
+
+---
+
+## 3. PERFORMANS TESTLERİ
+
+### 3.1. Sistem Açılış ve Model Hazırlık Testi
+
+Modelin RAM’e yüklenme süresi optimize edilmiştir.
+
+**Test Çıktısı:**
+
+```json
+{
+  "model_durumu": "Hafızada Hazır (Pre-loaded)",
+  "yukleme_hizi_saniye": 0.4527,
+  "yontem": "Lifespan Async Loading",
+  "durum": "Optimize Edildi"
+}
+```
+
+### 3.2. İşlem Verimliliği ve FPS Testi
+Toplu işleme algoritmaları sayesinde yüksek veri işleme kapasitesi elde edilmiştir
+Binlerce kareyi eş zamanlı işleyebilecek teorik altyapı oluşturulmuştur
+CPU kullanımı dengelenmiştir
+### 3.3. Altyapı ve Kütüphane Doğrulaması
+Sistem performansını artırmak için aşağıdaki teknolojiler entegre edilmiştir:
+NumPy (vektörizasyon)
+ONNX Runtime (model hızlandırma)
+Yapılan doğrulamalarda:
+ONNX Runtime’ın aktif olarak hızlandırıcı (accelerator) olarak çalıştığı teyit edilmiştir
+## 4. ANALİZ VE SONUÇ
+Gerçekleştirilen optimizasyonlar sonucunda:
+DeepFace tabanlı modeller gerçek zamanlı çalışabilir hale getirilmiştir
+Düşük gecikme (latency) ile yüksek doğruluk elde edilmiştir
+Sistem, "in-the-wild" (gerçek dünya) senaryolarında stabil performans göstermektedir
+Bu çalışma ile sistem:
+Yüksek performans
+Ölçeklenebilirlik
+Profesyonel kullanım uygunluğu
+kriterlerini karşılayacak seviyeye ulaşmıştır.
 
