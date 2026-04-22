@@ -1686,12 +1686,16 @@ Modelin RAM’e yüklenme süresi optimize edilmiştir.
 Toplu işleme algoritmaları sayesinde yüksek veri işleme kapasitesi elde edilmiştir
 Binlerce kareyi eş zamanlı işleyebilecek teorik altyapı oluşturulmuştur
 CPU kullanımı dengelenmiştir
+<img width="1782" height="149" alt="Ekran Resmi 2026-04-22 20 13 45" src="https://github.com/user-attachments/assets/54b78a3d-9c88-4034-a7d1-9d6ed00a77d0" />
+
 ### 3.3. Altyapı ve Kütüphane Doğrulaması
 Sistem performansını artırmak için aşağıdaki teknolojiler entegre edilmiştir:
 NumPy (vektörizasyon)
 ONNX Runtime (model hızlandırma)
 Yapılan doğrulamalarda:
 ONNX Runtime’ın aktif olarak hızlandırıcı (accelerator) olarak çalıştığı teyit edilmiştir
+<img width="2940" height="464" alt="Ekran Resmi 2026-04-22 20 31 54" src="https://github.com/user-attachments/assets/a7098bca-0963-40e6-bfaa-9ca74684d9a4" />
+
 ## 4. ANALİZ VE SONUÇ
 Gerçekleştirilen optimizasyonlar sonucunda:
 DeepFace tabanlı modeller gerçek zamanlı çalışabilir hale getirilmiştir
