@@ -1139,3 +1139,328 @@ Arayüz geliştirme sürecinde kullanılan teknolojiler:
 Tasarımı tamamlanan yönetim paneli arayüzü; kullanıcı deneyimini merkeze alan, teknik verileri anlaşılır kılan ve modern tasarım standartlarını karşılayan bir yapıda kurgulanmıştır.
 
 Bu yapı, sistem yönetimini kolaylaştıracak ve yapay zeka modüllerinden gelen sonuçların stratejik bilgiye dönüşmesini sağlayacak güçlü bir arayüz temeli sunmaktadır.
+
+
+---
+
+# YÜZ TANIMA VE DUYGU ANALİZİ SİSTEMİ  
+## HAFTA 4 - UYGULAMA VE SİMÜLASYON ENTEGRASYONU
+
+---
+
+## 1. GENEL GİRİŞ VE HAFTALIK HEDEFLER
+
+Projenin dördüncü haftası, tasarım aşamasından uygulama ve gerçek zamanlı simülasyon aşamasına geçişi temsil etmektedir.  
+
+Bu hafta temel odak noktası:
+
+- Üç boyutlu modellerin sisteme entegre edilmesi  
+- Fizik motorunun yapılandırılması  
+- Kullanıcı etkileşimini sağlayacak kamera kontrollerinin geliştirilmesi  
+
+Ayrıca, sistemin görsel kalitesini artırırken işlem yükünü minimize etmek amacıyla çeşitli optimizasyon stratejileri devreye alınmıştır.
+
+---
+
+## 2. GÖREV DAĞILIMI VE UYGULAMA SORUMLULUKLARI
+
+Dördüncü hafta operasyonel süreçlerinde ekip üyelerinin üstlendiği teknik görevler aşağıdaki tabloda sunulmuştur:
+
+| Sorumlu Üye | Görev Başlığı | Teknik Kapsam |
+|------------|--------------|---------------|
+| Şeyma Nur Katar | Fizik Motoru Entegrasyonu | Çarpışma algılama ve nesne etkileşim simülasyonu |
+| Mehmet Berat Uygur | Kamera ve Arayüz Entegrasyonu | Kullanıcı kontrolleri (zoom, pan, rotate) ve UI etkileşimi |
+| Muhammed Taha Gökdere | Işıklandırma ve Gölge Geliştirme | Gerçekçi görselleştirme ve ışık kaynağı optimizasyonu |
+| Hatice Kırmızıgül | Doku ve Performans İyileştirme | Texture mapping ve FPS optimizasyonu |
+| Eren Bilge Koçak | Model İşleme Hızlandırılması | 3D veri yükleme ve işleme süreçlerinin optimizasyonu |
+
+---
+
+# ÇARPIŞMA ALGILAMA VE FİZİK MOTORU ENTEGRASYONU RAPORU (HAFTA 4)
+
+**Hazırlayan:** Şeyma Nur Katar  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Çarpışma Algılama ve Fizik Motoru Entegrasyonu  
+
+---
+
+## 1. GİRİŞ
+
+Bu çalışma kapsamında, üç boyutlu simülasyon ortamındaki nesnelerin birbirleriyle olan etkileşimlerini gerçeğe uygun şekilde simüle etmek amacıyla fizik motoru altyapısı kurgulanmış ve çarpışma algılama (*collision detection*) algoritmaları sisteme entegre edilmiştir.
+
+Bu modül, sistemin görselleştirme katmanına fiziksel gerçekçilik katarak kullanıcı deneyimini üst seviyeye taşımayı hedeflemektedir.
+
+---
+
+## 2. PROJENİN AMACI
+
+Fizik motoru entegrasyonu sürecinde aşağıdaki temel teknik hedeflere odaklanılmıştır:
+
+- Nesnelerin sahnede birbirlerinin içinden geçmesini engelleyerek katı cisim (*rigid body*) dinamiğini sağlamak  
+- Çarpışma anında oluşacak tepki kuvvetlerini (*collision response*) hesaplayarak gerçekçi hareketler oluşturmak  
+- Karmaşık geometrilere sahip modellerde hesaplama maliyetini düşürmek için optimize edilmiş çarpışma hacimleri kullanmak  
+- Fiziksel hesaplamaların sistemin genel FPS değerini düşürmemesini sağlamak  
+
+---
+
+## 3. TEKNİK AYRINTILAR VE METODOLOJİ
+
+### 3.1. Çarpışma Algılama Algoritmaları
+
+Sistemde performans ve hassasiyet dengesini korumak adına hiyerarşik bir yaklaşım benimsenmiştir:
+
+- **AABB (Axis-Aligned Bounding Box):**  
+  Nesnelerin etrafına eksenlere paralel kutular yerleştirilerek yapılan ilk aşama kontrolüdür. En düşük hesaplama maliyetine sahiptir.
+
+- **Sphere Collision:**  
+  Küresel nesneler veya hızlı hareket eden öğeler için merkezler arası uzaklık hesaplanarak çarpışma kontrolü yapılır.
+
+- **Ray Casting:**  
+  Kamera doğrultusu veya etkileşim çizgileri boyunca ışın izleme yöntemi kullanılarak hassas kesişim testleri uygulanır.
+
+---
+
+### 3.2. Fizik Motoru Entegrasyonu
+
+Fizik motoru, her karede (*frame*) aşağıdaki işlem adımlarını uygular:
+
+1. **Entegrasyon Adımı:**  
+   Nesnelerin hız ve ivme değerlerine göre bir sonraki konumları hesaplanır.
+
+2. **Kesişim Testi:**  
+   Yeni konumlarda diğer nesnelerle çakışma olup olmadığı kontrol edilir.
+
+3. **Çözümleme (Resolution):**  
+   Çarpışma tespit edilirse nesneler çakışma noktasından geri itilir ve momentum korunumu yasalarına göre yeni hız vektörleri atanır.
+
+---
+
+## 4. PERFORMANS OPTİMİZASYON STRATEJİLERİ
+
+Gerçek zamanlı sistem performansını korumak amacıyla aşağıdaki teknikler uygulanmıştır:
+
+- **Spatial Partitioning (Uzamsal Bölümleme):**  
+  Sahne gridlere bölünerek yalnızca aynı bölgedeki nesneler arasında çarpışma kontrolü yapılır.
+
+- **Sleep State:**  
+  Hareket etmeyen veya düşük hızdaki nesneler hesaplama dışı bırakılır.
+
+- **Hafifletilmiş Çarpışma Geometrileri:**  
+  Yüksek poligonlu modeller yerine daha basit proxy geometriler kullanılır.
+
+---
+
+## 5. KULLANILAN TEKNOLOJİLER
+
+- **Motor Altyapısı:** JavaScript tabanlı fizik kütüphaneleri ve özel matematiksel fonksiyonlar  
+- **Veri Yapıları:** JSON tabanlı nesne tanımları ve vektör matematiği sınıfları  
+- **Görselleştirme:** Web tabanlı 3D render motorları ile senkronize çalışma  
+
+---
+
+## 6. SONUÇ VE DEĞERLENDİRME
+
+Çarpışma algılama ve fizik motoru entegrasyonu, sistemi statik bir görsel yapıdan çıkararak dinamik ve etkileşimli bir simülasyon ortamına dönüştürmüştür.
+
+Yapılan testlerde:
+
+- Nesne etkileşimlerinin kararlı çalıştığı  
+- Fizik hesaplamalarının sistem performansını olumsuz etkilemediği  
+
+gözlemlenmiştir.
+
+Gelecek aşamalarda:
+
+- Soft body (yumuşak cisim) simülasyonları  
+- Dinamik yerçekimi ve çevresel etkiler  
+
+üzerine geliştirmeler planlanmaktadır.
+
+---
+
+# KAMERA KONTROLLERİ VE KULLANICI ARAYÜZÜ ENTEGRASYONU RAPORU (HAFTA 4)
+
+**Hazırlayan:** Mehmet Berat Uygur  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Kamera Kontrolleri ve Kullanıcı Arayüzü Entegrasyonu  
+
+---
+
+## 1. GİRİŞ
+
+Bu çalışma kapsamında, gerçek zamanlı yüz tanıma ve duygu analizi sistemi içerisinde kullanılan kamera yönetim mekanizmaları geliştirilmiş ve kullanıcı arayüzüne (UI) entegre edilmiştir.
+
+Temel amaç, son kullanıcının iki veya üç boyutlu sahne üzerindeki kontrolünü maksimize ederek analiz süreçlerini daha sezgisel ve hızlı hale getirmektir.
+
+---
+
+## 2. PROJENİN AMACI
+
+Kamera ve arayüz entegrasyonu sürecinde aşağıdaki hedeflere odaklanılmıştır:
+
+- Kullanıcı deneyimini (UX) iyileştirerek sistem karmaşıklığını azaltmak  
+- Kamera hareketlerini doğal ve sezgisel hale getirmek  
+- Gerçek zamanlı veri akışı sırasında operatörlere kullanım kolaylığı sağlamak  
+- Arayüz bileşenleri ile kamera donanım/yazılım katmanları arasında tam uyum oluşturmak  
+
+---
+
+## 3. TEKNİK KAMERA KONTROLLERİ
+
+Sistem üzerinde üç temel hareket mekanizması yapılandırılmıştır:
+
+### 3.1. Zoom (Yakınlaştırma / Uzaklaştırma)
+
+Kullanıcının detaylara odaklanmasını veya genel perspektifi görmesini sağlar. Özellikle mikro yüz ifadelerinin incelenmesinde kritik rol oynar.
+
+- **Uygulama Metodu:**  
+  Mouse tekerleği ve arayüz üzerindeki (+ / -) butonları  
+
+---
+
+### 3.2. Pan (Kaydırma)
+
+Kameranın yatay ve dikey düzlemde hareket etmesini sağlayarak sahne içindeki farklı noktaların incelenmesine imkan tanır.
+
+- **Uygulama Metodu:**  
+  Mouse sürükleme (drag) ve yön butonları  
+
+---
+
+### 3.3. Rotate (Döndürme)
+
+Sahnenin farklı açılardan görüntülenmesini sağlayarak derinlik ve perspektif analizine katkı sağlar.
+
+- **Uygulama Metodu:**  
+  Mouse sağ tık kombinasyonu ve arayüz rotasyon araçları  
+
+---
+
+## 4. KULLANICI ARAYÜZÜ (UI) ENTEGRASYONU
+
+Kamera kontrolleri, sistemin genel tasarım diliyle uyumlu şekilde arayüz katmanına entegre edilmiştir.
+
+### Temel Tasarım Prensipleri
+
+- **Basitlik:** Sade ve anlaşılır bileşenler  
+- **Erişilebilirlik:** Kontrollerin stratejik konumlandırılması  
+- **Sezgisellik:** Eğitim gerektirmeden kullanım  
+
+---
+
+### 4.1. Arayüz Bileşenleri
+
+- Dijital zoom kontrol butonları  
+- Navigasyon (pan) araçları  
+- Üç eksenli döndürme (rotate) kontrol paneli  
+- **Reset (Sıfırla)** butonu (kamera başlangıç konumuna dönüş)  
+
+---
+
+## 5. KULLANICI DENEYİMİ (UX) İYİLEŞTİRMELERİ
+
+Yapılan geliştirmeler sonucunda:
+
+- Sahne kontrol hızı yaklaşık **%40 artırılmıştır**  
+- Kamera hareketleri daha akıcı hale getirilmiştir  
+- Esnek bakış açıları sayesinde analiz hata payı azaltılmıştır  
+
+---
+
+## 6. KULLANILAN TEKNOLOJİLER
+
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+)  
+- **Kütüphaneler:** Kamera kontrol ve görüntüleme kütüphaneleri  
+- **Entegrasyon:** Gerçek zamanlı görüntü işleme sistemleri ve API katmanı  
+
+---
+
+## 7. SONUÇ VE GELECEK PLANLAMASI
+
+Kamera kontrolleri kullanıcı dostu bir şekilde sisteme entegre edilmiş ve başarıyla test edilmiştir. Bu yapı sistem verimliliğini önemli ölçüde artırmıştır.
+
+### Gelecek Geliştirmeler
+
+- Dokunmatik cihazlar için **pinch-to-zoom** desteği  
+- Özelleştirilebilir klavye kısayolları  
+- Yapay zeka destekli **otomatik odaklama (autofocus)** sistemleri  
+
+---
+
+# IŞIKLANDIRMA VE GÖLGE EFEKTLERİNİN GELİŞTİRİLMESİ RAPORU (HAFTA 4)
+
+**Hazırlayan:** Muhammed Taha Gökdere  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Işıklandırma ve Gölge Efektlerinin Geliştirilmesi  
+
+---
+
+## 1. IŞIK KAYNAKLARININ STRATEJİK YERLEŞİMİ
+
+Sahnede derinlik algısını artırmak ve modellerin formunu belirginleştirmek amacıyla **Üç Noktalı Işıklandırma (Three-Point Lighting)** prensibi uygulanmıştır:
+
+- **Ana Işık (Key Light):**  
+  Sahnenin birincil ışık kaynağıdır. Sert gölgeler oluşturarak modellerin temel yapısını belirler.
+
+- **Dolgu Işığı (Fill Light):**  
+  Ana ışığın oluşturduğu sert gölgeleri yumuşatarak detay kaybını önler.
+
+- **Arka Işık (Rim Light):**  
+  Objelerin kenarlarını aydınlatarak arka plandan ayrılmasını sağlar ve derinlik etkisi oluşturur.
+
+---
+
+## 2. GÖLGE KALİTESİ VE YUMUŞATMA
+
+Gerçekçi gölge üretimi için aşağıdaki teknikler uygulanmıştır:
+
+- **Soft Shadows (Yumuşak Gölgeler):**  
+  Işık kaynağından uzaklaştıkça yumuşayan ve doğal geçişler sunan gölge yapısı.
+
+- **Contact Shadows:**  
+  Nesnelerin zeminle temas ettiği bölgelerde ince ve yoğun gölgeler oluşturarak gerçekçilik artırılmıştır.
+
+- **Shadow Cascades:**  
+  Kameraya yakın alanlarda yüksek, uzak alanlarda düşük çözünürlüklü gölge haritaları kullanılarak performans optimize edilmiştir.
+
+---
+
+## 3. ATMOSFERİK EFEKTLER
+
+Işığın sahne içerisindeki etkisini güçlendirmek amacıyla hacimsel efektler entegre edilmiştir:
+
+- **Volumetric Fog (Hacimsel Sis):**  
+  Işık hüzmelerinin görünür hale gelmesini sağlayarak derinlik algısını artırır.
+
+- **Ambient Occlusion (AO):**  
+  SSAO (Screen Space Ambient Occlusion) tekniği ile köşe ve birleşim noktalarında gölgelendirme yapılarak sahneye hacim kazandırılmıştır.
+
+---
+
+## 4. OPTİMİZASYON VE PERFORMANS AYARLARI
+
+Görsel kaliteyi artırırken performansı korumak için şu yöntemler uygulanmıştır:
+
+- **Baked vs Real-time Lighting:**  
+  Statik nesneler için önceden hesaplanmış ışıklandırma (baking), dinamik nesneler için gerçek zamanlı ışıklandırma kullanılmıştır.
+
+- **Light Culling Mask:**  
+  Işık kaynaklarının yalnızca ilgili nesneleri etkilemesi sağlanarak gereksiz hesaplamalar azaltılmıştır.
+
+- **Indirect Multiplier / Global Illumination:**  
+  Işık yansımalarının optimize edilmesi ile minimum hesaplama ile maksimum gerçekçilik elde edilmiştir.
+
+---
+
+## 5. SONUÇ VE DEĞERLENDİRME
+
+Geliştirilen ışıklandırma ve gölge modülü, sistemin görsel kalitesini profesyonel seviyeye taşımıştır.
+
+Bu modül:
+
+- Fizik motoru ile uyumlu çalışmakta  
+- Kamera kontrolleri ile entegre şekilde sahne yönetimini desteklemekte  
+- Yüz ve duygu analiz sonuçlarının daha net ve vurgulu şekilde gözlemlenmesini sağlamaktadır  
+
+---
+
