@@ -614,17 +614,17 @@ Projenin temel hedefi olan *gerçek zamanlı analiz yeteneğini* desteklemek ama
 
 # VERİTABANI ŞEMASI TASARIM RAPORU
 
-## *Görev Tanımı:* Veritabanı Şeması Tasarımı ve Veri Yönetimi  
-## *Proje Aşaması:* Tasarım ve Modelleme 
-## *Hazırlayan:* Şeyma Nur Katar
+### *Görev Tanımı:* Veritabanı Şeması Tasarımı ve Veri Yönetimi  
+### *Proje Aşaması:* Tasarım ve Modelleme 
+### *Hazırlayan:* Şeyma Nur Katar
 
 ---
 
-# 1. VERİTABANI YÖNETİM SİSTEMİ (DBMS) SEÇİMİ
+## 1. VERİTABANI YÖNETİM SİSTEMİ (DBMS) SEÇİMİ
 
 Sistemin tüm bileşenlerinden gelen verilerin **kalıcı, güvenli ve performanslı** bir şekilde saklanması için veritabanı yönetim sistemi olarak *PostgreSQL* tercih edilmiştir.
 
-## *Seçim Gerekçeleri*
+### *Seçim Gerekçeleri*
 
 - *İlişkisel Veri Kararlılığı:* Kullanıcı, tespit ve analiz verileri arasındaki karmaşık ilişkilerin korunması  
 - *JSONB Desteği:* Yapay zeka modellerinden gelen dinamik verilerin esnek şekilde saklanabilmesi  
@@ -632,13 +632,13 @@ Sistemin tüm bileşenlerinden gelen verilerin **kalıcı, güvenli ve performan
 
 ---
 
-# 2. VERİTABANI TABLO YAPILARI
+## 2. VERİTABANI TABLO YAPILARI
 
 Sistemin mimari tasarımıyla uyumlu olacak şekilde aşağıdaki tablolar tanımlanmıştır.
 
 ---
 
-## *2.1 Tablo: users (Sistem Yetkilileri)*
+### *2.1 Tablo: users (Sistem Yetkilileri)*
 
 Yönetim paneline erişim yetkisi bulunan kullanıcı bilgilerini tutar.
 
@@ -651,7 +651,7 @@ Yönetim paneline erişim yetkisi bulunan kullanıcı bilgilerini tutar.
 
 ---
 
-## *2.2 Tablo: cameras (Donanım Kaynakları)*
+### *2.2 Tablo: cameras (Donanım Kaynakları)*
 
 Sisteme bağlı görüntü kaynaklarının konfigürasyonlarını saklar.
 
@@ -663,7 +663,7 @@ Sisteme bağlı görüntü kaynaklarının konfigürasyonlarını saklar.
 
 ---
 
-## *2.3 Tablo: detections (Yüz Tespit ve Takip Kayıtları)*
+### *2.3 Tablo: detections (Yüz Tespit ve Takip Kayıtları)*
 
 Yüz tespit (*YuNet*) ve takip (*KCF*) modüllerinden gelen verileri saklar.
 
@@ -678,7 +678,7 @@ Yüz tespit (*YuNet*) ve takip (*KCF*) modüllerinden gelen verileri saklar.
 
 ---
 
-## *2.4 Tablo: emotion_analysis (Analiz Sonuçları)*
+### *2.4 Tablo: emotion_analysis (Analiz Sonuçları)*
 
 Duygu analizi sonuçlarını tespit verileriyle ilişkilendirir.
 
@@ -691,7 +691,7 @@ Duygu analizi sonuçlarını tespit verileriyle ilişkilendirir.
 
 ---
 
-# 3. MİMARİ ENTEGRASYON VE VERİ İLİŞKİLERİ
+## 3. MİMARİ ENTEGRASYON VE VERİ İLİŞKİLERİ
 
 Sistem tasarımı, veri bütünlüğünü korumak amacıyla **ilişkisel model** üzerine kurulmuştur:
 
@@ -700,7 +700,7 @@ Sistem tasarımı, veri bütünlüğünü korumak amacıyla **ilişkisel model**
 
 ---
 
-# 4. PERFORMANS OPTİMİZASYONU VE İNDEKSLEME
+## 4. PERFORMANS OPTİMİZASYONU VE İNDEKSLEME
 
 Sistemin düşük gecikme ile çalışabilmesi için aşağıdaki stratejiler uygulanmıştır:
 
@@ -709,7 +709,7 @@ Sistemin düşük gecikme ile çalışabilmesi için aşağıdaki stratejiler uy
 
 ---
 
-# 5. VERİ GÜVENLİĞİ VE ERİŞİM KONTROLÜ
+## 5. VERİ GÜVENLİĞİ VE ERİŞİM KONTROLÜ
 
 - *Şifreleme:* Kullanıcı şifreleri **Bcrypt** ile hashlenir  
 - *API İzolasyonu:* Tüm veri erişimi kimlik doğrulamalı API üzerinden yapılır  
@@ -720,12 +720,12 @@ Sistemin düşük gecikme ile çalışabilmesi için aşağıdaki stratejiler uy
 
 # YÜZ TANIMA VE TAKİP MODÜLÜ MİMARİ TASARIM RAPORU
 
-## *Görev Tanımı:* Yüz Tanıma ve Takip Modülü Analizi ve Tasarımı  
-## *Proje Aşaması:* Tasarım ve Modelleme  
-## *Hazırlayan:* Hatice Kırmızıgül
+### *Görev Tanımı:* Yüz Tanıma ve Takip Modülü Analizi ve Tasarımı  
+### *Proje Aşaması:* Tasarım ve Modelleme  
+### *Hazırlayan:* Hatice Kırmızıgül
 ---
 
-# 1. AMAÇ VE KAPSAM
+## 1. AMAÇ VE KAPSAM
 
 Bu rapor, *OpenCV* kütüphanesi kullanılarak gerçek zamanlı video akışından yüzleri tespit eden ve takip eden modülün yazılım mimarisini tanımlar.  
 
@@ -738,11 +738,11 @@ Tasarım sürecinde aşağıdaki kriterler temel alınmıştır:
 
 ---
 
-# 2. SİSTEM MİMARİSİ
+## 2. SİSTEM MİMARİSİ
 
 Modül, sorumlulukların ayrıştırılması ilkesine uygun olarak **katmanlı mimari** ile tasarlanmıştır:
 
-## * Katmanlar
+### * Katmanlar
 
 - *Video Capture Layer:* Kamera donanımından ham karelerin alınması  
 - *Preprocessing Layer:* Gürültü azaltma, histogram eşitleme, yeniden boyutlandırma  
@@ -752,7 +752,7 @@ Modül, sorumlulukların ayrıştırılması ilkesine uygun olarak **katmanlı m
 
 ---
 
-# 3. NESNE TABANLI TASARIM VE SINIF SORUMLULUKLARI
+## 3. NESNE TABANLI TASARIM VE SINIF SORUMLULUKLARI
 
 Sistemin sürdürülebilirliği için önerilen sınıf yapıları aşağıdadır:
 
@@ -766,7 +766,7 @@ Sistemin sürdürülebilirliği için önerilen sınıf yapıları aşağıdadı
 
 ---
 
-# 4. SİSTEM AKTİVİTE AKIŞI
+## 4. SİSTEM AKTİVİTE AKIŞI
 
 Sistemin operasyonel akışı aşağıdaki gibidir:
 
@@ -778,7 +778,7 @@ Sistemin operasyonel akışı aşağıdaki gibidir:
 
 ---
 
-# 5. ALGORİTMALARIN KARŞILAŞTIRMALI ANALİZİ
+## 5. ALGORİTMALARIN KARŞILAŞTIRMALI ANALİZİ
 
 | Yaklaşım                     | Avantajları                                 | Dezavantajları                                  |
 |-----------------------------|----------------------------------------------|-------------------------------------------------|
@@ -788,11 +788,11 @@ Sistemin operasyonel akışı aşağıdaki gibidir:
 
 ---
 
-# 6. SEÇİLEN ALGORİTMALAR VE TEKNİK GEREKÇELER
+## 6. SEÇİLEN ALGORİTMALAR VE TEKNİK GEREKÇELER
 
 Proje kapsamında *OpenCV DNN tabanlı YuNet* veya hafif CNN modelleri tercih edilmiştir.
 
-## * Gerekçeler
+### * Gerekçeler
 
 - *Kararlılık:* Düşük ışıkta daha iyi performans  
 - *Açı Dayanımı:* Profil ve eğik yüzlerde yüksek başarı  
@@ -800,20 +800,20 @@ Proje kapsamında *OpenCV DNN tabanlı YuNet* veya hafif CNN modelleri tercih ed
 
 ---
 
-# 7. NESNE TAKİP STRATEJİSİ
+## 7. NESNE TAKİP STRATEJİSİ
 
 Yüz takibi için *KCF (Kernelized Correlation Filters)* algoritması seçilmiştir.
 
-## * Özellikler
+### * Özellikler
 
 - *Yüksek hız:* Gerçek zamanlı kullanım için uygun  
 - *Esneklik:* Gerektiğinde *CSRT* algoritmasına geçiş imkanı  
 
 ---
 
-# 8. ÇEVRESEL KOŞULLAR VE OPTİMİZASYON
+## 8. ÇEVRESEL KOŞULLAR VE OPTİMİZASYON
 
-## * Optimizasyon Teknikleri
+### * Optimizasyon Teknikleri
 
 - *Aydınlatma:* CLAHE uygulanması  
 - *Açı Kontrolü:* >30° açılarda CNN avantajı kullanımı  
@@ -821,7 +821,7 @@ Yüz takibi için *KCF (Kernelized Correlation Filters)* algoritması seçilmiş
 
 ---
 
-# 9. PERFORMANS VE KAYNAK YÖNETİMİ
+## 9. PERFORMANS VE KAYNAK YÖNETİMİ
 
 Sistem performansını artırmak için:
 
@@ -832,15 +832,15 @@ Sistem performansını artırmak için:
 
 ---
 
-# 10. OPERASYONEL İŞ AKIŞI ÖRNEĞİ
+## 10. OPERASYONEL İŞ AKIŞI ÖRNEĞİ
 
 Kamera görüntüsü alınır → ön işleme uygulanır → CNN modeli ile yüz tespiti yapılır → *bounding box* elde edilir → takip modülüne aktarılır → sistem eş zamanlı olarak performans ölçümü yapar.
 
 ---
 
-# 11. SEKANSIYEL VERİ AKIŞI
+## 11. SEKANSIYEL VERİ AKIŞI
 
-## * Veri Akışı
+### * Veri Akışı
 
 - Camera → VideoStreamManager  
 - VideoStreamManager → Preprocessor  
@@ -850,7 +850,7 @@ Kamera görüntüsü alınır → ön işleme uygulanır → CNN modeli ile yüz
 
 ---
 
-# 12. SONUÇ
+## 12. SONUÇ
 
 CNN tabanlı yüz tespit modeli ile *KCF* takip algoritmasının birlikte kullanımı; **doğruluk, hız ve gerçek zamanlılık** arasında optimum denge sağlamaktadır.  
 
@@ -859,35 +859,35 @@ Tasarlanan mimari yapı, hem akademik standartlara hem de gerçek dünya uygulam
 
 # DUYGU ANALİZİ ALGORİTMASI TASARIM RAPORU
 
-## *Görev Tanımı:* Duygu Analizi Algoritma Tasarımı ve Optimizasyonu  
-## *Proje Aşaması:* Tasarım ve Modelleme  
-## *Hazırlayan:* Muhammed Taha Gökdere
+### *Görev Tanımı:* Duygu Analizi Algoritma Tasarımı ve Optimizasyonu  
+### *Proje Aşaması:* Tasarım ve Modelleme  
+### *Hazırlayan:* Muhammed Taha Gökdere
 ---
 
-# 1. DUYGU SPEKTRUMU: TESPİT PARAMETRELERİ
+## 1. DUYGU SPEKTRUMU: TESPİT PARAMETRELERİ
 
 Sistem, insan psikolojisindeki *"7 Temel Duygu"* modelini baz almaktadır. Bu duygular, yüz kaslarındaki mikro hareketler üzerinden analiz edilir.
 
-## * Duygu Kategorileri
+### * Duygu Kategorileri
 
-### * Pozitif Duygular
+#### * Pozitif Duygular
 - *Mutluluk:* Gülümseme ve göz kenarı kırışıklığı  
 
-### * Negatif Duygular
+#### * Negatif Duygular
 - *Üzüntü:* Dudak kenarlarının aşağı sarkması  
 - *Öfke:* Çatık kaşlar  
 - *Korku:* Açık ağız ve gergin gözler  
 - *Tiksinti:* Burun kırıştırma  
 
-### * Dinamik / Anlık Duygular
+#### * Dinamik / Anlık Duygular
 - *Şaşkınlık:* Kalkık kaşlar ve açılmış ağız  
 
-### * Referans Durumu
+#### * Referans Durumu
 - *Nötr:* Kas aktivitesi olmayan temel durum  
 
 ---
 
-# 2. MODEL KARŞILAŞTIRMASI VE STRATEJİK SEÇİM
+## 2. MODEL KARŞILAŞTIRMASI VE STRATEJİK SEÇİM
 
 Duygu analizi için farklı modeller karşılaştırılmıştır:
 
@@ -897,40 +897,40 @@ Duygu analizi için farklı modeller karşılaştırılmıştır:
 | OpenFace         | Gerçek zamanlı hız   | Orta (düşük ışıkta hataya açık)             | Elendi  |
 | VGG-Face         | Derin öznitelik      | Çok yüksek doğruluk                         | SEÇİLDİ |
 
-## * Seçim Gerekçesi
+### * Seçim Gerekçesi
 
 Duygu analizi, yüzün kimliğinden ziyade *anlık ifadesine* odaklanır.  
 *VGG-Face* modeli, çok katmanlı yapısı sayesinde yüz kaslarındaki küçük değişimleri yüksek doğrulukla yakalayabilmektedir.
 
 ---
 
-# 3. ALGORİTMANIN ÇALIŞMA MİMARİSİ
+## 3. ALGORİTMANIN ÇALIŞMA MİMARİSİ
 
 Analiz süreci dört temel aşamadan oluşur:
 
-## * 1. Yüz Yakalama ve Hizalama (Alignment)
+### * 1. Yüz Yakalama ve Hizalama (Alignment)
 - Kafa eğimi düzeltilir  
 - Örneğin: 15° eğim dijital olarak normalize edilir  
 
-## * 2. Işık Normalizasyonu
+### * 2. Işık Normalizasyonu
 - Gölgeler yumuşatılır  
 - Yanlış duygu tespiti engellenir  
 
-## * 3. Vektör Analizi
+### * 3. Vektör Analizi
 - Yüz, binlerce matematiksel noktaya ayrılır  
 - Noktalar arası ilişkiler hesaplanır  
 
-## * 4. Olasılık Hesaplama (Softmax)
+### * 4. Olasılık Hesaplama (Softmax)
 - Duygulara olasılık dağıtılır  
 - Örnek: *%75 Mutlu, %20 Nötr, %5 Şaşkın*  
 
 ---
 
-# 4. EĞİTİM VE İNCE AYAR (FINE-TUNING) PLANI
+## 4. EĞİTİM VE İNCE AYAR (FINE-TUNING) PLANI
 
 Model doğruluğunu artırmak için *Transfer Learning* uygulanacaktır.
 
-## * Stratejiler
+### * Stratejiler
 
 - *Özel Veri Seti:* FER-2013 gibi geniş veri setleri kullanımı  
 - *Katman Dondurma:* İlk katmanlar sabit, son katmanlar eğitilir  
@@ -938,32 +938,32 @@ Model doğruluğunu artırmak için *Transfer Learning* uygulanacaktır.
 
 ---
 
-# 5. GÜVENLİRLİK VE FİLTRELEME TASARIMI
+## 5. GÜVENLİRLİK VE FİLTRELEME TASARIMI
 
 Hatalı sonuçları azaltmak için üç aşamalı kontrol mekanizması:
 
-## * A. Zaman Pencereli Ortalama (Smoothing)
+### * A. Zaman Pencereli Ortalama (Smoothing)
 - Son 15 kare ortalaması alınır  
 - Anlık değişimler filtrelenir  
 
-## * B. Kararlılık Eşiği (Thresholding)
+### * B. Kararlılık Eşiği (Thresholding)
 - Minimum %65 güven skoru şartı  
 - Altı → *Nötr / Belirsiz*  
 
-## * C. Ani Değişim Reddi (Hysteresis)
+### * C. Ani Değişim Reddi (Hysteresis)
 - Ani duygu sıçramaları engellenir  
 - Önceki stabil durum korunur  
 
 ---
 
-# 6. PERFORMANS BEKLENTİSİ
+## 6. PERFORMANS BEKLENTİSİ
 
-## * Sistem Performansı
+### * Sistem Performansı
 
 - *Masaüstü / Sunucu:* 25–30 FPS (gerçek zamanlı)  
 - *Mobil / Uç Cihaz:* 10–15 FPS  
 
-## * Doğruluk Oranı
+### * Doğruluk Oranı
 
 - İdeal koşullarda: *%88 – %92*  
 
@@ -1060,7 +1060,7 @@ Bu yapı, projenin web paneli, mobil uygulama ve diğer dış sistemlerle olan i
 **Hazırlayan:** Mehmet Berat Uygur
 ---
 
-# 1. GİRİŞ
+## 1. GİRİŞ
 
 Bu çalışma kapsamında, sistemin yönetilmesi ve analiz sonuçlarının izlenmesi amacıyla Flask ve JavaScript teknolojileri üzerine kurgulanacak web tabanlı yönetim panelinin arayüz tasarımı oluşturulmuştur.
 
