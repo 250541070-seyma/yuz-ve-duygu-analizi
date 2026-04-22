@@ -540,3 +540,515 @@ Kimlik Doğrulama: JWT (JSON Web Token) tabanlı güvenli oturum yönetimi.
 ### 9. SONUÇ
 Tasarlanan bu yönetim paneli, sistemin ürettiği karmaşık verileri merkezi bir noktada toplayarak kullanım kolaylığı, anlık veri takibi ve derinlemesine analiz kabiliyeti sunacaktır. Modüler yapısı sayesinde gelecekteki yeni analiz gereksinimlerine göre kolayca genişletilebilir bir mimariye sahiptir.
  
+
+# 1. GENEL GİRİŞ
+
+Bu döküman, Fırat Üniversitesi Yazılım Mühendisliği Bölümü bünyesinde yürütülen *"Yüz Tanıma ve Duygu Analizi Sistemi"* projesinin üçüncü hafta çalışmalarını kapsamaktadır. İkinci haftada gerçekleştirilen teknoloji seçimi ve kavramsal analiz süreçlerinin ardından, bu hafta projenin **"Tasarım ve Mimari Yapılandırma"** evresine geçiş yapılmıştır.
+
+Üçüncü hafta çalışmalarının temel odağı; sistemin modülleri arasındaki veri akışını standardize etmek, veritabanı ilişkilerini kurgulamak ve algoritma mantığını matematiksel/mantıksal düzlemde doğrulamaktır. Tasarım evresinde alınan kararlar, projenin gerçek zamanlı çalışma performansını ve sistem güvenliğini doğrudan etkileyecek temel yapı taşlarını oluşturmaktadır.
+
+---
+
+# 2. HAFTALIK ODAK NOKTASI VE HEDEFLER
+
+Hafta 3 kapsamında ekip olarak aşağıdaki teknik hedeflere odaklanılmıştır:
+
+## * Sistem Mimarisi
+* Görüntü işleme hattının (*pipeline*) katmanlı bir yapıda tasarlanması  
+* YuNet/KCF entegrasyonunun planlanması  
+
+## * Veri Yönetimi
+* PostgreSQL üzerinde analiz sonuçlarının ve kullanıcı bilgilerinin saklanması  
+* Tutarlı bir ilişkisel veritabanı şemasının oluşturulması  
+
+## * API ve Haberleşme
+* Modüller arası veri transferi için API uç noktalarının planlanması  
+* JWT tabanlı güvenlik mekanizmasının belirlenmesi  
+
+## * Algoritma Optimizasyonu
+* VGG-Face modeli üzerinden duygu analizi süreçlerinin iyileştirilmesi  
+* Hata payını minimize edecek filtreleme tekniklerinin geliştirilmesi  
+
+## * Kullanıcı Deneyimi
+* Yönetim paneli için wireframe taslaklarının oluşturulması  
+* Kullanıcı akış senaryolarının netleştirilmesi  
+
+---
+
+# 3. GÖREV DAĞILIMI VE SORUMLULUK MATRİSİ
+
+Projenin bu aşamasında, her ekip üyesi kendi uzmanlık alanı doğrultusunda sistemin bir modülünün teknik tasarımından sorumlu tutulmuştur.
+
+## * Piksel Mühendisleri Ekibi
+
+| Sorumlu Üye            | Proje Rolü                                   | Hafta 3 Teknik Görev Tanımı                                                                 |
+|-----------------------|----------------------------------------------|---------------------------------------------------------------------------------------------|
+| Şeyma Nur Katar       | *Grup Yöneticisi / Veritabanı Mimarı*        | PostgreSQL veritabanı şemasının tasarımı, tablolar arası ilişkiler ve veri güvenliği planı |
+| Hatice Kırmızıgül     | *Analiz Uzmanı / Görüntü İşleme Mimarı*      | YuNet ve KCF tabanlı yüz tanıma/takip mimarisi ve UML diyagramlarının oluşturulması        |
+| Muhammed Taha Gökdere | *Analiz Uzmanı / Yapay Zeka Tasarımcısı*     | VGG-Face modeli ile duygu analizi algoritması ve filtreleme süreçlerinin tasarımı          |
+| Eren Bilge Koçak      | *Yazılım Geliştirici / Entegrasyon Sorumlusu*| RESTful API, JWT güvenlik yapısı ve veri akış şeması                                        |
+| Mehmet Berat Uygur    | *UI/UX Tasarımcısı / Arayüz Geliştirici*     | Yönetim paneli wireframe taslakları ve responsive tasarım planlaması                       |
+
+---
+
+# 4. SONUÇ
+
+Hafta 3 sonunda elde edilen tüm tasarım dökümanları, birbirini teknik olarak destekleyecek şekilde entegre edilmiştir. Bu rapor; veritabanından kullanıcı arayüzüne, yapay zeka modelinden API katmanına kadar sistemin tüm iskeletini tanımlamaktadır.
+
+Belirlenen bu mimari çerçeve, dördüncü haftada başlayacak olan uygulama ve kodlama süreci için kesinleşmiş rehber niteliğindedir.
+
+# YÜZ TANIMA VE DUYGU ANALİZİ SİSTEMİ  
+## *3. HAFTA ANALİZ VE TASARIM DÖKÜMANTASYONU*
+
+---
+
+# 1. PROJE GENEL GİRİŞİ
+
+Bu döküman, *"Yüz Tanıma ve Duygu Analizi Sistemi"* projesinin üçüncü hafta çalışmalarını kapsamaktadır. Analiz evresinden tasarım evresine geçiş yapılan bu aşamada; sistemin **yazılım mimarisi**, **modüler yapısı** ve **veritabanı şeması** detaylandırılmıştır.  
+
+Projenin temel hedefi olan *gerçek zamanlı analiz yeteneğini* desteklemek amacıyla, veri saklama ve işleme süreçleri **en düşük gecikme süresini hedefleyecek şekilde** kurgulanmıştır.
+
+Üçüncü hafta itibarıyla, sistemin *"Görüntü İşleme"* ve *"Veri Yönetimi"* katmanları arasındaki entegrasyon noktaları belirlenmiş; kullanılan algoritmaların (*YuNet, KCF*) üreteceği verilerin tutarlılığını sağlayacak ilişkisel model tasarlanmıştır.
+
+---
+
+# VERİTABANI ŞEMASI TASARIM RAPORU
+
+## *Görev Tanımı:* Veritabanı Şeması Tasarımı ve Veri Yönetimi  
+## *Proje Aşaması:* Tasarım ve Modelleme 
+## *Hazırlayan:* Şeyma Nur Katar
+
+---
+
+# 1. VERİTABANI YÖNETİM SİSTEMİ (DBMS) SEÇİMİ
+
+Sistemin tüm bileşenlerinden gelen verilerin **kalıcı, güvenli ve performanslı** bir şekilde saklanması için veritabanı yönetim sistemi olarak *PostgreSQL* tercih edilmiştir.
+
+## *Seçim Gerekçeleri*
+
+- *İlişkisel Veri Kararlılığı:* Kullanıcı, tespit ve analiz verileri arasındaki karmaşık ilişkilerin korunması  
+- *JSONB Desteği:* Yapay zeka modellerinden gelen dinamik verilerin esnek şekilde saklanabilmesi  
+- *Yüksek Yük Performansı:* Yoğun veri akışında güçlü indeksleme kabiliyeti  
+
+---
+
+# 2. VERİTABANI TABLO YAPILARI
+
+Sistemin mimari tasarımıyla uyumlu olacak şekilde aşağıdaki tablolar tanımlanmıştır.
+
+---
+
+## *2.1 Tablo: users (Sistem Yetkilileri)*
+
+Yönetim paneline erişim yetkisi bulunan kullanıcı bilgilerini tutar.
+
+| Sütun Adı      | Veri Tipi   | Özellik            | Açıklama                          |
+|----------------|------------|--------------------|----------------------------------|
+| user_id        | Serial     | Primary Key        | Kullanıcı benzersiz kimliği      |
+| username       | Varchar(50)| Unique, Not Null   | Sisteme giriş adı                |
+| password_hash  | Text       | Not Null           | Bcrypt ile korunmuş şifre        |
+| role           | Varchar(20)| Not Null           | Yetki düzeyi (Admin, Operatör)   |
+
+---
+
+## *2.2 Tablo: cameras (Donanım Kaynakları)*
+
+Sisteme bağlı görüntü kaynaklarının konfigürasyonlarını saklar.
+
+| Sütun Adı   | Veri Tipi    | Özellik      | Açıklama                     |
+|-------------|-------------|--------------|------------------------------|
+| camera_id   | Serial      | Primary Key  | Kamera benzersiz kimliği     |
+| camera_name | Varchar(100)| Not Null     | Kamera lokasyon bilgisi      |
+| stream_url  | Text        | Not Null     | RTSP veya donanım yolu       |
+
+---
+
+## *2.3 Tablo: detections (Yüz Tespit ve Takip Kayıtları)*
+
+Yüz tespit (*YuNet*) ve takip (*KCF*) modüllerinden gelen verileri saklar.
+
+| Sütun Adı        | Veri Tipi  | Özellik            | Açıklama                                |
+|------------------|-----------|--------------------|------------------------------------------|
+| detection_id     | BigSerial | Primary Key        | Tespit benzersiz kimliği                 |
+| camera_id        | Integer   | Foreign Key        | Kaynak kamera                            |
+| bounding_box     | JSONB     | Not Null           | Koordinatlar (x, y, w, h)                |
+| confidence_score | Float     | Not Null           | Tespit doğruluk oranı                    |
+| tracker_info     | Varchar(50)| Not Null          | Kullanılan takip algoritması             |
+| timestamp        | Timestamp | Default Now()      | Kayıt zamanı                             |
+
+---
+
+## *2.4 Tablo: emotion_analysis (Analiz Sonuçları)*
+
+Duygu analizi sonuçlarını tespit verileriyle ilişkilendirir.
+
+| Sütun Adı     | Veri Tipi  | Özellik      | Açıklama                          |
+|---------------|-----------|--------------|----------------------------------|
+| analysis_id   | BigSerial | Primary Key  | Analiz kimliği                   |
+| detection_id  | BigInt    | Foreign Key  | İlgili tespit verisi             |
+| emotion_label | Varchar(20)| Not Null    | Tahmin edilen duygu              |
+| score         | Float     | Not Null     | Güven skoru                      |
+
+---
+
+# 3. MİMARİ ENTEGRASYON VE VERİ İLİŞKİLERİ
+
+Sistem tasarımı, veri bütünlüğünü korumak amacıyla **ilişkisel model** üzerine kurulmuştur:
+
+- *Kamera → Tespit:* Bir kamera birden fazla tespit üretebilir *(1:N)*  
+- *Tespit → Analiz:* Her tespit bir veya daha fazla analiz sonucu ile ilişkilendirilebilir *(1:1 / 1:N)*  
+
+---
+
+# 4. PERFORMANS OPTİMİZASYONU VE İNDEKSLEME
+
+Sistemin düşük gecikme ile çalışabilmesi için aşağıdaki stratejiler uygulanmıştır:
+
+- *Zaman Bazlı İndeksleme:* `timestamp` alanına **B-Tree index** atanmıştır  
+- *Kısmi İndeksleme:* `confidence_score` üzerinden filtrelenmiş sorgular optimize edilmiştir  
+
+---
+
+# 5. VERİ GÜVENLİĞİ VE ERİŞİM KONTROLÜ
+
+- *Şifreleme:* Kullanıcı şifreleri **Bcrypt** ile hashlenir  
+- *API İzolasyonu:* Tüm veri erişimi kimlik doğrulamalı API üzerinden yapılır  
+- *Veri Bütünlüğü:* FOREIGN KEY ve CASCADE yapıları ile referans bütünlüğü korunur  
+
+---
+
+
+# YÜZ TANIMA VE TAKİP MODÜLÜ MİMARİ TASARIM RAPORU
+
+## *Görev Tanımı:* Yüz Tanıma ve Takip Modülü Analizi ve Tasarımı  
+## *Proje Aşaması:* Tasarım ve Modelleme  
+## *Hazırlayan:* Hatice Kırmızıgül
+---
+
+# 1. AMAÇ VE KAPSAM
+
+Bu rapor, *OpenCV* kütüphanesi kullanılarak gerçek zamanlı video akışından yüzleri tespit eden ve takip eden modülün yazılım mimarisini tanımlar.  
+
+Tasarım sürecinde aşağıdaki kriterler temel alınmıştır:
+
+- *Düşük gecikme süresi*  
+- *Değişken aydınlatma koşullarına dayanıklılık*  
+- *Farklı yüz açılarını destekleme*  
+- *Ölçeklenebilir performans*  
+
+---
+
+# 2. SİSTEM MİMARİSİ
+
+Modül, sorumlulukların ayrıştırılması ilkesine uygun olarak **katmanlı mimari** ile tasarlanmıştır:
+
+## * Katmanlar
+
+- *Video Capture Layer:* Kamera donanımından ham karelerin alınması  
+- *Preprocessing Layer:* Gürültü azaltma, histogram eşitleme, yeniden boyutlandırma  
+- *Face Detection Layer:* İlk yüz tespitinin gerçekleştirilmesi  
+- *Face Tracking Layer:* Yüzün ardışık karelerde takibi  
+- *Decision Layer:* Kimlik doğrulama, alarm ve veri kayıt süreçleri  
+
+---
+
+# 3. NESNE TABANLI TASARIM VE SINIF SORUMLULUKLARI
+
+Sistemin sürdürülebilirliği için önerilen sınıf yapıları aşağıdadır:
+
+| Sınıf Adı           | Temel Fonksiyonlar                         | Sorumluluk                                      |
+|---------------------|--------------------------------------------|-------------------------------------------------|
+| VideoStreamManager  | startStream(), readFrame(), stopStream()   | Kamera akış yönetimi ve veri yakalama           |
+| Preprocessor        | resizeFrame(), normalizeLighting(), denoise() | Görüntü iyileştirme ve normalizasyon        |
+| FaceDetector        | detectFaces()                              | Yüz tespiti ve koordinat üretimi                |
+| FaceTracker         | initTracker(), updateTracker()             | Nesne takibi sürekliliği                        |
+| PerformanceMonitor  | calculateFPS(), logLatency()               | Performans ve kaynak izleme                     |
+
+---
+
+# 4. SİSTEM AKTİVİTE AKIŞI
+
+Sistemin operasyonel akışı aşağıdaki gibidir:
+
+1. Sistem başlatılır ve kamera aktive edilir  
+2. Anlık kare okunur ve ön işleme aktarılır  
+3. Yüz tespiti algoritması çalıştırılır  
+4. Takip mekanizması başlatılır veya güncellenir  
+5. Sonuçlar görselleştirilir ve döngü devam eder  
+
+---
+
+# 5. ALGORİTMALARIN KARŞILAŞTIRMALI ANALİZİ
+
+| Yaklaşım                     | Avantajları                                 | Dezavantajları                                  |
+|-----------------------------|----------------------------------------------|-------------------------------------------------|
+| Haar Cascade                | Yüksek hız, düşük CPU kullanımı              | Işık ve açı değişimlerine duyarlılık            |
+| HOG + SVM                   | Daha kararlı yapı                            | Yüksek çözünürlükte performans düşüşü           |
+| CNN Tabanlı (YuNet / SSD)   | Yüksek doğruluk ve dayanıklılık              | Donanım bağımlılığı (GPU) ihtiyacı olabilir     |
+
+---
+
+# 6. SEÇİLEN ALGORİTMALAR VE TEKNİK GEREKÇELER
+
+Proje kapsamında *OpenCV DNN tabanlı YuNet* veya hafif CNN modelleri tercih edilmiştir.
+
+## * Gerekçeler
+
+- *Kararlılık:* Düşük ışıkta daha iyi performans  
+- *Açı Dayanımı:* Profil ve eğik yüzlerde yüksek başarı  
+- *Entegrasyon:* OpenCV ile optimize uyum  
+
+---
+
+# 7. NESNE TAKİP STRATEJİSİ
+
+Yüz takibi için *KCF (Kernelized Correlation Filters)* algoritması seçilmiştir.
+
+## * Özellikler
+
+- *Yüksek hız:* Gerçek zamanlı kullanım için uygun  
+- *Esneklik:* Gerektiğinde *CSRT* algoritmasına geçiş imkanı  
+
+---
+
+# 8. ÇEVRESEL KOŞULLAR VE OPTİMİZASYON
+
+## * Optimizasyon Teknikleri
+
+- *Aydınlatma:* CLAHE uygulanması  
+- *Açı Kontrolü:* >30° açılarda CNN avantajı kullanımı  
+- *Arka Işık:* Gamma Correction uygulanması  
+
+---
+
+# 9. PERFORMANS VE KAYNAK YÖNETİMİ
+
+Sistem performansını artırmak için:
+
+- *Frame Skipping:* N karede bir tespit yapılması  
+- *ROI Kullanımı:* Sadece ilgili bölgede analiz  
+- *Threading:* Paralel video işleme  
+- *Hafif Modeller:* INT8 / FP16 optimizasyonu  
+
+---
+
+# 10. OPERASYONEL İŞ AKIŞI ÖRNEĞİ
+
+Kamera görüntüsü alınır → ön işleme uygulanır → CNN modeli ile yüz tespiti yapılır → *bounding box* elde edilir → takip modülüne aktarılır → sistem eş zamanlı olarak performans ölçümü yapar.
+
+---
+
+# 11. SEKANSIYEL VERİ AKIŞI
+
+## * Veri Akışı
+
+- Camera → VideoStreamManager  
+- VideoStreamManager → Preprocessor  
+- Preprocessor → FaceDetector  
+- FaceDetector → FaceTracker  
+- FaceTracker → UI  
+
+---
+
+# 12. SONUÇ
+
+CNN tabanlı yüz tespit modeli ile *KCF* takip algoritmasının birlikte kullanımı; **doğruluk, hız ve gerçek zamanlılık** arasında optimum denge sağlamaktadır.  
+
+Tasarlanan mimari yapı, hem akademik standartlara hem de gerçek dünya uygulamalarına uygun, sürdürülebilir ve ölçeklenebilir bir çözüm sunmaktadır.
+
+
+# DUYGU ANALİZİ ALGORİTMASI TASARIM RAPORU
+
+## *Görev Tanımı:* Duygu Analizi Algoritma Tasarımı ve Optimizasyonu  
+## *Proje Aşaması:* Tasarım ve Modelleme  
+## *Hazırlayan:* Muhammed Taha Gökdere
+---
+
+# 1. DUYGU SPEKTRUMU: TESPİT PARAMETRELERİ
+
+Sistem, insan psikolojisindeki *"7 Temel Duygu"* modelini baz almaktadır. Bu duygular, yüz kaslarındaki mikro hareketler üzerinden analiz edilir.
+
+## * Duygu Kategorileri
+
+### * Pozitif Duygular
+- *Mutluluk:* Gülümseme ve göz kenarı kırışıklığı  
+
+### * Negatif Duygular
+- *Üzüntü:* Dudak kenarlarının aşağı sarkması  
+- *Öfke:* Çatık kaşlar  
+- *Korku:* Açık ağız ve gergin gözler  
+- *Tiksinti:* Burun kırıştırma  
+
+### * Dinamik / Anlık Duygular
+- *Şaşkınlık:* Kalkık kaşlar ve açılmış ağız  
+
+### * Referans Durumu
+- *Nötr:* Kas aktivitesi olmayan temel durum  
+
+---
+
+# 2. MODEL KARŞILAŞTIRMASI VE STRATEJİK SEÇİM
+
+Duygu analizi için farklı modeller karşılaştırılmıştır:
+
+| Model             | Odak Noktası          | Uygunluk                                   | Karar   |
+|------------------|----------------------|---------------------------------------------|---------|
+| Google FaceNet   | Kimlik doğrulama     | Düşük (ifadeye değil geometriye odaklı)     | Elendi  |
+| OpenFace         | Gerçek zamanlı hız   | Orta (düşük ışıkta hataya açık)             | Elendi  |
+| VGG-Face         | Derin öznitelik      | Çok yüksek doğruluk                         | SEÇİLDİ |
+
+## * Seçim Gerekçesi
+
+Duygu analizi, yüzün kimliğinden ziyade *anlık ifadesine* odaklanır.  
+*VGG-Face* modeli, çok katmanlı yapısı sayesinde yüz kaslarındaki küçük değişimleri yüksek doğrulukla yakalayabilmektedir.
+
+---
+
+# 3. ALGORİTMANIN ÇALIŞMA MİMARİSİ
+
+Analiz süreci dört temel aşamadan oluşur:
+
+## * 1. Yüz Yakalama ve Hizalama (Alignment)
+- Kafa eğimi düzeltilir  
+- Örneğin: 15° eğim dijital olarak normalize edilir  
+
+## * 2. Işık Normalizasyonu
+- Gölgeler yumuşatılır  
+- Yanlış duygu tespiti engellenir  
+
+## * 3. Vektör Analizi
+- Yüz, binlerce matematiksel noktaya ayrılır  
+- Noktalar arası ilişkiler hesaplanır  
+
+## * 4. Olasılık Hesaplama (Softmax)
+- Duygulara olasılık dağıtılır  
+- Örnek: *%75 Mutlu, %20 Nötr, %5 Şaşkın*  
+
+---
+
+# 4. EĞİTİM VE İNCE AYAR (FINE-TUNING) PLANI
+
+Model doğruluğunu artırmak için *Transfer Learning* uygulanacaktır.
+
+## * Stratejiler
+
+- *Özel Veri Seti:* FER-2013 gibi geniş veri setleri kullanımı  
+- *Katman Dondurma:* İlk katmanlar sabit, son katmanlar eğitilir  
+- *Learning Rate:* 0.0001 ile hassas öğrenme  
+
+---
+
+# 5. GÜVENLİRLİK VE FİLTRELEME TASARIMI
+
+Hatalı sonuçları azaltmak için üç aşamalı kontrol mekanizması:
+
+## * A. Zaman Pencereli Ortalama (Smoothing)
+- Son 15 kare ortalaması alınır  
+- Anlık değişimler filtrelenir  
+
+## * B. Kararlılık Eşiği (Thresholding)
+- Minimum %65 güven skoru şartı  
+- Altı → *Nötr / Belirsiz*  
+
+## * C. Ani Değişim Reddi (Hysteresis)
+- Ani duygu sıçramaları engellenir  
+- Önceki stabil durum korunur  
+
+---
+
+# 6. PERFORMANS BEKLENTİSİ
+
+## * Sistem Performansı
+
+- *Masaüstü / Sunucu:* 25–30 FPS (gerçek zamanlı)  
+- *Mobil / Uç Cihaz:* 10–15 FPS  
+
+## * Doğruluk Oranı
+
+- İdeal koşullarda: *%88 – %92*  
+
+---
+
+# API ENTEGRASYONU VE VERİ AKIŞI TASARIM RAPORU
+
+## *Görev Tanımı:* API Entegrasyonu Tasarımı ve Veri Akışı Yönetimi  
+## *Proje Aşaması:* Tasarım ve Modelleme  
+
+---
+
+# 1. GÖREV ÖZETİ VE KAPSAM
+
+Bu çalışma kapsamında; yüz tanıma, takip ve duygu analizi modüllerinden gelen verileri merkezi bir yapıda toplayan, **RESTful prensiplerine uygun**, **yüksek güvenlikli** ve **ölçeklenebilir** bir API mimarisi tasarlanmıştır.  
+
+Sistemin farklı platformlardan (*Python, C#, Java vb.*) erişilebilir olması sağlanmış ve performans optimizasyonları (*Caching*) devreye alınmıştır.
+
+---
+
+# 2. TEKNİK TASARIM VE GÜVENLİK MEKANİZMASI
+
+Tasarlanan API mimarisinde aşağıdaki ileri seviye teknikler kullanılmıştır:
+
+## * Kimlik Doğrulama ve Yetkilendirme (OAuth2 & JWT)
+- Statik anahtarlar yerine *JWT (JSON Web Token)* kullanılmıştır  
+- Kullanıcılar giriş yaparak *access token* alır  
+- Tüm veri alışverişi bu token üzerinden güvenli şekilde gerçekleştirilir  
+
+## * Modül Entegrasyonu
+- Yüz tanıma, takip ve duygu verileri tek bir veri modelinde birleştirilmiştir  
+- Ortak veri modeli: *AnalizSonucu (JSON)*  
+- Veri bütünlüğü sağlanmıştır  
+
+## * Ölçeklenebilirlik ve Önbellekleme (Caching)
+- API önünde bir *cache katmanı* oluşturulmuştur  
+- Tekrarlı istekler doğrudan bellekten karşılanır  
+- Yapay zeka modüllerinin yükü azaltılır  
+
+---
+
+# 3. UYGULAMA VE TEST KANITLARI
+
+## * A. API Güvenlik Katmanı (JWT Auth)
+
+- Sistem yetkisiz erişimlere karşı korunmuştur  
+- *Swagger UI* üzerinden OAuth2 ile test edilebilir yapı sağlanmıştır  
+- Geliştiriciler için güvenli endpoint test ortamı sunulmuştur  
+<img width="1900" height="268" alt="Ekran Resmi 2026-04-22 14 36 57" src="https://github.com/user-attachments/assets/9fd7e31b-b359-4b4f-b66e-df011d68c1a8" />
+
+---
+
+## * B. Entegre Veri Akışı ve 200 OK Yanıtı
+
+Yüz, takip ve duygu verilerinin eş zamanlı olarak API üzerinden iletildiği ve sistemin başarılı şekilde yanıt verdiği doğrulanmıştır.
+
+<img width="2894" height="1438" alt="Ekran Resmi 2026-04-22 14 37 42" src="https://github.com/user-attachments/assets/d9e70adf-ce61-4d73-a485-6110e040b0ac" />
+
+### * Örnek JSON Çıktısı
+
+```json
+{
+  "kamera_id": 1,
+  "tespit_id": 102,
+  "kisi_adi": "Bilinmeyen",
+  "duygu": "Mutlu",
+  "koordinat": [150, 200, 50, 50],
+  "guven_skoru": 0.94
+}
+```
+## C. Performans ve Önbellekleme (Cache) Testi
+
+Tekrarlı isteklerde sistemin önbellekten veri döndürdüğü doğrulanmıştır.
+
+İşlem süresinde ciddi düşüş gözlemlenmiştir.
+
+**Test çıktısı:** "Veri ÖNBELLEKTEN (Cache) hızlıca getirildi"
+<img width="2940" height="429" alt="Ekran Resmi 2026-04-22 15 05 38" src="https://github.com/user-attachments/assets/65cfce22-81a7-4649-9797-7663738498e7" />
+
+## D. Farklı Platformlardan Erişim (Client-Side Test)
+API'nin farklı istemciler üzerinden erişilebilir olduğu doğrulanmıştır
+Python ve diğer platformlardan başarılı bağlantı sağlanmıştır
+JWT ile güvenli veri aktarımı gerçekleştirilmiştir
+<img width="2215" height="255" alt="Ekran Resmi 2026-04-22 14 38 04" src="https://github.com/user-attachments/assets/9eed7bad-b262-4164-8255-4036a0a4e064" />
+
+# 4. SONUÇ
+Hafta 3 çalışmaları sonucunda; modüllerin entegre edildiği, yüksek güvenlikli ve performanslı bir API mimarisi başarıyla oluşturulmuştur.
+Bu yapı, projenin web paneli, mobil uygulama ve diğer dış sistemlerle olan iletişiminin temelini oluşturmaktadır.
