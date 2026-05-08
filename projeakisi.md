@@ -549,12 +549,13 @@ Hafta 3 kapsamında ekip olarak aşağıdaki teknik hedeflere odaklanılmıştı
 * Kullanıcı Deneyimi: Yönetim paneli için wireframe taslaklarının oluşturulması ve kullanıcı akış senaryolarının netleştirilmesi.
 
 3. GÖREV DAĞILIMI VE SORUMLULUK MATRİSİ
+Projenin bu aşamasında, her ekip üyesi kendi uzmanlık alanı doğrultusunda sistemin bir modülünün teknik tasarımından sorumlu tutulmuştur.
+
 * Şeyma Nur Katar (Grup Yöneticisi / Veritabanı Mimarı): SQLite veritabanı şemasının tasarımı, tablolar arası ilişkiler ve veri güvenliği planı.
 * Hatice Kırmızıgül (Analiz Uzmanı / Görüntü İşleme Mimarı): Haar Cascade ve KCF tabanlı yüz tanıma/takip mimarisi ve UML diyagramlarının oluşturulması.
-* Muhammed Taha Gökdere (Analiz Uzmanı / Yapay Zeka Tasarımcısı): PyTorch (CNN) modeli ile duygu analizi algoritması ve filtreleme süreçlerinin tasarımı.
+* Muhammed Taha Gökdere (Analiz Uzmanı / Yapay Zeka Tasarımcısı): PyTorch (ViT Modeli) ile duygu analizi algoritması ve filtreleme süreçlerinin tasarımı.
 * Eren Bilge Koçak (Yazılım Geliştirici / Entegrasyon Sorumlusu): REST API (FastAPI), JWT güvenlik yapısı ve veri akış şeması.
-* Mehmet Berat Uygur (UI/UX Tasarımcısı / Arayüz Geliştirici): Yönetim paneli wireframe taslakları ve responsive tasarım planlaması.
----
+* Mehmet Berat Uygur (UI/UX Tasarımcısı / Arayüz Geliştirici): Web Paneli (FastAPI ve Chart.js destekli) wireframe taslakları ve responsive tasarım planlaması.
 
 # 4. SONUÇ
 
@@ -606,53 +607,42 @@ Sistemin mimari tasarımıyla uyumlu olacak şekilde aşağıdaki tablolar tanı
 ### *2.1 Tablo: users (Sistem Yetkilileri)*
 
 Yönetim paneline erişim yetkisi bulunan kullanıcı bilgilerini tutar.
-
-| Sütun Adı      | Veri Tipi   | Özellik            | Açıklama                          |
-|----------------|------------|--------------------|----------------------------------|
-| user_id        | Serial     | Primary Key        | Kullanıcı benzersiz kimliği      |
-| username       | Varchar(50)| Unique, Not Null   | Sisteme giriş adı                |
-| password_hash  | Text       | Not Null           | Bcrypt ile korunmuş şifre        |
-| role           | Varchar(20)| Not Null           | Yetki düzeyi (Admin, Operatör)   |
-
----
+| Sütun Adı | Veri Tipi | Özellik | Açıklama |
+| :--- | :--- | :--- | :--- |
+| user_id | INTEGER | Primary Key | Kullanıcı benzersiz kimliği (Auto Increment) |
+| username | Varchar(50) | Unique, Not Null | Sisteme giriş adı |
+| password_hash | Text | Not Null | Bcrypt ile korunmuş şifre |
+| role | Varchar(20) | Not Null | Yetki düzeyi (Admin, Operatör) |
 
 ### *2.2 Tablo: cameras (Donanım Kaynakları)*
-
 Sisteme bağlı görüntü kaynaklarının konfigürasyonlarını saklar.
-
-| Sütun Adı   | Veri Tipi    | Özellik      | Açıklama                     |
-|-------------|-------------|--------------|------------------------------|
-| camera_id   | Serial      | Primary Key  | Kamera benzersiz kimliği     |
-| camera_name | Varchar(100)| Not Null     | Kamera lokasyon bilgisi      |
-| stream_url  | Text        | Not Null     | RTSP veya donanım yolu       |
-
----
+| Sütun Adı | Veri Tipi | Özellik | Açıklama |
+| :--- | :--- | :--- | :--- |
+| camera_id | INTEGER | Primary Key | Kamera benzersiz kimliği (Auto Increment) |
+| camera_name | Varchar(100) | Not Null | Kamera lokasyon bilgisi |
+| stream_url | Text | Not Null | RTSP veya donanım yolu |
 
 ### *2.3 Tablo: detections (Yüz Tespit ve Takip Kayıtları)*
-
-Yüz tespit (*Haar Cascade*) ve takip (*KCF*) modüllerinden gelen verileri saklar.
-
-| Sütun Adı        | Veri Tipi  | Özellik            | Açıklama                                |
-|------------------|-----------|--------------------|------------------------------------------|
-| detection_id     | BigSerial | Primary Key        | Tespit benzersiz kimliği                 |
-| camera_id        | Integer   | Foreign Key        | Kaynak kamera                            |
-| bounding_box     | JSONB     | Not Null           | Koordinatlar (x, y, w, h)                |
-| confidence_score | Float     | Not Null           | Tespit doğruluk oranı                    |
-| tracker_info     | Varchar(50)| Not Null          | Kullanılan takip algoritması             |
-| timestamp        | Timestamp | Default Now()      | Kayıt zamanı                             |
-
----
+Yüz tespit (Haar Cascade) ve takip (KCF) modüllerinden gelen verileri saklar.
+| Sütun Adı | Veri Tipi | Özellik | Açıklama |
+| :--- | :--- | :--- | :--- |
+| detection_id | INTEGER | Primary Key | Tespit benzersiz kimliği (Auto Increment) |
+| camera_id | INTEGER | Foreign Key | Kaynak kamera |
+| bounding_box | TEXT (JSON) | Not Null | Koordinatlar (x, y, w, h) |
+| confidence_score | Float | Not Null | Tespit doğruluk oranı |
+| tracker_info | Varchar(50) | Not Null | Kullanılan takip algoritması |
+| timestamp | Timestamp | Default Now() | Kayıt zamanı |
 
 ### *2.4 Tablo: emotion_analysis (Analiz Sonuçları)*
-
 Duygu analizi sonuçlarını tespit verileriyle ilişkilendirir.
+| Sütun Adı | Veri Tipi | Özellik | Açıklama |
+| :--- | :--- | :--- | :--- |
+| analysis_id | INTEGER | Primary Key | Analiz kimliği (Auto Increment) |
+| detection_id | INTEGER | Foreign Key | İlgili tespit verisi |
+| emotion_label | Varchar(20) | Not Null | Tahmin edilen duygu |
+| score | Float | Not Null | Güven skoru |
 
-| Sütun Adı     | Veri Tipi  | Özellik      | Açıklama                          |
-|---------------|-----------|--------------|----------------------------------|
-| analysis_id   | BigSerial | Primary Key  | Analiz kimliği                   |
-| detection_id  | BigInt    | Foreign Key  | İlgili tespit verisi             |
-| emotion_label | Varchar(20)| Not Null    | Tahmin edilen duygu              |
-| score         | Float     | Not Null     | Güven skoru                      |
+
 
 ---
 
@@ -745,21 +735,21 @@ Sistemin operasyonel akışı aşağıdaki gibidir:
 
 ## 5. ALGORİTMALARIN KARŞILAŞTIRMALI ANALİZİ
 
-| Yaklaşım                     | Avantajları                                 | Dezavantajları                                  |
-|-----------------------------|----------------------------------------------|-------------------------------------------------|
-| Haar Cascade                | Yüksek hız, düşük CPU kullanımı              | Işık ve açı değişimlerine duyarlılık            |
-| HOG + SVM                   | Daha kararlı yapı                            | Yüksek çözünürlükte performans düşüşü           |
-| CNN Tabanlı (YuNet / SSD)   | Yüksek doğruluk ve dayanıklılık              | Donanım bağımlılığı (GPU) ihtiyacı olabilir     |
-
+5. ALGORİTMALARIN KARŞILAŞTIRMALI ANALİZİ
+| Yaklaşım | Avantajları | Dezavantajları |
+| :--- | :--- | :--- |
+| Haar Cascade | Yüksek hız, minimum CPU kullanımı ve Frame Skipping uyumu | Işık ve açı değişimlerine duyarlılık (Histogram eşitleme ile çözülecek) |
+| HOG + SVM | Daha kararlı yapı | Yüksek çözünürlükte performans düşüşü |
+| CNN Tabanlı Modeller | Yüksek doğruluk ve dayanıklılık | Donanım bağımlılığı (CPU'da FPS darboğazı) |
 ---
 
 ## 6. SEÇİLEN ALGORİTMALAR VE TEKNİK GEREKÇELER
-Proje kapsamında yüz tespiti için OpenCV (Haar Cascade) algoritması tercih edilmiştir.
-### * Gerekçeler
-Hız ve Gerçek Zamanlılık: DNN tabanlı modellerin yarattığı CPU yükünden kaçınılarak Frame Skipping (Kare Atlama) mantığı ile milisaniyeler içinde tespit yapılabilmesi.
-Kaynak Tasarrufu: Yüz tespiti yükünün minimuma indirilerek ana işlemci gücünün PyTorch tabanlı duygu analizi modeline ayrılması.
-Entegrasyon: KCF takip algoritmasıyla %100 uyumlu ve optimize çalışması.
 
+Proje kapsamında yüz tespiti için OpenCV (Haar Cascade) algoritması tercih edilmiştir.
+* Gerekçeler
+Kararlılık: Frame Skipping mantığıyla çalıştığında milisaniyeler içinde sonuç vermesi.
+Kaynak Tasarrufu: Ağır DNN/CNN tabanlı modellerden kaçınılarak CPU gücünün tamamen ana duygu analizi modeline (ViT) ayrılması.
+Entegrasyon: KCF takip algoritmasıyla %100 uyumlu ve optimize çalışması.
 ---
 
 ## 7. NESNE TAKİP STRATEJİSİ
@@ -796,7 +786,8 @@ Sistem performansını artırmak için:
 
 ## 10. OPERASYONEL İŞ AKIŞI ÖRNEĞİ
 
-Kamera görüntüsü alınır → ön işleme uygulanır → CNN modeli ile yüz tespiti yapılır → *bounding box* elde edilir → takip modülüne aktarılır → sistem eş zamanlı olarak performans ölçümü yapar.
+Kamera görüntüsü alınır → ön işleme uygulanır → Haar Cascade algoritması ile yüz tespiti yapılır  → *bounding box* elde edilir → takip modülüne aktarılır → sistem eş zamanlı olarak performans ölçümü yapar.
+
 
 ---
 
