@@ -540,46 +540,20 @@ Bu döküman, Fırat Üniversitesi Yazılım Mühendisliği Bölümü bünyesind
 
 ---
 
-# 2. HAFTALIK ODAK NOKTASI VE HEDEFLER
-
+2. HAFTALIK ODAK NOKTASI VE HEDEFLER
 Hafta 3 kapsamında ekip olarak aşağıdaki teknik hedeflere odaklanılmıştır:
+* Sistem Mimarisi: Görüntü işleme hattının (pipeline) katmanlı bir yapıda tasarlanması ve OpenCV (Haar Cascade) ile KCF entegrasyonunun planlanması.
+* Veri Yönetimi: Donanım dostu SQLite üzerinde analiz sonuçlarının ve kullanıcı bilgilerinin saklanması. Tutarlı bir ilişkisel veritabanı şemasının oluşturulması.
+* API ve Haberleşme: Modüller arası veri transferi için REST API (FastAPI) uç noktalarının planlanması ve JWT tabanlı güvenlik mekanizmasının belirlenmesi.
+* Algoritma Optimizasyonu: PyTorch (CNN) modeli üzerinden duygu analizi süreçlerinin iyileştirilmesi ve hata payını minimize edecek filtreleme tekniklerinin geliştirilmesi.
+* Kullanıcı Deneyimi: Yönetim paneli için wireframe taslaklarının oluşturulması ve kullanıcı akış senaryolarının netleştirilmesi.
 
-## * Sistem Mimarisi
-* Görüntü işleme hattının (*pipeline*) katmanlı bir yapıda tasarlanması  
-* YuNet/KCF entegrasyonunun planlanması  
-
-## * Veri Yönetimi
-* PostgreSQL üzerinde analiz sonuçlarının ve kullanıcı bilgilerinin saklanması  
-* Tutarlı bir ilişkisel veritabanı şemasının oluşturulması  
-
-## * API ve Haberleşme
-* Modüller arası veri transferi için API uç noktalarının planlanması  
-* JWT tabanlı güvenlik mekanizmasının belirlenmesi  
-
-## * Algoritma Optimizasyonu
-* VGG-Face modeli üzerinden duygu analizi süreçlerinin iyileştirilmesi  
-* Hata payını minimize edecek filtreleme tekniklerinin geliştirilmesi  
-
-## * Kullanıcı Deneyimi
-* Yönetim paneli için wireframe taslaklarının oluşturulması  
-* Kullanıcı akış senaryolarının netleştirilmesi  
-
----
-
-# 3. GÖREV DAĞILIMI VE SORUMLULUK MATRİSİ
-
-Projenin bu aşamasında, her ekip üyesi kendi uzmanlık alanı doğrultusunda sistemin bir modülünün teknik tasarımından sorumlu tutulmuştur.
-
-## * Piksel Mühendisleri Ekibi
-
-| Sorumlu Üye            | Proje Rolü                                   | Hafta 3 Teknik Görev Tanımı                                                                 |
-|-----------------------|----------------------------------------------|---------------------------------------------------------------------------------------------|
-| Şeyma Nur Katar       | *Grup Yöneticisi / Veritabanı Mimarı*        | PostgreSQL veritabanı şemasının tasarımı, tablolar arası ilişkiler ve veri güvenliği planı |
-| Hatice Kırmızıgül     | *Analiz Uzmanı / Görüntü İşleme Mimarı*      | YuNet ve KCF tabanlı yüz tanıma/takip mimarisi ve UML diyagramlarının oluşturulması        |
-| Muhammed Taha Gökdere | *Analiz Uzmanı / Yapay Zeka Tasarımcısı*     | VGG-Face modeli ile duygu analizi algoritması ve filtreleme süreçlerinin tasarımı          |
-| Eren Bilge Koçak      | *Yazılım Geliştirici / Entegrasyon Sorumlusu*| RESTful API, JWT güvenlik yapısı ve veri akış şeması                                        |
-| Mehmet Berat Uygur    | *UI/UX Tasarımcısı / Arayüz Geliştirici*     | Yönetim paneli wireframe taslakları ve responsive tasarım planlaması                       |
-
+3. GÖREV DAĞILIMI VE SORUMLULUK MATRİSİ
+* Şeyma Nur Katar (Grup Yöneticisi / Veritabanı Mimarı): SQLite veritabanı şemasının tasarımı, tablolar arası ilişkiler ve veri güvenliği planı.
+* Hatice Kırmızıgül (Analiz Uzmanı / Görüntü İşleme Mimarı): Haar Cascade ve KCF tabanlı yüz tanıma/takip mimarisi ve UML diyagramlarının oluşturulması.
+* Muhammed Taha Gökdere (Analiz Uzmanı / Yapay Zeka Tasarımcısı): PyTorch (CNN) modeli ile duygu analizi algoritması ve filtreleme süreçlerinin tasarımı.
+* Eren Bilge Koçak (Yazılım Geliştirici / Entegrasyon Sorumlusu): REST API (FastAPI), JWT güvenlik yapısı ve veri akış şeması.
+* Mehmet Berat Uygur (UI/UX Tasarımcısı / Arayüz Geliştirici): Yönetim paneli wireframe taslakları ve responsive tasarım planlaması.
 ---
 
 # 4. SONUÇ
@@ -613,13 +587,13 @@ Projenin temel hedefi olan *gerçek zamanlı analiz yeteneğini* desteklemek ama
 
 ## 1. VERİTABANI YÖNETİM SİSTEMİ (DBMS) SEÇİMİ
 
-Sistemin tüm bileşenlerinden gelen verilerin **kalıcı, güvenli ve performanslı** bir şekilde saklanması için veritabanı yönetim sistemi olarak *PostgreSQL* tercih edilmiştir.
+Sistemin donanım kısıtları göz önüne alınarak, tüm bileşenlerden gelen verilerin hafif, hızlı ve sistemi yormayan bir şekilde saklanması için veritabanı yönetim sistemi olarak SQLite tercih edilmiştir.
 
 ### *Seçim Gerekçeleri*
+* Düşük Kaynak Tüketimi: RAM ve CPU darboğazlarını engellemek adına sunucusuz ve dosya tabanlı hafif mimarisi.
+* Hızlı Prototipleme: Konfigürasyon gerektirmeden doğrudan dosya üzerinden hızlı okuma/yazma işlemleri yapabilmesi.
+* İlişkisel Veri Kararlılığı: Kullanıcı, tespit ve analiz verileri arasındaki karmaşık ilişkilerin korunması ve Foreign Key desteği.
 
-- *İlişkisel Veri Kararlılığı:* Kullanıcı, tespit ve analiz verileri arasındaki karmaşık ilişkilerin korunması  
-- *JSONB Desteği:* Yapay zeka modellerinden gelen dinamik verilerin esnek şekilde saklanabilmesi  
-- *Yüksek Yük Performansı:* Yoğun veri akışında güçlü indeksleme kabiliyeti  
 
 ---
 
@@ -656,7 +630,7 @@ Sisteme bağlı görüntü kaynaklarının konfigürasyonlarını saklar.
 
 ### *2.3 Tablo: detections (Yüz Tespit ve Takip Kayıtları)*
 
-Yüz tespit (*YuNet*) ve takip (*KCF*) modüllerinden gelen verileri saklar.
+Yüz tespit (*Haar Cascade*) ve takip (*KCF*) modüllerinden gelen verileri saklar.
 
 | Sütun Adı        | Veri Tipi  | Özellik            | Açıklama                                |
 |------------------|-----------|--------------------|------------------------------------------|
@@ -780,14 +754,11 @@ Sistemin operasyonel akışı aşağıdaki gibidir:
 ---
 
 ## 6. SEÇİLEN ALGORİTMALAR VE TEKNİK GEREKÇELER
-
-Proje kapsamında *OpenCV DNN tabanlı YuNet* veya hafif CNN modelleri tercih edilmiştir.
-
+Proje kapsamında yüz tespiti için OpenCV (Haar Cascade) algoritması tercih edilmiştir.
 ### * Gerekçeler
-
-- *Kararlılık:* Düşük ışıkta daha iyi performans  
-- *Açı Dayanımı:* Profil ve eğik yüzlerde yüksek başarı  
-- *Entegrasyon:* OpenCV ile optimize uyum  
+Hız ve Gerçek Zamanlılık: DNN tabanlı modellerin yarattığı CPU yükünden kaçınılarak Frame Skipping (Kare Atlama) mantığı ile milisaniyeler içinde tespit yapılabilmesi.
+Kaynak Tasarrufu: Yüz tespiti yükünün minimuma indirilerek ana işlemci gücünün PyTorch tabanlı duygu analizi modeline ayrılması.
+Entegrasyon: KCF takip algoritmasıyla %100 uyumlu ve optimize çalışması.
 
 ---
 
@@ -843,10 +814,7 @@ Kamera görüntüsü alınır → ön işleme uygulanır → CNN modeli ile yüz
 
 ## 12. SONUÇ
 
-CNN tabanlı yüz tespit modeli ile *KCF* takip algoritmasının birlikte kullanımı; **doğruluk, hız ve gerçek zamanlılık** arasında optimum denge sağlamaktadır.  
-
-Tasarlanan mimari yapı, hem akademik standartlara hem de gerçek dünya uygulamalarına uygun, sürdürülebilir ve ölçeklenebilir bir çözüm sunmaktadır.
-
+Haar Cascade yüz tespit algoritması ile KCF takip algoritmasının birlikte kullanımı; doğruluk, hız ve gerçek zamanlılık arasında optimum denge sağlamaktadır. Tasarlanan bu hafif mimari yapı, donanım darboğazlarını önleyerek sürdürülebilir bir çözüm sunmaktadır.
 
 # DUYGU ANALİZİ ALGORİTMASI TASARIM RAPORU
 
@@ -880,18 +848,16 @@ Sistem, insan psikolojisindeki *"7 Temel Duygu"* modelini baz almaktadır. Bu du
 
 ## 2. MODEL KARŞILAŞTIRMASI VE STRATEJİK SEÇİM
 
-Duygu analizi için farklı modeller karşılaştırılmıştır:
+Duygu analizi için farklı modeller karşılaştırılmış ve ilk hafta başarıyla test edilen yapıya sadık kalınmıştır:
 
-| Model             | Odak Noktası          | Uygunluk                                   | Karar   |
-|------------------|----------------------|---------------------------------------------|---------|
-| Google FaceNet   | Kimlik doğrulama     | Düşük (ifadeye değil geometriye odaklı)     | Elendi  |
-| OpenFace         | Gerçek zamanlı hız   | Orta (düşük ışıkta hataya açık)             | Elendi  |
-| VGG-Face         | Derin öznitelik      | Çok yüksek doğruluk                         | SEÇİLDİ |
+| Model | Odak Noktası | Uygunluk | Karar |
+| :--- | :--- | :--- | :--- |
+| Google FaceNet | Kimlik doğrulama | Düşük (ifadeye değil geometriye odaklı) | Elendi |
+| OpenFace | Gerçek zamanlı hız | Orta (düşük ışıkta hataya açık) | Elendi |
+| **PyTorch (CNN)** | Derin öznitelik ve esnek optimizasyon | Çok yüksek doğruluk ve donanım uyumu | **SEÇİLDİ** |
 
-### * Seçim Gerekçesi
-
-Duygu analizi, yüzün kimliğinden ziyade *anlık ifadesine* odaklanır.  
-*VGG-Face* modeli, çok katmanlı yapısı sayesinde yüz kaslarındaki küçük değişimleri yüksek doğrulukla yakalayabilmektedir.
+**Seçim Gerekçesi**
+Duygu analizi, yüzün kimliğinden ziyade anlık ifadesine odaklanır. PyTorch tabanlı dima806 (CNN) modeli, donanım yetersizliklerine karşı geliştirdiğimiz "Frame Skipping" mimarisiyle tam bir uyum içinde çalışmakta ve FPS darboğazı yaratmadan mikro-mimikleri yüksek doğrulukla yakalayabilmektedir.
 
 ---
 
@@ -1053,7 +1019,7 @@ Bu yapı, projenin web paneli, mobil uygulama ve diğer dış sistemlerle olan i
 
 ## 1. GİRİŞ
 
-Bu çalışma kapsamında, sistemin yönetilmesi ve analiz sonuçlarının izlenmesi amacıyla Flask ve JavaScript teknolojileri üzerine kurgulanacak web tabanlı yönetim panelinin arayüz tasarımı oluşturulmuştur.
+Bu çalışma kapsamında, sistemin yönetilmesi ve analiz sonuçlarının izlenmesi amacıyla FastAPI ve JavaScript teknolojileri üzerine kurgulanacak web tabanlı yönetim panelinin arayüz tasarımı oluşturulmuştur.
 
 Tasarımın temel odak noktası; karmaşık analiz verilerinin anlaşılır bir şekilde görselleştirilmesi, sistem konfigürasyonlarının kolayca yönetilmesi ve raporlama süreçlerinin optimize edilmesidir.
 
@@ -1116,12 +1082,11 @@ Sistemin tüm cihazlarda erişilebilir olması için aşağıdaki stratejiler uy
 
 ## 7. KULLANILAN TEKNOLOJİ YIĞINI
 
-Arayüz geliştirme sürecinde kullanılan teknolojiler:
-
-- **Backend:** Flask (Python)
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-- **UI Framework:** Tailwind CSS / Bootstrap
-- **Grafik Kütüphaneleri:** Chart.js / D3.js
+Arayüz geliştirme ve entegrasyon sürecinde kullanılan teknolojiler:
+**Backend:** FastAPI (Python) - Asenkron ve yüksek performanslı veri transferi için.
+**Frontend:** HTML5, CSS3, JavaScript (ES6+)
+**UI Framework:** Tailwind CSS / Bootstrap
+**Grafik Kütüphaneleri:** Chart.js (Dinamik veri görselleştirme için)
 
 ---
 
