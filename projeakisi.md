@@ -574,7 +574,7 @@ Bu döküman, *"Yüz Tanıma ve Duygu Analizi Sistemi"* projesinin üçüncü ha
 
 Projenin temel hedefi olan *gerçek zamanlı analiz yeteneğini* desteklemek amacıyla, veri saklama ve işleme süreçleri **en düşük gecikme süresini hedefleyecek şekilde** kurgulanmıştır.
 
-Üçüncü hafta itibarıyla, sistemin *"Görüntü İşleme"* ve *"Veri Yönetimi"* katmanları arasındaki entegrasyon noktaları belirlenmiş; kullanılan algoritmaların (*YuNet, KCF*) üreteceği verilerin tutarlılığını sağlayacak ilişkisel model tasarlanmıştır.
+Üçüncü hafta itibarıyla, sistemin *"Görüntü İşleme"* ve *"Veri Yönetimi"* katmanları arasındaki entegrasyon noktaları belirlenmiş; kullanılan algoritmaların (*Haar Cascade, KCF*) üreteceği verilerin tutarlılığını sağlayacak ilişkisel model tasarlanmıştır.
 
 ---
 
