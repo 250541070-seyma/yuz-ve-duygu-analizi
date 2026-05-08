@@ -99,8 +99,8 @@ Sistem, "Yüz var mı?", "Bu kim?" ve "Ne hissediyor?" sorularına gerçek zaman
 ### **4. Sistem Mimarisi ve Veri Akış Şeması**
 Sistem dört ana katman üzerinde kurgulanmıştır:
 1.  **Input Layer:** `cv2.VideoCapture(0)` ile yerel veya IP kameradan akış alınır.
-2.  **Processing Layer (OpenCV):** Haar Cascades veya DNN modülü ile yüz koordinatları (Bounding Box) belirlenir.
-3.  **Analysis Layer (DeepFace):** Kırpılan yüz görüntüsü VGG-Face veya Facenet modellerine gönderilir; duygu vektörü çıkarılır.
+2.  **Processing Layer (OpenCV):** Processing Layer (OpenCV): Haar Cascades ile yüz koordinatları (Bounding Box) belirlenir."
+3.  **Analysis Layer (PyTorch):** Kırpılan yüz görüntüsü PyTorch framework'ü üzerinden önceden eğitilmiş CNN modeline (dima806/facial_emotions_image_detection) gönderilir; duygu vektörü çıkarılır.
 4.  **Presentation Layer (Flask & JS):** Sonuçlar WebSockets veya HTTP polling ile arayüze aktarılır; Chart.js ile duygu değişim grafiği çizilir.
 
 ### **5. Kullanım Senaryosu (Use Case Description)**
@@ -112,7 +112,7 @@ Sistem dört ana katman üzerinde kurgulanmıştır:
 | **Sistem** | Duygu eşiği aşılırsa (Örn: %90 Kızgın). | Log sistemine "Yüksek Stres Seviyesi" uyarısı düşer. |
 
 ### **6. Proje Kısıtları (Constraints)**
-* **Donanım:** Uygulama, DeepFace modellerinin ağırlığı nedeniyle en az **8 GB RAM** ve **Modern bir CPU/GPU** gerektirir.
+* **Donanım:** Uygulama, derin öğrenme (CNN) tabanlı modelin anlık işleme gereksinimleri nedeniyle en az 8 GB RAM ve Modern bir CPU/GPU gerektirir
 * **Yazılım:** Python 3.9+ sürümü zorunludur.
 
 
