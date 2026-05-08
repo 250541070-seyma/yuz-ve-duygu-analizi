@@ -845,10 +845,10 @@ Duygu analizi için farklı modeller karşılaştırılmış ve ilk hafta başar
 | :--- | :--- | :--- | :--- |
 | Google FaceNet | Kimlik doğrulama | Düşük (ifadeye değil geometriye odaklı) | Elendi |
 | OpenFace | Gerçek zamanlı hız | Orta (düşük ışıkta hataya açık) | Elendi |
-| **PyTorch (CNN)** | Derin öznitelik ve esnek optimizasyon | Çok yüksek doğruluk ve donanım uyumu | **SEÇİLDİ** |
+| **PyTorch (ViT Modeli)** | Transformer tabanlı derin öznitelik çıkarımı | Çok yüksek doğruluk ve esnek donanım uyumu | **SEÇİLDİ** |
 
 **Seçim Gerekçesi**
-Duygu analizi, yüzün kimliğinden ziyade anlık ifadesine odaklanır. PyTorch tabanlı dima806 (CNN) modeli, donanım yetersizliklerine karşı geliştirdiğimiz "Frame Skipping" mimarisiyle tam bir uyum içinde çalışmakta ve FPS darboğazı yaratmadan mikro-mimikleri yüksek doğrulukla yakalayabilmektedir.
+Duygu analizi, yüzün kimliğinden ziyade anlık ifadesine odaklanır. PyTorch tabanlı dima806 (Vision Transformer - ViT) modeli, klasik CNN'lere göre görüntünün tamamındaki ilişkileri (attention mekanizması ile) çok daha iyi analiz etmektedir. Donanım yetersizliklerine karşı geliştirdiğimiz "Frame Skipping" mimarisiyle tam bir uyum içinde çalışmakta ve FPS darboğazı yaratmadan mikro-mimikleri yüksek doğrulukla yakalayabilmektedir.
 
 ---
 
