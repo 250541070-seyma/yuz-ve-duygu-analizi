@@ -211,21 +211,25 @@ Proje: Yüz Tanıma ve Duygu Analizi Sistemi
 Bu döküman; sistemin geliştirilmesinde kullanılacak olan yazılım dillerinin, kütüphanelerin ve frameworklerin seçim süreçlerini, bu seçimlerin nedenlerini, avantajlarını ve olası risklere karşı geliştirilen çözüm önerilerini kapsamaktadır. Projenin teknik bütünlüğü ve akademik gereksinimler doğrultusunda belirlenen bu teknolojiler, tüm ekip üyeleri için bağlayıcıdır.
 
 
- ### 2. TEKNOLOJİ ANALİZİ VE SEÇİM GEREKÇELERİ
-Teknoloji	Seçim Amacı	Avantajı	Dezavantajı / Risk
-Python 3.9+	Ana Programlama Dili	AI/ML kütüphane desteği, hızlı prototipleme ve geniş topluluk desteği.	C++'a göre daha yavaş çalışma hızı (GIL kısıtlaması).
-OpenCV	Görüntü İşleme	Gerçek zamanlı (Real-time) işlem hızı, düşük kaynak tüketimi.	Karmaşık ışıklandırma koşullarında doğruluk kaybı riski.
-DeepFace	Duygu Analizi Modeli	Birden fazla CNN modelini (VGG-Face, Facenet) tek çatıda desteklemesi.	Yüksek işlem yükü (CPU/GPU) gereksinimi.
-Flask	Backend Framework	Mikro-mimari yapısı sayesinde hafif, hızlı ve esnek entegrasyon.	Çok yüksek trafikli sistemlerde ek yapılandırma gerektirmesi.
-JavaScript	Frontend & Dashboard	Dinamik veri görselleştirme (Chart.js) ve zengin kullanıcı etkileşimi.	Tarayıcı uyumluluğu ve performans takibi gereksinimi.
+
+### 2. TEKNOLOJİ ANALİZİ VE SEÇİM GEREKÇELERİ
+
+| Teknoloji | Seçim Amacı | Avantajı | Dezavantajı / Risk |
+| :--- | :--- | :--- | :--- |
+| **Python 3.9+** | Ana Programlama Dili | AI/ML kütüphane desteği, hızlı prototipleme ve geniş topluluk desteği. | C++'a göre daha yavaş çalışma hızı (GIL kısıtlaması). |
+| **OpenCV (Haar Cascade)** | Görüntü İşleme | Gerçek zamanlı (Real-time) işlem hızı, düşük kaynak tüketimi. | Karmaşık ışıklandırma koşullarında doğruluk kaybı riski. |
+| **PyTorch (CNN)** | Duygu Analizi Modeli | Önceden eğitilmiş dima806 modeli ile yüksek doğruluk ve esnek optimizasyon. | CPU üzerinde çalışırken frame skipping gerektirmesi. |
+| **FastAPI** | Backend Framework | Asenkron yapısı sayesinde yüksek performanslı REST API entegrasyonu. | Çok yüksek trafikli sistemlerde ek yapılandırma gerektirmesi. |
+| **JavaScript** | Frontend & Dashboard | Dinamik veri görselleştirme (Chart.js) ve zengin kullanıcı etkileşimi. | Tarayıcı uyumluluğu ve performans takibi gereksinimi. |
 
 
 
 
  ### 3. DERİNLEMESİNE DEĞERLENDİRME VE RİSK ANALİZİ
-3.1. Neden Python ve Flask?
-Projenin temelinde yer alan derin öğrenme modellerinin en kararlı performansı Python ekosisteminde (PyTorch/TensorFlow) vermesi nedeniyle Python ana dildir. Flask ise, projenin modüler yapısını korumak ve sistemler arası veri akışını (API katmanı) karmaşıklaştırmadan yönetmek için tercih edilmiştir.
-3.2. OpenCV (Haar Cascade) Tercih Nedeni
+#### 3.1. Neden Python ve FastAPI?
+Projenin temelinde yer alan derin öğrenme modellerinin en kararlı performansı Python ekosisteminde vermesi nedeniyle Python ana dildir. FastAPI ise, projenin sistemler arası veri akışını (API katmanı) asenkron uç noktalarla çok daha hızlı ve düşük gecikmeyle (REST standartlarında) yönetmek için tercih edilmiştir.
+
+#### 3.2. OpenCV (Haar Cascade) Tercih Nedeni
 Dlib veya MTCNN gibi ağır modeller yerine OpenCV Haar Cascade seçilmiştir.
 •	Gerekçe: Gerçek zamanlı analizde FPS değerini korumak, doğruluğu bir miktar feda edip akıcılığı artırmaktan geçmektedir.
 •	Risk Yönetimi: Düşük ışıkta yüz kaçırma ihtimaline karşı, görüntü ön işleme katmanında Histogram Eşitleme(Equalization) kullanılarak kontrast artırılacaktır.
@@ -317,26 +321,16 @@ Kaynak (CPU)	Yüksek Kullanım	Çok Yüksek (Hantal)	Orta
 Kaynak (GPU)	4GB+ VRAM İdeal	8GB+ VRAM Önerilir	2GB+ VRAM Yeterli
 
 
+
 ### 3. Proje Gereksinimlerine Göre Algoritma Seçimi
-Seçilen Algoritma: DeepFace Framework (Backend: RetinaFace + Model: ResNet)
 
-Seçim Gerekçeleri:
-Entegrasyon Kolaylığı: Python ortamında hazır fonksiyonlarla gelmesi geliştirme süresini ciddi oranda düşürür.
+**Seçilen Algoritma:** PyTorch Framework ve dima806 CNN Modeli.
 
-Yüz Tespiti Üstünlüğü: İçerisindeki RetinaFace dedektörü, maskeli veya yan dönmüş yüzlerde bile %90+ doğruluk sunar.
+**Seçim Gerekçeleri:**
+* **Donanım ve FPS Uyumluluğu:** 1. haftadaki testlerde modelin, donanım yetersizliklerine karşı geliştirdiğimiz "Frame Skipping" mimarisiyle tam uyum sağlaması ve FPS darboğazını aşmasıdır.
+* **Yüz Tespiti Uyumluluğu:** Duygu analizi motoru, CPU dostu olan ve Frame Skipping mimarimizle milisaniyeler seviyesinde çalışan OpenCV (Haar Cascade) algoritmasının çıktılarından (Bounding Box) beslenerek hız avantajı sağlamaktadır.
 
-Çok Yönlülük: Sadece duygu değil; yaş, cinsiyet ve ırk gibi metrikleri de aynı anda analiz edebilir.
-
-Dinamik Donanım Desteği: Hem CPU'da stabil çalışır hem de NVIDIA GPU'larda CUDA desteğiyle gerçek zamanlı analiz yapabilir.
-
-### 4. Uygulama Stratejisi (Nasıl "Baya İyi" Olur?)
-Sistemin kararlılığını artırmak için şu iki yöntem uygulanacaktır:
-
-Zaman Damgalı Filtreleme (Sliding Window): Tek bir karede anlık hatalı tespitleri engellemek için son 10 karedeki sonuçların medyanı veya modu alınarak "duygusal süreklilik" sağlanacaktır.
-
-Aydınlatma Normalizasyonu: Görüntü modele girmeden önce Histogram Eşitleme (CLAHE) uygulanacaktır. Bu, karanlık ortamlarda kaş çatıklığı gibi mikro ifadelerin daha iyi seçilmesini sağlar.
-
-### 5. Sonuç
+### 4. Sonuç
 Proje için DeepFace, sunduğu kütüphane desteği ve yüksek doğruluk oranıyla en rasyonel seçimdir. Ancak sistemin "gerçekten iyi" çalışması için sadece modele güvenilmemeli; görüntü ön işleme ve sonuçların zamansal filtrelenmesi teknikleri mutlaka tasarıma dahil edilmelidir.
 
 ## API ENTEGRASYONU PLANLAMASI VE VERİ AKIŞI ŞEMASI
@@ -527,15 +521,12 @@ Filtreleme seçeneklerinin (Tarih / Kamera / Kişi) belirlenmesi
 PDF veya Excel çıktı dosyasının indirilmesi
 
 ### 8. TEKNİK ÖNERİLER VE TEKNOLOJİ YIĞINI
-Frontend: React veya Vue.js (Dinamik ve hızlı arayüz performansı için).
 
-Backend: FastAPI (Python) veya Node.js (Asenkron veri işleme için).
-
-Veritabanı: PostgreSQL (İlişkisel veri güvenliği için).
-
-Grafik Kütüphanesi: Chart.js (Dinamik veri görselleştirme için).
-
-Kimlik Doğrulama: JWT (JSON Web Token) tabanlı güvenli oturum yönetimi.
+* **Frontend:** JavaScript ve HTML/CSS (Chart.js entegrasyonu ile dinamik veri görselleştirme için).
+* **Backend:** FastAPI (Asenkron veri işleme ve yüksek performanslı REST API entegrasyonu için).
+* **Veritabanı:** SQLite (Sistemi yormayan hafif veri kaydı ve donanım kısıtlarına uyum için).
+* **Grafik Kütüphanesi:** Chart.js (Dinamik veri görselleştirme için).
+* **Kimlik Doğrulama:** JWT (JSON Web Token) tabanlı güvenli oturum yönetimi.
 
 ### 9. SONUÇ
 Tasarlanan bu yönetim paneli, sistemin ürettiği karmaşık verileri merkezi bir noktada toplayarak kullanım kolaylığı, anlık veri takibi ve derinlemesine analiz kabiliyeti sunacaktır. Modüler yapısı sayesinde gelecekteki yeni analiz gereksinimlerine göre kolayca genişletilebilir bir mimariye sahiptir.
