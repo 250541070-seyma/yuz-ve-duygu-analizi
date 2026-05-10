@@ -1651,3 +1651,103 @@ Gerçekleştirilen optimizasyonlar sonucunda:
 * Düşük gecikme (latency) ile yüksek doğruluk elde edilmiştir.
 * Sistem, "in-the-wild" (gerçek dünya) senaryolarında stabil performans göstermektedir.
 
+## HAFTA 5 RAPORU
+Hazırlayan: Hatice Kırmızıgül 
+Proje: Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi 
+Proje Görevi: Haftalık İlerleme Raporu Hazırlama 
+
+1. Proje Özeti 
+Bu projede görüntü işleme teknikleri kullanılarak görüntüler üzerinde nesne tespiti ve 
+sınıflandırma işlemlerinin gerçekleştirilmesi amaçlanmaktadır. Projenin temel hedefi, 
+verilen görüntülerden anlamlı veriler çıkararak otomatik analiz yapabilen bir sistem 
+geliştirmektir.
+
+2. Mevcut Durum 
+Projenin bu aşamasına kadar aşağıdaki çalışmalar tamamlanmıştır: 
+• Proje konusu belirlenmiş ve kapsamı netleştirilmiştir.  
+• Gerekli veri seti toplanmış ve düzenlenmiştir.  
+• Görüntüler üzerinde ön işleme adımları uygulanmıştır (boyutlandırma, gri 
+tonlama, filtreleme vb.).  
+• OpenCV kütüphanesi kullanılarak temel görüntü işleme işlemleri 
+gerçekleştirilmiştir.  
+• İlk model oluşturulmuş ve deneme eğitimleri yapılmıştır.
+
+3. Karşılaşılan Zorluklar 
+Proje sürecinde bazı teknik zorluklarla karşılaşılmıştır: 
+• Veri setinin yetersiz ve dengesiz olması  
+• Görüntülerdeki gürültü nedeniyle model performansının düşmesi  
+• Modelin doğruluk oranının beklenen seviyeye ulaşamaması  
+• Eğitim sürecinin uzun sürmesi ve donanım sınırlamaları
+
+4. Çözüm Yaklaşımları 
+Karşılaşılan sorunları çözmek amacıyla şu yöntemler uygulanmıştır: 
+• Veri artırma (augmentation) teknikleri kullanılmıştır  
+• Görüntüler üzerinde filtreleme işlemleri ile gürültü azaltılmıştır  
+• Farklı model parametreleri denenerek optimizasyon yapılmıştır  
+• Daha verimli algoritmalar araştırılmıştır
+
+5. Gelecek Hafta Planı 
+Bir sonraki hafta için planlanan çalışmalar şunlardır: 
+• Model performansının artırılması  
+• Test ve doğrulama süreçlerinin tamamlanması  
+• Sonuçların analiz edilmesi  
+• Final proje dokümantasyonunun hazırlanması
+
+## HAFTA 6 – FİNAL PROJE DOKÜMANI 
+
+Hazırlayan: Hatice Kırmızıgül 
+Proje: Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi 
+Proje Görevi: Final Proje Dokümantasyonu Tamamlama 
+ 
+1. Giriş 
+Bu projede görüntü işleme teknikleri kullanılarak görüntülerden anlamlı bilgi çıkarılması 
+hedeflenmiştir. Projenin amacı, otomatik olarak nesne tanıma ve sınıflandırma 
+yapabilen bir sistem geliştirmektir.
+
+2. Kullanılan Teknolojiler 
+Projede aşağıdaki teknolojiler kullanılmıştır: 
+• Python  
+• OpenCV  
+• NumPy  
+• TensorFlow / PyTorch  
+• Matplotlib
+
+3. Yöntem (Metodoloji) 
+Proje geliştirme süreci aşağıdaki adımlardan oluşmaktadır: 
+• Veri toplama ve veri seti oluşturma  
+• Görüntü ön işleme (filtreleme, normalize etme, boyutlandırma)  
+• Model oluşturma  
+• Model eğitimi  
+• Test ve değerlendirme
+
+4. Uygulama Aşamaları 
+Projenin uygulama süreci adım adım şu şekilde gerçekleştirilmiştir: 
+1. Veri seti hazırlanmıştır.  
+2. Görüntüler ön işleme aşamasından geçirilmiştir.  
+3. Model tasarlanmış ve eğitilmiştir.  
+4. Model test edilerek performansı ölçülmüştür.  
+5. Sonuçlar analiz edilmiştir.
+   
+5. Karşılaşılan Sorunlar ve Çözümler 
+Sorun 
+Çözüm 
+Veri yetersizliği 
+Veri artırma teknikleri kullanıldı 
+Gürültülü görüntüler Filtreleme yöntemleri uygulandı 
+Düşük doğruluk 
+Model parametreleri optimize edildi 
+Eğitim süresi uzunluğu Daha verimli yöntemler denendi
+
+6. Sonuçlar 
+Elde edilen sonuçlara göre model belirli bir doğruluk oranına ulaşmış ve temel seviyede 
+nesne tanıma işlemlerini başarıyla gerçekleştirebilmektedir.
+
+7. Değerlendirme 
+Proje genel olarak başarılı bir şekilde tamamlanmıştır. Ancak model performansının 
+artırılması ve daha geniş veri setleri ile test edilmesi gerekmektedir.
+
+8. Gelecek Çalışmalar 
+Projenin geliştirilmesi için aşağıdaki çalışmalar yapılabilir: 
+• Daha büyük ve çeşitli veri setleri kullanılması  
+• Gerçek zamanlı görüntü işleme sistemine dönüştürülmesi  
+• Daha gelişmiş derin öğrenme modellerinin uygulanması 
