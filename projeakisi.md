@@ -1701,4 +1701,70 @@ Açıklama: Şekil 3. Kullanıcı geri bildirimleri ve sistem değerlendirme pua
 Hafta 5 çalışmaları sonucunda, teknik performansı yüksek olan duygu analizi sistemi, kullanıcı 
 dostu bir kabuk ile birleştirilerek profesyonel bir ürün seviyesine getirilmiştir. Sistem, gerçek 
 zamanlı analiz yeteneklerini şık bir görsel sunumla birleştirmektedir.
+## PROJE FİNAL RAPORU(Hafta 6)
 
+
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/ab120d3c-0c68-4539-b935-c7b925f31436" />
+
+
+**Hazırlayan:** Eren Bilge Koçak  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:**  Sunum Hazırlığı ve Demo Oluşturma
+---
+
+1. ## Giriş ve Amaç
+2.  Bu çalışma kapsamında, derin öğrenme algoritmaları kullanılarak 
+insan yüzü üzerinden anlık duygu tespiti yapan ve bu verileri modern bir web 
+arayüzünde (dashboard) görselleştiren uçtan uca bir sistem geliştirilmiştir. Projenin 
+temel odağı, yüksek performanslı model optimizasyonu ve düşük gecikmeli veri 
+iletimidir.
+---
+
+## 3. 6 Haftalık Gelişim Süreci 
+• Hafta 1-2: Mimari tasarım, sanal ortam (.venv) kurulumu, RetinaFace ve 
+DeepFace modellerinin teorik incelemesi. 
+• Hafta 3-4: FastAPI ile asenkron backend motorunun kurulması, ONNX Runtime 
+entegrasyonu ve ilk performans testleri. 
+• Hafta 5-6: Modern koyu tema dashboard tasarımı, responsive (mobil uyumlu) 
+yapı ve titreşimsiz veri akışı için sliding window filtreleme algoritması.
+
+## SAYFA 3: TEKNİK MİMARİ VE MODEL SEÇİMİ
+3. Model Mimarisi (RetinaFace & DeepFace) Sistemde yüz tespiti için RetinaFace 
+modeli tercih edilmiştir. Bu model, zorlu ışık koşullarında ve farklı açılarda yüksek 
+doğruluk sağlar. Duygu analizi tarafında ise DeepFace kütüphanesi ile 7 temel duygu 
+sınıfı (Mutlu, Üzgün, Öfkeli, Korkmuş, Şaşırmış, Tiksinmiş, Nötr) anlık olarak 
+işlenmektedir
+
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/5b17a1f3-493c-4295-8850-36ee7588ae22" />
+
+## SAYFA 4: PERFORMANS VE HIZ OPTİMİZASYONU 
+4. %900 Verimlilik Artışı Ağır CNN modellerinin oluşturduğu gecikme (latency) 
+problemi, ONNX Runtime ve NumPy vektörizasyonu ile aşılmıştır. Bu optimizasyonlar 
+sayesinde işlem yükü 10 kat azaltılmıştır. 
+• Standart İşlem Süresi: 4.2 Saniye 
+• Optimize Edilmiş Süre: 0.45 Saniye 
+• Performans Kazancı: %900
+
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/96a36646-79dd-461f-a1f2-bd09c1ab4833" />
+
+## SAYFA 5: DASHBOARD VE KULLANICI DENEYİMİ 
+5. Modern Dashboard Tasarımı Kullanıcı deneyimini (UX) en üst seviyeye çıkarmak için 
+tasarlanan dashboard, şu özelliklere sahiptir: 
+• Koyu Tema: Uzun süreli izlemede göz yorgunluğunu minimize eder. 
+• Sliding Window: Duygu değişimlerindeki ani sıçramaları engelleyerek kararlı bir 
+grafik sunar. 
+• Responsive Tasarım: Masaüstü ve mobil cihazlarda tam uyumlu çalışma.
+
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/ade61b51-8d47-49e6-ae4b-68b77cc3e5f4" />
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/69904d86-34eb-496f-b17a-eead46896d76" />
+
+## SAYFA 6: SONUÇ VE DEĞERLENDİRME 
+6. Final Metrikleri ve Başarı Yapılan testler sonucunda sistemin başarısı şu verilerle 
+kanıtlanmıştır: 
+• Kullanıcı Memnuniyeti: 5/5 Tam Puan 
+• Sistem Güveni: Teknik verilerin şeffaf gösterimi ile %100 güven artışı. 
+• Teknik Kararlılık: Final testlerinde 0 kritik hata.
+
+## Sonuç:
+Proje, hedeflenen tüm teknik isterleri karşılayarak, gerçek zamanlı analiz 
+yeteneğiyle başarılı bir şekilde tamamlanmıştır.
