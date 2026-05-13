@@ -1650,4 +1650,55 @@ Gerçekleştirilen optimizasyonlar sonucunda:
 * PyTorch (ViT) tabanlı modeller donanım darboğazı yaşamadan gerçek zamanlı çalışabilir hale getirilmiştir.
 * Düşük gecikme (latency) ile yüksek doğruluk elde edilmiştir.
 * Sistem, "in-the-wild" (gerçek dünya) senaryolarında stabil performans göstermektedir.
+  ---
+# MODEL YÜKLEME VE İŞLEME SÜREÇLERİNİN HIZLANDIRILMASI RAPORU (HAFTA 5)
+
+**Hazırlayan:** Eren Bilge Koçak  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:**  Kullanıcı Arayüzü (UI) İyileştirmeleri ve Kullanılabilirlik Testleri 
+
+# GİRİŞ VE AMAÇ 
+
+Bu çalışma kapsamında, projenin 4. haftasında optimize edilen backend altyapısı, son 
+kullanıcının rahatlıkla kullanabileceği modern bir Dashboard arayüzüne entegre edilmiştir. Temel 
+amaç, teknik metriklerin (FPS, gecikme süresi, güven oranı) görselleştirilmesi ve kullanıcı 
+deneyiminin (UX) artırılmasıdır
+
+## 2. UYGULANAN ARAYÜZ İYİLEŞTİRMELERİ
+
+* Modern Koyu Tema (Dark Mode): Uzun süreli kullanımlarda göz yorgunluğunu azaltmak 
+amacıyla "Slate & Emerald" renk paleti kullanılmıştır. 
+* Kart Tabanlı Mimari: Bilgiler; Duygu Durumu, Sistem Performansı ve Optimizasyon 
+Motorları olmak üzere üç ana kategoriye ayrılmıştır. 
+* Responsive Tasarım: Arayüzün mobil, tablet ve masaüstü cihazlarda sorunsuz çalışması 
+sağlanmıştır.
+
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/bd5f2409-d4bc-49a3-a01d-3534d929b82e" />
+
+
+Açıklama: Şekil 1. Ana Dashboard tasarımı ve teknik metriklerin görsel sunumu. 
+---
+## 3. TEKNİK ENTEGRASYON VE DOĞRULAMA 
+Arayüzde gösterilen veriler, arka planda çalışan derin öğrenme modellerinden (RetinaFace ve 
+DeepFace) canlı olarak beslenmektedir. Hafta 4'te geliştirilen asenkron yükleme metotları, 
+arayüzde "0.45 sn" gecikme süresi olarak başarıyla raporlanmaktadır.
+
+<img width="262" height="643" alt="image" src="https://github.com/user-attachments/assets/12deba92-b6c6-4613-999f-4215bd1a5303" />
+
+Açıklama: Şekil 2. Arayüzün mobil uyumluluk (Responsive) testi sonucu.
+
+## 4. KULLANILABİLİRLİK TESTİ VE GERİ BİLDİRİMLER 
+Farklı kullanıcı profilleri üzerinde yapılan testler sonucunda sistemin kullanım kolaylığı ve 
+verimliliği onaylanmıştır. Özellikle teknik terimlerin basitleştirilmiş ikonlarla sunulması kullanıcılar 
+tarafından olumlu karşılanmıştır.
+
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/13dcf73a-6bd7-4bb4-a9e4-bfae0c17c1d7" />
+
+
+Açıklama: Şekil 3. Kullanıcı geri bildirimleri ve sistem değerlendirme puanları tablosu.
+
+## 5. SONUÇ 
+Hafta 5 çalışmaları sonucunda, teknik performansı yüksek olan duygu analizi sistemi, kullanıcı 
+dostu bir kabuk ile birleştirilerek profesyonel bir ürün seviyesine getirilmiştir. Sistem, gerçek 
+zamanlı analiz yeteneklerini şık bir görsel sunumla birleştirmektedir.
 
