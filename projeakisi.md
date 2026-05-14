@@ -1651,3 +1651,264 @@ Gerçekleştirilen optimizasyonlar sonucunda:
 * Düşük gecikme (latency) ile yüksek doğruluk elde edilmiştir.
 * Sistem, "in-the-wild" (gerçek dünya) senaryolarında stabil performans göstermektedir.
 
+---
+
+# YÜZ TANIMA VE DUYGU ANALİZİ SİSTEMİ
+
+## HAFTA 5 — SİSTEM ENTEGRASYONU, TEST VE ÜRÜNLEŞTİRME
+
+---
+
+# Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi
+
+Bu proje; gerçek zamanlı yüz tanıma ve duygu analizi gerçekleştiren, yüksek performanslı yapay zeka modelleri, asenkron REST API mimarisi ve web tabanlı izleme paneli içeren entegre bir yapay zeka sistemidir.
+
+---
+
+## Proje Özellikleri
+
+- Gerçek zamanlı yüz tanıma ve hibrit takip sistemi  
+  *(Haar Cascade & KCF Tracking)*
+
+- PyTorch ViT destekli duygu analizi
+
+- Performans optimizasyonları  
+  *(Frame Skipping, Asenkron Yükleme, ONNX Runtime)*
+
+- RESTful API altyapısı ve JWT güvenlik katmanı
+
+- Düşük gecikme süresi  
+  *(Yaklaşık 0.45 sn latency)*
+
+- Web tabanlı yönetim paneli *(Dashboard)*
+
+---
+
+## Dokümantasyon
+
+### Hafta 5 — Sistem Entegrasyonu ve Test Süreçleri
+
+| Doküman | Açıklama |
+|---|---|
+| Genel Rapor | Haftalık genel ilerleme ve mevcut durum |
+| Kod Optimizasyonu | Darboğaz tespiti ve performans iyileştirme |
+| UI İyileştirmeleri | Kullanıcı deneyimi ve arayüz testleri |
+| Sistem Testleri | Fonksiyonel testler ve hata ayıklama |
+| API & Belgelendirme | REST API entegrasyonu ve final belgeleri |
+
+---
+
+## Kullanılan Teknolojiler
+
+### Backend
+- Python *(FastAPI)*
+- SQLite
+- JWT *(JSON Web Token)*
+
+### Frontend
+- JavaScript *(ES6+)*
+- HTML5 / CSS3
+- Tailwind CSS / Bootstrap
+- Chart.js
+
+### Yapay Zeka & Görüntü İşleme
+- PyTorch
+- OpenCV
+
+---
+
+## Ekip
+
+| Sorumlu Üye | Görev Başlığı | Teknik Kapsam |
+|------------|--------------|---------------|
+| Hatice Kırmızıgül | Haftalık İlerleme Raporu Hazırlama | Projenin mevcut durumunun ve donanım darboğazı çözümlerinin dokümante edilmesi |
+| Muhammed Taha Gökdere | Optimizasyon Çalışmalarına Katkı | Profiling araçlarıyla darboğaz tespiti, KCF takip sistemi ve Frame Skipping optimizasyonu |
+| Eren Bilge Koçak | Kullanıcı Arayüzü İyileştirmeleri | Dashboard yanıt sürelerinin iyileştirilmesi ve kullanılabilirlik (UX) testleri |
+| Mehmet Berat Uygur | Hata Ayıklama ve Test Senaryoları | UI, kamera kontrolleri, duygu analiz modülü fonksiyonel testleri ve hata ayıklama |
+| Şeyma Nur Katar | Belge Güncelleme ve API Entegrasyonu | Sistemin dış dünyaya açılması (REST API) ve final proje dokümantasyonunun standartlaştırılması |
+
+
+---
+
+
+
+# HAFTA 5 RAPORU
+
+**Hazırlayan:** Hatice Kırmızıgül  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Haftalık İlerleme Raporu Hazırlama  
+
+---
+
+## 1. Proje Özeti
+
+Bu projede, standart kamera akışları üzerinden CPU dostu algoritmalarla yüz tespiti yapan ve derin öğrenme (Deep Learning) tabanlı modellerle milisaniyeler içinde duygu analizi gerçekleştiren entegre bir sistemin son aşamalarına gelinmiştir.
+
+Projenin temel hedefi; FPS darboğazları yaşatmayan, web tabanlı bir yönetim paneli (Dashboard) üzerinden gerçek zamanlı izlenebilen ve REST API ile dış dünyaya veri sunabilen uçtan uca bir mimari kurmaktır.
+
+---
+
+## 2. Mevcut Durum
+
+Projenin 5. haftası itibarıyla mimari altyapı büyük ölçüde tamamlanmış olup aşağıdaki entegrasyonlar başarıyla gerçekleştirilmiştir:
+
+- Donanım dostu çalışma için OpenCV (Haar Cascade) ve KCF Tracking hibrit yüz takip modülü sisteme entegre edilmiştir.
+- Duygu analizi amacıyla önceden eğitilmiş PyTorch tabanlı `dima806 ViT` modeli projeye dahil edilerek anlık duygu tahmini başlatılmıştır.
+- Backend altyapısı, yüksek performans ve asenkron veri akışı sağlamak amacıyla FastAPI kullanılarak geliştirilmiştir.
+- Veri yönetimi için hafif yapılı SQLite veritabanı kurgulanmıştır.
+- Web tabanlı yönetim panelinin (UI) tasarımları tamamlanmış ve backend ile haberleşmesi sağlanmıştır.
+
+---
+
+## 3. Karşılaşılan Zorluklar
+
+Geliştirme ve entegrasyon süreçlerinde karşılaşılan başlıca mühendislik problemleri şunlardır:
+
+- PyTorch tabanlı derin öğrenme modelinin her karede (frame) analiz çalıştırması nedeniyle CPU kullanımının %90 seviyelerine çıkması ve FPS değerlerinin düşmesi.
+- Düşük ışıklı ortamlarda, özellikle “kızgın” ve “üzgün” gibi ince kas hareketleri içeren mikro-mimiklerin doğru algılanamaması.
+- Kamera akışı ile web tabanlı arayüz arasındaki veri iletiminde senkronizasyon ve gecikme (latency) problemlerinin oluşması.
+
+---
+
+## 4. Çözüm Yaklaşımları
+
+Karşılaşılan sistemsel ve donanımsal darboğazları gidermek amacıyla aşağıdaki optimizasyonlar uygulanmıştır:
+
+### Frame Skipping (Kare Atlama)
+
+Duygu analizinin her karede değil, her 5 karede bir gerçekleştirilmesi sağlanarak FPS düşüşleri önemli ölçüde giderilmiştir.
+
+### Histogram Eşitleme (`cv2.equalizeHist`)
+
+Görüntü ön işleme katmanına kontrast artırıcı algoritmalar eklenmiş, böylece düşük ışık koşullarında mikro-mimik tespit başarısı artırılmıştır.
+
+### Asenkron API Altyapısı
+
+FastAPI’nin asenkron mimarisi ve Uvicorn sunucusu kullanılarak arayüze veri aktarım gecikmesi yaklaşık **0.45 saniye** seviyesine düşürülmüştür.
+
+---
+
+## 5. Gelecek Hafta Planı
+
+Bir sonraki hafta için planlanan kapanış ve teslim çalışmaları aşağıdaki gibidir:
+
+- Modelin RAM kullanımını azaltmak amacıyla ONNX Runtime ve Model Quantization testlerinin tamamlanması.
+- Sistem genelinde stres testleri uygulanarak olası yazılım hatalarının (bug) tespit edilmesi ve giderilmesi.
+- Kod tabanının refactoring işlemleriyle sadeleştirilmesi ve gereksiz dosyaların temizlenmesi.
+- API entegrasyon belgeleri ile final proje dokümantasyonunun hazırlanması.
+
+---
+
+# KOD OPTİMİZASYONU VE DARBOĞAZ (BOTTLENECK) ANALİZİ RAPORU
+
+**Görev Tanımı:** Optimizasyon Çalışmalarına Katkı  
+**Proje Aşaması:** Performans İyileştirme ve Sistem Testleri (Hafta 5)  
+**Hazırlayan:** Muhammed Taha Gökdere  
+
+---
+
+## 1. GİRİŞ VE OPTİMİZASYONUN AMACI
+
+Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi'nin dördüncü hafta itibarıyla tüm modülleri (Yapay Zeka, 3D Simülasyon, FastAPI) entegre edilmiş ve sistem çalışır hale getirilmiştir. Ancak derin öğrenme modellerinin ve 3D fizik motorlarının birleşmesi, donanım üzerinde (özellikle CPU ve RAM) yoğun bir işlem yükü oluşturmuştur.
+
+Bu çalışmanın temel amacı; hedeflenen **maksimum 200ms uçtan uca gecikme (end-to-end latency)** kısıtını korumak ve saniyede **30 kare (30 FPS)** akıcılığını garanti altına almaktır. Bu doğrultuda, kodu satır satır okumak yerine bilimsel profilleme (*profiling*) araçları kullanılarak sistemdeki darboğazlar (*bottlenecks*) tespit edilmiş ve algoritma düzeyinde matematiksel iyileştirmelere gidilmiştir.
+
+---
+
+## 2. PROFİLLEME (PROFILING) STRATEJİSİ VE METRİK ANALİZİ
+
+Sistemin hangi aşamalarda milisaniye (ms) kaybettiğini kesin olarak belirlemek için iki farklı profilleme yaklaşımı izlenmiştir:
+
+- **Backend (Python/FastAPI) Profilleme:** `cProfile` aracı ve PyTorch'un `torch.autograd.profiler` modülü kullanılarak yapay zeka çıkarım (*inference*) süreleri ölçülmüştür.
+- **Frontend (WebGL/JS) Profilleme:** Chrome DevTools `Performance` ve `Memory` sekmeleri kullanılarak 3D render süreleri, GPU bellek sızıntıları (*memory leaks*) ve JavaScript çöp toplayıcı (*Garbage Collection*) yükleri analiz edilmiştir.
+
+### Tespit Edilen Darboğazlar
+
+1. PyTorch (ViT - Vision Transformer) modelinin tensör dönüşümlerinde CPU üzerinde gereksiz kopyalamalar yaptığı tespit edilmiştir.
+2. Hatalı sonuçları engellemek için kurulan **Zaman Pencereli Ortalama (Smoothing)** algoritmasının her karede dizileri (*array*) yeniden kopyalaması nedeniyle `O(N)` zaman karmaşıklığı yarattığı saptanmıştır.
+3. 4. haftada eklenen **Üç Noktalı Işıklandırma** ve **Yumuşak Gölgeler** efektlerinin, ekranda olmayan nesneler için bile GPU'da gölge haritası hesapladığı görülmüştür.
+
+---
+
+## 3. YAPAY ZEKA (ViT) VE ÇIKARIM (INFERENCE) SÜREÇLERİNİN HIZLANDIRILMASI
+
+Sistemin kalbini oluşturan yapay zeka analiz motorunda tespit edilen gecikmeleri aşmak için aşağıdaki yapısal değişiklikler uygulanmıştır:
+
+- **Kanal Uyuşmazlığı ve Tensör Optimizasyonu (Kritik Çözüm):**  
+  Yüz tespiti yapan Haar Cascade algoritmasının hızlanması için görüntüler gri tonlamaya (*Grayscale - 1 Kanal*) çevrilmektedir. Ancak PyTorch `dima806` (ViT) modeli RGB (*3 Kanal*) görüntülerle eğitilmiştir.
+
+  Sistemde tespit edilen bir `RuntimeError (Boyut Uyuşmazlığı)` darboğazı, görüntü ön işleme (*preprocessing*) hattının ayrıştırılmasıyla çözülmüştür. Cascade için gri, ViT modeli için ise orijinal RGB ROI (*Region of Interest*) korunarak bellek tahsis (*allocation*) hataları engellenmiştir.
+
+- **ONNX Runtime Entegrasyonu:**  
+  PyTorch tabanlı ViT modeli, standart bir Python döngüsünde çalıştırılmak yerine ONNX (*Open Neural Network Exchange*) formatına dönüştürülerek çalıştırılmaya başlanmıştır.
+
+  Bu sayede model yükleme hızları artırılmış ve CPU çekirdekleri tam kapasiteyle (*multithreading*) kullanıma alınmıştır.
+
+- **Agresif Frame Skipping (Kare Atlama):**  
+  1. ve 2. haftalarda kurgulanan *Frame Skipping* mimarisi statik yapıdan dinamik yapıya geçirilmiştir.
+
+  Kamera karşısındaki yüz sabitse ve mimik değişmiyorsa, analiz motoru 5 kare yerine 10 karede bir çalışarak işlemciyi *idle* moduna geçirmekte ve güç tasarrufu sağlamaktadır.
+
+---
+
+## 4. MATEMATİKSEL FİLTRELEME ALGORİTMALARI OPTİMİZASYONU
+
+Yapay zekanın hatalı sonuçlarını (*False Positives*) engellemek için tasarlanan kontrol mekanizması bellek dostu hale getirilmiştir:
+
+- **Zaman Pencereli Ortalama (Smoothing) Optimizasyonu:**  
+  Son 15 karenin ortalamasını alan algoritma, her döngüde eski veriyi silip yenisini ekleyen ağır bir liste yapısı kullanmaktaydı.
+
+  Bu yapı **Dairesel Kuyruk (Circular Buffer)** veri yapısına geçirilmiştir. Böylece zaman karmaşıklığı:
+
+  ```text
+  O(N) → O(1)
+  ```
+
+  seviyesine düşürülmüş ve saniyede yüzlerce gereksiz bellek tahsisi (*memory allocation*) engellenmiştir.
+
+- **Hysteresis (Ani Değişim Reddi) Optimizasyonu:**  
+  Kararlılık eşiğini (`%65`) denetleyen koşul blokları optimize edilmiş ve mantıksal sorguların çalışma süresi mikro-saniyeler seviyesine indirilmiştir.
+
+---
+
+## 5. 3D RENDER VE IŞIKLANDIRMA (GPU) OPTİMİZASYONLARI
+
+4. hafta çalışmalarında WebGL arayüzüne eklenen görsel efektlerin donanım üzerinde yarattığı tıkanıklıklar çözülmüştür:
+
+- **Frustum Culling ve Light Masking:**  
+  Sahnedeki ışık kaynaklarının tüm sahneyi değil, yalnızca kameranın görüş alanında (*frustum*) bulunan nesneleri aydınlatması için `Light Culling Mask` parametreleri optimize edilmiştir.
+
+- **Shadow Cascades İyileştirmesi:**  
+  Kameraya yakın olan alanlarda gölge çözünürlüğü yüksek tutulurken, uzak alanlarda çözünürlük kademeli olarak düşürülmüştür (*Shadow Cascades*).
+
+  Böylece `Draw Call` (GPU çizim çağrısı) sayısı `%40` oranında azaltılmıştır.
+
+---
+
+## 6. KOD TEMİZLİĞİ VE 6. HAFTA İÇİN ZEMİN HAZIRLIĞI
+
+Bu hafta yapılan profilleme çalışmaları yalnızca sistemin hızlanmasını sağlamamış; aynı zamanda 6. haftada planlanan **Kod Temizliği ve Son Optimizasyonlar** görevi için aşağıdaki hazırlıkları sağlamıştır:
+
+- Kullanılmayan değişkenler, import edilip çağrılmayan kütüphaneler (*technical debt*) ve test aşamasında unutulmuş loglama ibareleri işaretlenmiştir.
+- Birbirini tekrar eden (*DRY prensibine aykırı*) OpenCV ön işleme fonksiyonları tek bir modüler sınıf (*class*) altında toplanmaya hazır hale getirilmiştir.
+
+---
+
+## 7. SONUÇ VE PERFORMANS KAZANIMLARI
+
+Gerçekleştirilen profilleme ve optimizasyon çalışmaları sonucunda elde edilen veriler aşağıdaki gibidir:
+
+| Metrik | Önce | Sonra |
+|---|---|---|
+| CPU Kullanımı | `%85` | `%45` |
+| Gecikme Süresi (Latency) | `350ms` | `140ms` |
+| FPS Stabilitesi | Düşük | Stabil 30 FPS |
+
+### Genel Sonuçlar
+
+- Sistem genelindeki CPU kullanımı (kamera açıkken) ortalama `%85` seviyesinden `%45` seviyelerine gerilemiştir.
+- Gecikme süresi (*Latency*) `350ms` seviyesinden, projenin hedefi olan `200ms` sınırının altına (`ortalama 140ms`) düşürülmüştür.
+- Darboğazların tamamen aşılmasıyla sistem, düşük donanımlı cihazlarda dahi akıcı bir simülasyon ve analiz deneyimi sunacak stabiliteye ulaşmıştır.
+
+---
+
