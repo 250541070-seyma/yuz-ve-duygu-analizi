@@ -1650,7 +1650,366 @@ Gerçekleştirilen optimizasyonlar sonucunda:
 * PyTorch (ViT) tabanlı modeller donanım darboğazı yaşamadan gerçek zamanlı çalışabilir hale getirilmiştir.
 * Düşük gecikme (latency) ile yüksek doğruluk elde edilmiştir.
 * Sistem, "in-the-wild" (gerçek dünya) senaryolarında stabil performans göstermektedir.
-[YMT_Hafta5_MehmetBeratUygur.docx](https://github.com/user-attachments/files/27755378/YMT_Hafta5_MehmetBeratUygur.docx)
-[YMT_Hafta6_MehmetBeratUygur.docx](https://github.com/user-attachments/files/27755377/YMT_Hafta6_MehmetBeratUygur.docx)
+
+---
+
+# YMT Hafta 5 - Mehmet Berat Uygur
+
+**Hazırlayan:** Mehmet Berat Uygur  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Hata Ayıklama ve Test Senaryoları
+
+## 1. Giriş
+
+Bu çalışma kapsamında, geliştirilen Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi üzerinde oluşabilecek hataları tespit etmek, sistem kararlılığını artırmak ve kullanıcı deneyimini iyileştirmek amacıyla çeşitli test senaryoları hazırlanmış ve uygulanmıştır.
+
+Test süreçleri; kullanıcı arayüzü, kamera kontrolleri, yüz tanıma sistemi, duygu analizi modülü ve raporlama sistemi üzerinde gerçekleştirilmiştir. Amaç, sistemin farklı kullanım senaryolarında doğru, hızlı ve stabil şekilde çalışmasını sağlamaktır.
+
+## 2. Test Sürecinin Amaçları
+
+Bu test çalışmalarının temel amaçları şunlardır:
+
+- Sistem içerisindeki yazılım hatalarını tespit etmek
+- Olası performans sorunlarını önceden belirlemek
+- Kullanıcı deneyimini iyileştirmek
+- Kamera kontrollerinin doğru çalışmasını doğrulamak
+- Gerçek zamanlı veri akışının stabil çalışmasını sağlamak
+- Arayüz bileşenlerinin farklı cihazlarda uyumunu test etmek
+- Hatalı kullanıcı işlemlerine karşı sistem dayanıklılığını ölçmek
+
+## 3. Uygulanan Test Türleri
+
+### 3.1. Fonksiyonel Testler
+
+Sistemde bulunan özelliklerin beklenen şekilde çalışıp çalışmadığı kontrol edilmiştir.
+
+Test edilen alanlar:
+
+- Kullanıcı giriş sistemi
+- Dashboard veri görüntüleme
+- Yüz tanıma sonuçlarının listelenmesi
+- Duygu analizi grafiklerinin görüntülenmesi
+- Kamera kontrol işlemleri
+- Rapor oluşturma sistemi
+- Kullanıcı ekleme ve silme işlemleri
+
+### 3.2. Kullanıcı Arayüzü (UI) Testleri
+
+Arayüz tasarımının kullanıcı dostu olup olmadığı incelenmiştir.
+
+Kontrol edilen durumlar:
+
+- Butonların doğru çalışması
+- Menü geçişleri
+- Responsive tasarım uyumluluğu
+- Grafiklerin doğru görüntülenmesi
+- Tema geçişleri
+- Bildirim ve hata mesajları
+
+### 3.3. Kamera Kontrol Testleri
+
+Kamera entegrasyonu ve kontrol sistemleri test edilmiştir.
+
+#### Zoom Testi
+
+- Yakınlaştırma ve uzaklaştırma işlemleri kontrol edildi
+- Görüntü kalitesinin bozulup bozulmadığı incelendi
+
+#### Pan Testi
+
+- Kameranın sağa, sola, yukarı ve aşağı hareketleri test edildi
+- Hareket akıcılığı kontrol edildi
+
+#### Rotate Testi
+
+- Kamera döndürme işlemleri farklı açılarda test edildi
+- Görüntü kayması ve gecikme kontrol edildi
+
+#### Reset Testi
+
+- Kamera sıfırlama butonunun düzgün çalışması doğrulandı
+
+## 4. Test Senaryoları
+
+### Senaryo 1 - Kullanıcı Girişi
+
+| Test Durumu | Beklenen Sonuç |
+|---|---|
+| Doğru kullanıcı bilgileri girildi | Sisteme başarılı giriş |
+| Hatalı şifre girildi | Hata mesajı gösterilmesi |
+| Boş alan bırakıldı | Uyarı mesajı verilmesi |
+
+### Senaryo 2 - Yüz Tanıma Sistemi
+
+| Test Durumu | Beklenen Sonuç |
+|---|---|
+| Kamera görüntüsü aktif | Yüzlerin algılanması |
+| Aynı kişi tekrar görüntülendi | Sistem eşleşme sağlaması |
+| Düşük ışık ortamı | Algoritmanın çalışmaya devam etmesi |
+
+### Senaryo 3 - Duygu Analizi
+
+| Test Durumu | Beklenen Sonuç |
+|---|---|
+| Mutlu yüz ifadesi | “Mutlu” sonucu |
+| Nötr yüz ifadesi | “Nötr” sonucu |
+| Birden fazla kişi | Ayrı analiz sonuçları |
+
+### Senaryo 4 - Kamera Kontrolleri
+
+| Test Durumu | Beklenen Sonuç |
+|---|---|
+| Zoom butonu kullanıldı | Görüntünün büyümesi |
+| Pan işlemi yapıldı | Kameranın kayması |
+| Rotate işlemi uygulandı | Görüntünün dönmesi |
+| Reset butonuna basıldı | Varsayılan konuma dönmesi |
+
+### Senaryo 5 - Raporlama Sistemi
+
+| Test Durumu | Beklenen Sonuç |
+|---|---|
+| Tarih aralığı seçildi | Doğru verilerin listelenmesi |
+| PDF çıktısı alındı | Başarılı dosya oluşturulması |
+| Veri bulunamadı | Bilgilendirici mesaj gösterilmesi |
+
+## 5. Performans Testleri
+
+Sistemin yoğun kullanım altında performansı gözlemlenmiştir.
+
+Yapılan kontroller:
+
+- Gerçek zamanlı veri akışı sırasında gecikme analizi
+- Çoklu kullanıcı erişim testi
+- Kamera görüntü işleme performansı
+- Grafiklerin yüklenme süresi
+- Dashboard veri yenileme hızı
+
+Testler sonucunda sistemin stabil çalıştığı ve performans açısından yeterli olduğu gözlemlenmiştir.
+
+## 6. Hata Yönetimi ve İyileştirmeler
+
+Test süreçleri sırasında tespit edilen bazı sorunlar düzeltilmiştir:
+
+- Menü geçişlerinde oluşan küçük gecikmeler giderildi
+- Kamera hareketleri daha akıcı hale getirildi
+- Hata mesajları daha açıklayıcı yapıldı
+- Responsive tasarım iyileştirildi
+- Grafik yüklenme süreleri optimize edildi
+
+## 7. Kullanılan Teknolojiler
+
+Bu test süreçlerinde aşağıdaki teknolojiler ve araçlar kullanılmıştır:
+
+- HTML
+- CSS
+- JavaScript
+- Flask
+- Bootstrap / Tailwind CSS
+- Chart.js
+- Kamera kontrol sistemleri
+- Gerçek zamanlı görüntü işleme modülleri
+
+## 8. Sonuç ve Değerlendirme
+
+Gerçekleştirilen test senaryoları sayesinde sistem içerisindeki olası hatalar tespit edilmiş ve gerekli iyileştirmeler yapılmıştır.
+
+Yapılan testler sonucunda:
+
+- Sistem kararlılığı artırılmıştır
+- Kullanıcı deneyimi geliştirilmiştir
+- Kamera kontrolleri optimize edilmiştir
+- Arayüz uyumluluğu güçlendirilmiştir
+- Performans sorunları minimize edilmiştir
+
+Bu çalışmalar sayesinde Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi daha güvenilir, stabil ve kullanıcı dostu bir yapıya kavuşmuştur.
+
+---
+
+# YMT Hafta 6 - Mehmet Berat Uygur
+
+**Hazırlayan:** Mehmet Berat Uygur  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Final Test ve Hata Giderme
+
+## 1. Çalışmanın Amacı
+
+Projenin son aşamasında gerçekleştirilen bu çalışma ile sistemin genel çalışma yapısı yeniden analiz edilmiş ve tüm modüller birlikte değerlendirilmiştir.
+
+Bu süreçte özellikle:
+
+- Kullanıcı işlemleri
+- Kamera hareketleri
+- Veri akışları
+- Arayüz davranışları
+- Raporlama işlemleri
+- Gerçek zamanlı analiz süreçleri
+
+yeniden kontrol edilmiştir.
+
+Ayrıca kullanıcıların sistemi kullanırken izleyeceği akışlar tekrar uygulanmış ve sistemin bu senaryolara verdiği tepkiler incelenmiştir.
+
+## 2. Sistem Genel Kontrol Süreci
+
+Final aşamasında sistem yalnızca teknik olarak değil, kullanım açısından da değerlendirilmiştir.
+
+Kontrol süreci aşağıdaki bölümler üzerinde gerçekleştirilmiştir:
+
+| Kontrol Alanı | İncelenen Durum |
+|---|---|
+| Yönetim Paneli | Veri görüntüleme ve işlem akışı |
+| UI Tasarımı | Kullanıcı deneyimi ve erişilebilirlik |
+| Kamera Sistemi | Hareket kontrol doğruluğu |
+| Analiz Modülü | Gerçek zamanlı sonuç üretimi |
+| Raporlama Sistemi | Veri çıktıları ve filtreleme |
+| Performans | Sistem stabilitesi |
+
+## 3. Kullanıcı Akışlarının Yeniden İncelenmesi
+
+Sistemin kullanıcı odaklı çalışıp çalışmadığını kontrol etmek amacıyla temel kullanıcı akışları tekrar uygulanmıştır.
+
+### 3.1. Giriş ve Yetkilendirme Akışı
+
+Kullanıcıların sisteme erişim süreçleri yeniden değerlendirilmiştir.
+
+Kontrol edilen durumlar:
+
+- Kullanıcı doğrulama işlemleri
+- Yetki seviyelerine göre erişim
+- Hatalı giriş denemeleri
+- Oturum yönetimi
+
+Yapılan incelemeler sonucunda kullanıcı rollerinin doğru çalıştığı gözlemlenmiştir.
+
+### 3.2. Yönetim Paneli Kullanımı
+
+Dashboard ekranı üzerinde veri akışı yeniden test edilmiştir.
+
+İncelenen alanlar:
+
+- Güncel analiz sonuçlarının görüntülenmesi
+- Sistem durum bilgilerinin güncellenmesi
+- Grafiklerin doğru veri göstermesi
+- Son aktivitelerin listelenmesi
+
+Verilerin gerçek zamanlı olarak güncellendiği doğrulanmıştır.
+
+### 3.3. Kamera Kullanım Senaryoları
+
+Kamera kontrolleri farklı kullanım durumlarında tekrar test edilmiştir.
+
+İncelenen işlemler:
+
+- Yakınlaştırma
+- Uzaklaştırma
+- Kamera kaydırma
+- Döndürme işlemleri
+- Kamera sıfırlama
+
+Yapılan kontroller sonucunda kamera hareketlerinin kullanıcı arayüzü ile uyumlu çalıştığı görülmüştür.
+
+### 3.4. Duygu Analizi Süreci
+
+Duygu analizi modülü farklı yüz ifadeleri ile tekrar değerlendirilmiştir.
+
+Test edilen durumlar:
+
+- Mutlu yüz ifadeleri
+- Nötr ifadeler
+- Birden fazla kişinin aynı anda analiz edilmesi
+- Grafiklere veri aktarımı
+
+Sistemin analiz sonuçlarını doğru şekilde işlediği doğrulanmıştır.
+
+### 3.5. Raporlama İşlemleri
+
+Rapor oluşturma süreçleri yeniden uygulanmıştır.
+
+Kontrol edilen özellikler:
+
+- Tarih filtreleme
+- Veri listeleme
+- PDF çıktısı alma
+- Analiz raporu oluşturma
+
+Raporlama sisteminin sorunsuz çalıştığı gözlemlenmiştir.
+
+## 4. Arayüz ve Kullanıcı Deneyimi İncelemeleri
+
+Final değerlendirme sürecinde kullanıcı deneyimi odaklı bazı düzenlemeler gerçekleştirilmiştir.
+
+Yapılan incelemeler:
+
+- Menü yerleşimleri
+- Buton görünürlükleri
+- Grafik boyutlandırmaları
+- Mobil cihaz uyumluluğu
+- Sayfa geçişleri
+- Bildirim sistemleri
+
+Özellikle responsive yapı üzerinde iyileştirmeler yapılmıştır.
+
+## 5. Düzeltilen Problemler
+
+Son kontroller sırasında tespit edilen bazı küçük problemler giderilmiştir.
+
+Yapılan düzeltmeler:
+
+- Menü geçiş hızları artırıldı
+- Grafik yenileme sistemi optimize edildi
+- Kamera kontrol gecikmeleri azaltıldı
+- Hata mesajları daha açıklayıcı hale getirildi
+- Mobil görünüm düzenlendi
+- Dashboard veri güncelleme performansı iyileştirildi
+
+Bu düzenlemeler sistemin daha stabil çalışmasını sağlamıştır.
+
+## 6. Sistem Performansının Değerlendirilmesi
+
+Proje son aşamada farklı kullanım yoğunluklarında test edilmiştir.
+
+Gerçekleştirilen performans kontrolleri:
+
+- Çoklu kullanıcı erişimi
+- Kamera veri akışı
+- Grafik oluşturma hızı
+- Dashboard yenileme performansı
+- Gerçek zamanlı analiz süresi
+
+Sonuç olarak sistemin yoğun kullanım altında da kararlı çalıştığı gözlemlenmiştir.
+
+## 7. Kullanılan Teknolojilerin Son Kontrolü
+
+Projede kullanılan teknolojilerin entegrasyonları tekrar değerlendirilmiştir.
+
+Kullanılan başlıca teknolojiler:
+
+- HTML
+- CSS
+- JavaScript
+- Flask
+- Bootstrap / Tailwind CSS
+- Chart.js
+- Kamera kontrol modülleri
+- Gerçek zamanlı görüntü işleme sistemleri
+
+Tüm teknolojilerin birlikte uyumlu çalıştığı doğrulanmıştır.
+
+## 8. Genel Sonuç
+
+Gerçekleştirilen final kontrolleri sonucunda sistemin proje hedeflerine uygun şekilde çalıştığı belirlenmiştir.
+
+Yapılan değerlendirmeler sonucunda:
+
+- Kullanıcı senaryoları başarıyla doğrulanmıştır
+- Sistem kararlılığı artırılmıştır
+- Kullanıcı deneyimi geliştirilmiştir
+- Kamera kontrolleri optimize edilmiştir
+- Arayüz uyumluluğu güçlendirilmiştir
+- Performans açısından daha stabil bir yapı elde edilmiştir
+
+Sonuç olarak Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi, kullanıma hazır ve sürdürülebilir bir yapıya ulaştırılmıştır.
+
+---
+
 
 
