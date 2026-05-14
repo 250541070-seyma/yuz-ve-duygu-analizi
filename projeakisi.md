@@ -92,16 +92,16 @@ Sistem, "Yüz var mı?", "Bu kim?" ve "Ne hissediyor?" sorularına gerçek zaman
 
 ### **3. Fonksiyonel Olmayan Teknik Gereksinimler (Non-Functional)**
 * **NFR-1 (Gecikme Süresi - Latency):** Görüntünün yakalanması ile duygunun ekrana yazılması arasındaki toplam gecikme (end-to-end latency) **200ms** değerini aşmamalıdır.
-* **NFR-2 (Platform Bağımsızlığı):** Flask tabanlı web paneli, hem masaüstü hem de mobil tarayıcılarda (Responsive) sorunsuz çalışmalıdır.
+* **NFR-2 (Platform Bağımsızlığı):** FastApı tabanlı web paneli, hem masaüstü hem de mobil tarayıcılarda (Responsive) sorunsuz çalışmalıdır.
 * **NFR-3 (Hata Yönetimi):** Kamera bağlantısı koptuğunda sistem çökmemeli, arayüzde "Kamera Bağlantısı Bekleniyor..." uyarısı vermelidir.
 * **NFR-4 (Veri Gizliliği):** KVKK/GDPR uyumluluğu gereği analiz edilen yüz görüntüleri yerel diskte açık bir şekilde tutulmamalı, sadece vektörel veriler (embeddings) saklanmalıdır.
 
 ### **4. Sistem Mimarisi ve Veri Akış Şeması**
 Sistem dört ana katman üzerinde kurgulanmıştır:
 1.  **Input Layer:** `cv2.VideoCapture(0)` ile yerel veya IP kameradan akış alınır.
-2.  **Processing Layer (OpenCV):** Processing Layer (OpenCV): Haar Cascades ile yüz koordinatları (Bounding Box) belirlenir."
+2.  **Processing Layer (OpenCV):**  Haar Cascades ile yüz koordinatları (Bounding Box) belirlenir."
 3.  **Analysis Layer (PyTorch):** Kırpılan yüz görüntüsü PyTorch framework'ü üzerinden önceden eğitilmiş CNN modeline (dima806/facial_emotions_image_detection) gönderilir; duygu vektörü çıkarılır.
-4.  **Presentation Layer (Flask & JS):** Sonuçlar WebSockets veya HTTP polling ile arayüze aktarılır; Chart.js ile duygu değişim grafiği çizilir.
+4.  **Presentation Layer (FastApı & JS):** Sonuçlar WebSockets veya HTTP polling ile arayüze aktarılır; Chart.js ile duygu değişim grafiği çizilir.
 
 ### **5. Kullanım Senaryosu (Use Case Description)**
 
