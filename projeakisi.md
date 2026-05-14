@@ -1650,4 +1650,7 @@ Gerçekleştirilen optimizasyonlar sonucunda:
 * PyTorch (ViT) tabanlı modeller donanım darboğazı yaşamadan gerçek zamanlı çalışabilir hale getirilmiştir.
 * Düşük gecikme (latency) ile yüksek doğruluk elde edilmiştir.
 * Sistem, "in-the-wild" (gerçek dünya) senaryolarında stabil performans göstermektedir.
+[YMT_Hafta5_MehmetBeratUygur.docx](https://github.com/user-attachments/files/27755378/YMT_Hafta5_MehmetBeratUygur.docx)
+[YMT_Hafta6_MehmetBeratUygur.docx](https://github.com/user-attachments/files/27755377/YMT_Hafta6_MehmetBeratUygur.docx)
+
 
