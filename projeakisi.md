@@ -1680,8 +1680,8 @@ sağlanmıştır.
 Açıklama: Şekil 1. Ana Dashboard tasarımı ve teknik metriklerin görsel sunumu. 
 ---
 ## 3. TEKNİK ENTEGRASYON VE DOĞRULAMA 
-Arayüzde gösterilen veriler, arka planda çalışan derin öğrenme modellerinden (RetinaFace ve 
-DeepFace) canlı olarak beslenmektedir. Hafta 4'te geliştirilen asenkron yükleme metotları, 
+Arayüzde gösterilen veriler, arka planda çalışan derin öğrenme modellerinden (OpenCV ve PyTorch (ViT)
+) canlı olarak beslenmektedir. Hafta 4'te geliştirilen asenkron yükleme metotları, 
 arayüzde "0.45 sn" gecikme süresi olarak başarıyla raporlanmaktadır.
 
 <img width="280" height="647" alt="image" src="https://github.com/user-attachments/assets/62874bf7-5ab1-4bd3-bf68-50e8b6c6fe03" />
