@@ -1673,7 +1673,8 @@ Motorları olmak üzere üç ana kategoriye ayrılmıştır.
 * Responsive Tasarım: Arayüzün mobil, tablet ve masaüstü cihazlarda sorunsuz çalışması 
 sağlanmıştır.
 
-<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/bd5f2409-d4bc-49a3-a01d-3534d929b82e" />
+<img width="1277" height="688" alt="image" src="https://github.com/user-attachments/assets/6d08883e-9f99-44af-8b2e-6a4801828544" />
+
 
 
 Açıklama: Şekil 1. Ana Dashboard tasarımı ve teknik metriklerin görsel sunumu. 
@@ -1683,7 +1684,8 @@ Arayüzde gösterilen veriler, arka planda çalışan derin öğrenme modellerin
 DeepFace) canlı olarak beslenmektedir. Hafta 4'te geliştirilen asenkron yükleme metotları, 
 arayüzde "0.45 sn" gecikme süresi olarak başarıyla raporlanmaktadır.
 
-<img width="262" height="643" alt="image" src="https://github.com/user-attachments/assets/12deba92-b6c6-4613-999f-4215bd1a5303" />
+<img width="280" height="647" alt="image" src="https://github.com/user-attachments/assets/62874bf7-5ab1-4bd3-bf68-50e8b6c6fe03" />
+
 
 Açıklama: Şekil 2. Arayüzün mobil uyumluluk (Responsive) testi sonucu.
 
@@ -1692,7 +1694,8 @@ Farklı kullanıcı profilleri üzerinde yapılan testler sonucunda sistemin kul
 verimliliği onaylanmıştır. Özellikle teknik terimlerin basitleştirilmiş ikonlarla sunulması kullanıcılar 
 tarafından olumlu karşılanmıştır.
 
-<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/13dcf73a-6bd7-4bb4-a9e4-bfae0c17c1d7" />
+<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/b8188496-e27f-457a-97f6-88effc28325e" />
+
 
 
 Açıklama: Şekil 3. Kullanıcı geri bildirimleri ve sistem değerlendirme puanları tablosu.
@@ -1729,13 +1732,13 @@ entegrasyonu ve ilk performans testleri.
 yapı ve titreşimsiz veri akışı için sliding window filtreleme algoritması.
 
 ## SAYFA 3: TEKNİK MİMARİ VE MODEL SEÇİMİ
-3. Model Mimarisi (RetinaFace & DeepFace) Sistemde yüz tespiti için RetinaFace 
+3. Model Mimarisi Sistemde yüz tespiti için  Haar Cascade Yüz Tespiti
 modeli tercih edilmiştir. Bu model, zorlu ışık koşullarında ve farklı açılarda yüksek 
-doğruluk sağlar. Duygu analizi tarafında ise DeepFace kütüphanesi ile 7 temel duygu 
+doğruluk sağlar. Duygu analizi tarafında ise OpenCV ve PyTorch (ViT)   ile 7 temel duygu 
 sınıfı (Mutlu, Üzgün, Öfkeli, Korkmuş, Şaşırmış, Tiksinmiş, Nötr) anlık olarak 
 işlenmektedir
 
-<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/5b17a1f3-493c-4295-8850-36ee7588ae22" />
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/83d63f26-c08d-4af1-b4dd-8b9fc6131743" />
 
 ## SAYFA 4: PERFORMANS VE HIZ OPTİMİZASYONU 
 4. %900 Verimlilik Artışı Ağır CNN modellerinin oluşturduğu gecikme (latency) 
