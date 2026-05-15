@@ -1724,8 +1724,8 @@ iletimidir.
 ---
 
 ## 3. 6 Haftalık Gelişim Süreci 
-• Hafta 1-2: Mimari tasarım, sanal ortam (.venv) kurulumu, RetinaFace ve 
-DeepFace modellerinin teorik incelemesi. 
+• Hafta 1-2: Mimari tasarım, sanal ortam (.venv) kurulumu, OpenCV ve 
+PyTorch (ViT) modellerinin teorik incelemesi. 
 • Hafta 3-4: FastAPI ile asenkron backend motorunun kurulması, ONNX Runtime 
 entegrasyonu ve ilk performans testleri. 
 • Hafta 5-6: Modern koyu tema dashboard tasarımı, responsive (mobil uyumlu) 
