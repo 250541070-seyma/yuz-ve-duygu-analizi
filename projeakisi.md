@@ -1912,3 +1912,102 @@ Gerçekleştirilen profilleme ve optimizasyon çalışmaları sonucunda elde edi
 
 ---
 
+
+# KULLANICI ARAYÜZÜ (UI) İYİLEŞTİRMELERİ VE KULLANILABİLİRLİK TESTLERİ RAPORU (HAFTA 5)
+
+**Hazırlayan:** Eren Bilge Koçak  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Kullanıcı Arayüzü (UI) İyileştirmeleri ve Kullanılabilirlik Testleri  
+
+---
+
+## 1. Giriş ve Amaç
+
+Bu çalışma kapsamında, projenin 4. haftasında optimize edilen asenkron backend altyapısı (*FastAPI*), son kullanıcının rahatlıkla kullanabileceği modern bir Dashboard arayüzüne entegre edilmiştir.
+
+Temel amaç; teknik metriklerin (*FPS, gecikme süresi, güven oranı*) görselleştirilmesi ve kullanıcı deneyiminin (*UX*) artırılmasıdır.
+
+---
+
+## 2. Uygulanan Arayüz İyileştirmeleri
+
+### Modern Koyu Tema (Dark Mode)
+
+Uzun süreli kullanımlarda göz yorgunluğunu azaltmak amacıyla **Slate & Emerald** renk paleti kullanılmıştır.
+
+### Kart Tabanlı Mimari
+
+Bilgiler;
+
+- Duygu Durumu
+- Sistem Performansı
+- Optimizasyon Motorları
+
+olmak üzere üç ana kategoriye ayrılmıştır.
+
+### Responsive Tasarım
+
+Arayüzün mobil, tablet ve masaüstü cihazlarda sorunsuz çalışması sağlanmıştır.
+
+---
+
+
+<img width="2020" height="1078" alt="Ekran Resmi 2026-05-15 18 54 00" src="https://github.com/user-attachments/assets/9abfd70e-7e71-4c59-b4f8-d43fc817ff44" />
+
+
+
+**Açıklama:**  
+*Şekil 1. Ana Dashboard tasarımı ve teknik metriklerin görsel sunumu.*
+
+---
+
+## 3. Teknik Entegrasyon ve Doğrulama
+
+Arayüzde gösterilen veriler, arka planda çalışan donanım dostu yüz tespit algoritması (*OpenCV Haar Cascade*) ve yüksek performanslı derin öğrenme duygu analiz modelinden (*PyTorch dima806 ViT*) canlı olarak beslenmektedir.
+
+Hafta 4'te geliştirilen asenkron yükleme metotları sayesinde, arayüze veri aktarım gecikmesi başarıyla yaklaşık:
+
+```text
+0.45 sn
+```
+
+olarak raporlanmaktadır.
+
+---
+
+
+<img width="554" height="1281" alt="Ekran Resmi 2026-05-15 18 54 07" src="https://github.com/user-attachments/assets/09e38f29-37bc-4541-b031-db46d9bb0c85" />
+
+
+
+**Açıklama:**  
+*Şekil 2. Arayüzün mobil uyumluluk (Responsive) testi sonucu.*
+
+---
+
+## 4. Kullanılabilirlik Testi ve Geri Bildirimler
+
+Farklı kullanıcı profilleri üzerinde yapılan testler sonucunda sistemin kullanım kolaylığı ve verimliliği onaylanmıştır.
+
+Özellikle karmaşık teknik terimlerin basitleştirilmiş ikonlarla sunulması kullanıcılar tarafından olumlu karşılanmıştır.
+
+---
+
+
+<img width="1483" height="1491" alt="Ekran Resmi 2026-05-15 18 54 19" src="https://github.com/user-attachments/assets/30ac5c9d-bb7f-4f66-8a03-c4a6ad0e8e2a" />
+
+
+
+**Açıklama:**  
+*Şekil 3. Kullanıcı geri bildirimleri ve sistem değerlendirme puanları tablosu.*
+
+---
+
+## 5. Sonuç
+
+Hafta 5 çalışmaları sonucunda, teknik performansı yüksek olan duygu analizi sistemi; kullanıcı dostu bir arayüz ile birleştirilerek profesyonel bir ürün seviyesine getirilmiştir.
+
+Sistem, gerçek zamanlı analiz yeteneklerini şık ve gecikmesiz bir görsel sunumla birleştirmektedir.
+
+---
+
