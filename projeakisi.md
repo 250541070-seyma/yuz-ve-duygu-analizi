@@ -2011,3 +2011,98 @@ Sistem, gerçek zamanlı analiz yeteneklerini şık ve gecikmesiz bir görsel su
 
 ---
 
+
+
+# BELGE GÜNCELLEME VE API ENTEGRASYONU RAPORU (HAFTA 5)
+
+**Hazırlayan:** Şeyma Nur Katar  
+**Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
+**Proje Görevi:** Belge Güncelleme ve API Entegrasyonu  
+
+---
+
+## 1. Giriş ve Amaç
+
+Bu çalışmanın temel amacı; önceki haftalarda donanım darboğazlarını aşmak üzere optimize edilen asenkron backend (*FastAPI*), derin öğrenme (*PyTorch ViT*) ve hibrit yüz takip (*Haar Cascade & KCF*) modüllerinin dış sistemlerle (*Güvenlik Sistemleri, İK Yazılımları vb.*) haberleşebilmesi için RESTful API entegrasyonunu tamamlamaktır.
+
+Aynı zamanda, projenin final dokümantasyonunu bu güncel ve yüksek performanslı mimariye göre standardize etmek temel bir görev olarak belirlenmiştir.
+
+---
+
+## 2. API Mimarisi ve Güvenlik Altyapısı
+
+Sistemler arası iletişimde hantal yapılardan kaçınılarak, asenkron veri işleme yeteneğine sahip modern **FastAPI** framework'ü kullanılmış ve veri formatı olarak hafif yapılı **JSON** tercih edilmiştir.
+
+### Güvenlik ve Kimlik Doğrulama
+
+Dış sistemlerin API'ye yetkisiz erişimini engellemek amacıyla:
+
+- Statik API Key doğrulama sistemi
+- JWT (*JSON Web Token*) mekanizması
+
+aktif hale getirilmiştir.
+
+### Canlı Testler
+
+Geliştirilen uç noktalar (*endpoints*), yerleşik **Swagger UI** üzerinden test edilmiş ve `uvicorn` sunucusu üzerinden dış sistemlere başarılı şekilde:
+
+```http
+200 OK
+```
+
+HTTP yanıtı döndürdüğü doğrulanmıştır.
+
+### Önbellekleme (Caching)
+
+Tekrarlı isteklerin derin öğrenme motorunu yormaması için API katmanının önüne önbellekleme (*caching*) mekanizması kurulmuş ve cevap süreleri milisaniyeler seviyesine indirilmiştir.
+
+---
+
+## 3. Veritabanı ve Veri Akışı Güncellemesi
+
+Yapay zeka modüllerinden elde edilen:
+
+- Tespit ID
+- Kişi adı
+- Duygu durumu
+- Güven skoru
+
+gibi analiz verilerinin RAM ve CPU kullanımını artırmadan saklanabilmesi için sunucusuz, dosya tabanlı ve hafif yapılı **SQLite** veritabanı şeması API katmanına entegre edilmiştir.
+
+Bu sayede yüksek veri trafiği altında dahi sistem kararlılığı korunmuştur.
+
+---
+
+## 4. Dokümantasyonun Standardizasyonu
+
+Sistemin prototip aşamasından final ürününe geçişinde alınan performans odaklı mimari kararlar, tüm proje belgelerine işlenmiş ve dokümantasyon güncellenmiştir.
+
+### Dokümanlardan Kaldırılan Teknolojiler
+
+Ağır işlem yükü getiren ve FPS kayıplarına yol açan aşağıdaki eski teknolojiler proje dokümanlarından tamamen çıkarılmıştır:
+
+- DeepFace
+- Flask
+- PostgreSQL
+
+### Nihai Teknoloji Yığını
+
+Bunun yerine projeye gerçek zamanlılık kazandıran aşağıdaki teknolojiler sistemin nihai bileşenleri olarak standartlaştırılmıştır:
+
+| Teknoloji | Kullanım Amacı |
+|---|---|
+| PyTorch `dima806 ViT` | Duygu analizi modeli |
+| OpenCV `Haar Cascade` | Donanım dostu yüz tespiti |
+| FastAPI | Asenkron REST API altyapısı |
+| SQLite | Hafif veritabanı yönetimi |
+| JWT | Kimlik doğrulama ve güvenlik |
+
+---
+
+## 5. Sonuç
+
+5. hafta itibarıyla yüz tanıma ve duygu analizi motorunun dış dünya ile haberleşmesini sağlayacak REST API altyapısı, güvenli ve yüksek performanslı bir şekilde çalışır duruma getirilmiştir.
+
+Tüm proje belgeleri, geliştirilen bu güncel teknoloji yığını ile `%100` uyumlu hale getirilmiş ve projenin akademik ile teknik dokümantasyonu teslim aşamasına (*Hafta 6: Son Kod Temizliği*) hazır hale getirilmiştir.
+
+---
