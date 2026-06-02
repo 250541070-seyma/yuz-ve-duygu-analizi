@@ -273,6 +273,8 @@ Kullanım amacı:
 •	Titremeyi azaltmak 
 Kalman filtresi, tespit edilen yüz koordinatlarını kullanarak sonraki karede olası konumu hesaplayacaktır.
 MeanShift yöntemi de değerlendirilmiştir ancak renk değişimlerinden etkilenebildiği için ana yöntem olarak seçilmemiştir.
+Kalman filtresi ile yüz takip (tracking) mekanizması analiz aşamasında teorik olarak belirlenmiş olup, kod entegrasyonu projenin ilerleyen haftalarında tamamlanacaktır.
+
 
 ### 4. Performans Gereksinimleri
 Sistemin minimum performans hedefleri aşağıdaki şekilde belirlenmiştir:
@@ -331,7 +333,7 @@ Kaynak (GPU)	4GB+ VRAM İdeal	8GB+ VRAM Önerilir	2GB+ VRAM Yeterli
 * **Yüz Tespiti Uyumluluğu:** Duygu analizi motoru, CPU dostu olan ve Frame Skipping mimarimizle milisaniyeler seviyesinde çalışan OpenCV (Haar Cascade) algoritmasının çıktılarından (Bounding Box) beslenerek hız avantajı sağlamaktadır.
 
 ### 4. Sonuç
-Proje için DeepFace, sunduğu kütüphane desteği ve yüksek doğruluk oranıyla en rasyonel seçimdir. Ancak sistemin "gerçekten iyi" çalışması için sadece modele güvenilmemeli; görüntü ön işleme ve sonuçların zamansal filtrelenmesi teknikleri mutlaka tasarıma dahil edilmelidir.
+Sonuç olarak, donanım kısıtlamaları ve Frame Skipping mimarisiyle en uyumlu çalışan PyTorch tabanlı dima806 modelinde karar kılınmıştır. Ancak sistemin "gerçekten iyi" çalışması için sadece modele güvenilmemeli; görüntü ön işleme ve sonuçların zamansal filtrelenmesi teknikleri mutlaka tasarıma dahil edilmelidir.
 
 ## API ENTEGRASYONU PLANLAMASI VE VERİ AKIŞI ŞEMASI
 Hazırlayan: Eren Bilge Koçak
