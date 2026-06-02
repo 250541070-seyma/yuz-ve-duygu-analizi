@@ -375,9 +375,12 @@ A. API Kaynak Kodları (FastAPI Implementation)
 
 B. Test Sonuçları
 Uvicorn Sunucusu: Yerel ortamda (localhost) başarıyla başlatıldı.
+![Görüntü](https://github.com/user-attachments/assets/6f2d11c4-6386-4e58-b36d-87bc77719cae)
 
 Swagger UI (HTTP 200): Yapılan entegrasyon testlerinde yetkili erişim sağlanmış ve sistem "200 OK" yanıtı ile başarılı veri aktarımını doğrulamıştır.
-![Görüntü](https://github.com/user-attachments/assets/6f2d11c4-6386-4e58-b36d-87bc77719cae)
+
+<img width="2166" height="933" alt="Görüntü" src="https://github.com/user-attachments/assets/6bdc8e84-90e6-4c9f-92a5-f234117d571c" />
+
 
 
 ### 5. SONUÇ
