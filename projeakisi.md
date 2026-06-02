@@ -33,7 +33,7 @@ Projenin teknik bütünlüğü ve akademik gereksinimler doğrultusunda şu tekn
 * **Ana Programlama Dili:** Python 3.9+
 * **Görüntü İşleme:** OpenCV (Haar Cascade)
 * **Derin Öğrenme:** PyTorch (Hugging Face CNN Modelleri)
-* **Web Framework (Backend):** Flask & WebSockets
+* **Web Framework (Backend):** Fast API & WebSockets
 * **Veritabanı:** SQLite (Hafif veri kaydı için)
 
 ---
@@ -183,7 +183,7 @@ Aşağıda, optimize edilmiş sistemin canlı ortamda yüzü tespit ettiği ve "
 
 
 ### **5. Sonuç ve Değerlendirme**
-Geliştirilen sistem; OpenCV'nin hızını ve PyTorch'un derin öğrenme kapasitesini aynı potada eriterek başarılı bir hibrit mimari sunmuştur. Geliştirme aşamasında karşılaşılan donanım limitleri (FPS düşüşleri), yazılımsal optimizasyonlarla (Frame Skipping ve Histogram Eşitleme) aşılarak projenin "gerçek zamanlı çalışma" gereksinimi tam anlamıyla karşılanmıştır.
+Geliştirilen sistem; OpenCV'nin hızını ve PyTorch'un derin öğrenme kapasitesini aynı potada eriterek başarılı bir hibrit mimari sunmuştur. Geliştirme aşamasında karşılaşılan donanım limitleri (FPS düşüşleri), yazılımsal optimizasyonlarla (Frame Skipping ve Histogram Eşitleme) aşılarak projenin "gerçek zamanlı çalışma" gereksinimi tam  anlamıyla karşılanmıştır
 
 ---
 
