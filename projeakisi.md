@@ -803,9 +803,9 @@ Kamera görüntüsü alınır → ön işleme uygulanır → Haar Cascade algori
 - Camera → VideoStreamManager  
 - VideoStreamManager → Preprocessor  
 - Preprocessor → FaceDetector  
-- FaceDetector → FaceTracker  
-- FaceTracker → UI  
-
+- FaceDetector → FaceTracker
+- FaceTracker → EmotionAnalyzer (Duygu Analizi Modülü)
+- EmotionAnalyzer → API / UI
 ---
 
 ## 12. SONUÇ
