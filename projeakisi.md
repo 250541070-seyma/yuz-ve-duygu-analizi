@@ -21,7 +21,7 @@ Proje süreci, **Scrum** metodolojisine uygun olarak rollerin ve sorumlulukları
 | **Şeyma Nur Katar** | **Grup Yöneticisi** | Proje Yönetimi, Koordinasyon, GitHub ve Dökümantasyon Yönetimi |
 | **Hatice Kırmızıgül** | **Sistem Analisti** | Proje Analizi, Kapsam Belirleme ve Kullanım Senaryoları |
 | **Muhammed Taha Gökdere** | **Yazılım Mühendisi** | Teknik Gereksinimler, Sistem Mimarisi ve Backend Tasarımı |
-| **Mehmet Berat Uygur** | **Teknoloji Araştırmacısı** | Kütüphane Fizibilitesi, Model Performans Analizi ve Versiyon Yönetimi |
+| **Mehmet Berat Uygur** | **UI/UX Arayüz Geliştiricisi** | Kütüphane Fizibilitesi, Model Performans Analizi ve Versiyon Yönetimi |
 | **Eren Bilge Koçak** | **Geliştirici (Developer)** | Algoritma Geliştirme, Ortam Kurulumu ve Prototipleme |
 
 ---
@@ -593,7 +593,7 @@ Projenin temel hedefi olan *gerçek zamanlı analiz yeteneğini* desteklemek ama
 
 ## 1. VERİTABANI YÖNETİM SİSTEMİ (DBMS) SEÇİMİ
 
-Sistemin donanım kısıtları göz önüne alınarak, tüm bileşenlerden gelen verilerin hafif, hızlı ve sistemi yormayan bir şekilde saklanması için veritabanı yönetim sistemi olarak SQLite tercih edilmiştir.
+Durum: Revize Edildi. MySQL gibi ağır veritabanları yerine, RAM ve CPU darboğazlarını engellemek adına sunucusuz ve hafif mimariye sahip SQLite tercih edilmiştir.
 
 ### *Seçim Gerekçeleri*
 * Düşük Kaynak Tüketimi: RAM ve CPU darboğazlarını engellemek adına sunucusuz ve dosya tabanlı hafif mimarisi.
@@ -637,6 +637,8 @@ Yüz tespit (Haar Cascade) ve takip (KCF) modüllerinden gelen verileri saklar.
 | confidence_score | Float | Not Null | Tespit doğruluk oranı |
 | tracker_info | Varchar(50) | Not Null | Kullanılan takip algoritması |
 | timestamp | Timestamp | Default Now() | Kayıt zamanı |
+| kisi_adi | Varchar(50) | Not Null | Tespit edilen kişinin kimlik veya isim bilgisi. |
+
 
 ### *2.4 Tablo: emotion_analysis (Analiz Sonuçları)*
 Duygu analizi sonuçlarını tespit verileriyle ilişkilendirir.
@@ -1051,7 +1053,7 @@ Yönetim paneli, işlevsel gereksinimlere göre beş ana modüle ayrılmıştır
 | Dashboard (Ana Panel) | Canlı kamera akışı, anlık duygu dağılım grafikleri ve sistem sağlık göstergeleri |
 | Kullanıcı Yönetimi | Personel ekleme/silme, yetkilendirme (RBAC) ve kullanıcı aktivite logları |
 | Sistem Ayarları | Kamera kaynağı tanımlama, model hassasiyet ayarları ve bildirim konfigürasyonları |
-| Raporlama Modülü | Tarih tabanlı filtreleme, analiz verilerinin dışa aktarımı (PDF/DOCX) |
+| Raporlama Modülü | Tarih tabanlı filtreleme, analiz verilerinin dışa aktarımı (PDF/Excel) |
 | Görselleştirme Alanı | Çubuk, pasta ve çizgi grafikler ile veri analitiği |
 
 ---
