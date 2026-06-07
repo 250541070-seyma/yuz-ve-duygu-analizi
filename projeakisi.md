@@ -1174,459 +1174,1016 @@ Dördüncü hafta operasyonel süreçlerinde ekip üyelerinin üstlendiği tekni
 Bu repo akademik ve teknik geliştirme sürecinin dokümantasyonunu içermektedir.
 
 
-# ÇARPIŞMA ALGILAMA VE FİZİK MOTORU ENTEGRASYONU RAPORU (HAFTA 4)
+
+
+# Çarpışma Algılama ve Fizik Motoru Entegrasyonu Raporu (Hafta 4)
 
 **Hazırlayan:** Şeyma Nur Katar  
 **Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
-**Proje Görevi:** Çarpışma Algılama ve Fizik Motoru Entegrasyonu  
+**Görev:** Çarpışma Algılama ve Fizik Motoru Entegrasyonu
 
 ---
 
-## 1. GİRİŞ
+## 1. Giriş ve Vizyon
 
-Bu çalışma kapsamında, üç boyutlu simülasyon ortamındaki nesnelerin birbirleriyle olan etkileşimlerini gerçeğe uygun şekilde simüle etmek amacıyla fizik motoru altyapısı kurgulanmış ve çarpışma algılama (*collision detection*) algoritmaları sisteme entegre edilmiştir.
+Bu çalışma kapsamında, gerçek zamanlı yüz tanıma ve duygu analizi sisteminin görselleştirme katmanına yenilikçi bir özellik olarak **"3 Boyutlu Etkileşimli Duygu Simülasyonu (Dijital İkiz)"** eklenmiştir.
 
-Bu modül, sistemin görselleştirme katmanına fiziksel gerçekçilik katarak kullanıcı deneyimini üst seviyeye taşımayı hedeflemektedir.
+Temel amaç, yapay zeka modüllerinden (**PyTorch ViT**) dönen anlık duygu durumlarına göre sahneye dinamik olarak eklenen 3D nesnelerin (örneğin mutluluk anında yağan 3D kalpler veya üzüntü anında düşen gözyaşı damlaları) birbirleriyle ve 3D yüz avatarıyla olan etkileşimlerini gerçeğe uygun şekilde simüle etmektir.
 
----
-
-## 2. PROJENİN AMACI
-
-Fizik motoru entegrasyonu sürecinde aşağıdaki temel teknik hedeflere odaklanılmıştır:
-
-- Nesnelerin sahnede birbirlerinin içinden geçmesini engelleyerek katı cisim (*rigid body*) dinamiğini sağlamak  
-- Çarpışma anında oluşacak tepki kuvvetlerini (*collision response*) hesaplayarak gerçekçi hareketler oluşturmak  
-- Karmaşık geometrilere sahip modellerde hesaplama maliyetini düşürmek için optimize edilmiş çarpışma hacimleri kullanmak  
-- Fiziksel hesaplamaların sistemin genel FPS değerini düşürmemesini sağlamak  
+Bu doğrultuda sisteme fizik motoru altyapısı kurgulanmış ve çarpışma algılama (**Collision Detection**) algoritmaları entegre edilmiştir.
 
 ---
 
-## 3. TEKNİK AYRINTILAR VE METODOLOJİ
+## 2. Projenin Amacı ve Hedefleri
 
-### 3.1. Çarpışma Algılama Algoritmaları
+Web tabanlı yönetim panelindeki 3D sahneye fizik motoru entegrasyonu sürecinde aşağıdaki teknik hedeflere odaklanılmıştır:
 
-Sistemde performans ve hassasiyet dengesini korumak adına hiyerarşik bir yaklaşım benimsenmiştir:
-
-- **AABB (Axis-Aligned Bounding Box):**  
-  Nesnelerin etrafına eksenlere paralel kutular yerleştirilerek yapılan ilk aşama kontrolüdür. En düşük hesaplama maliyetine sahiptir.
-
-- **Sphere Collision:**  
-  Küresel nesneler veya hızlı hareket eden öğeler için merkezler arası uzaklık hesaplanarak çarpışma kontrolü yapılır.
-
-- **Ray Casting:**  
-  Kamera doğrultusu veya etkileşim çizgileri boyunca ışın izleme yöntemi kullanılarak hassas kesişim testleri uygulanır.
+- Sahnedeki 3D duygu nesnelerinin birbirlerinin veya yüz modelinin içinden geçmesini engelleyerek **katı cisim (Rigid Body)** dinamiğini sağlamak.
+- Çarpışma anında oluşacak tepki kuvvetlerini hesaplayarak sahneye fiziksel gerçekçilik kazandırmak.
+- Fiziksel davranışları optimize ederek arka planda gerçek zamanlı çalışan **PyTorch model çıkarım (Inference)** süreçlerinin anlık CPU/GPU pik yüklerini dengelemek.
+- Kararlı **30 FPS** değerini koruyarak kullanıcı deneyimini iyileştirmek.
 
 ---
 
-### 3.2. Fizik Motoru Entegrasyonu
+## 3. Çarpışma Algılama Algoritmaları ve Teknik Detaylar
 
-Fizik motoru, her karede (*frame*) aşağıdaki işlem adımlarını uygular:
+3D sahnede performans ve hassasiyet dengesini koruyabilmek amacıyla hiyerarşik bir çarpışma algılama yaklaşımı benimsenmiştir.
 
-1. **Entegrasyon Adımı:**  
-   Nesnelerin hız ve ivme değerlerine göre bir sonraki konumları hesaplanır.
+### 3.1 AABB (Axis-Aligned Bounding Box)
 
-2. **Kesişim Testi:**  
-   Yeni konumlarda diğer nesnelerle çakışma olup olmadığı kontrol edilir.
+Ekrana düşen 3D duygu objelerinin etrafına eksenlere paralel sınır kutuları yerleştirilerek ilk aşama çarpışma kontrolü gerçekleştirilmiştir.
 
-3. **Çözümleme (Resolution):**  
-   Çarpışma tespit edilirse nesneler çakışma noktasından geri itilir ve momentum korunumu yasalarına göre yeni hız vektörleri atanır.
+**Avantajları:**
 
----
+- Düşük hesaplama maliyeti
+- Yüksek performans
+- Geniş ölçekli sahnelerde hızlı ön eleme
 
-## 4. PERFORMANS OPTİMİZASYON STRATEJİLERİ
+### 3.2 Sphere Collision
 
-Gerçek zamanlı sistem performansını korumak amacıyla aşağıdaki teknikler uygulanmıştır:
+Hızlı hareket eden küresel nesneler (örneğin gözyaşı damlaları) için merkezler arası uzaklık hesaplanarak çarpışma kontrolü yapılmıştır.
 
-- **Spatial Partitioning (Uzamsal Bölümleme):**  
-  Sahne gridlere bölünerek yalnızca aynı bölgedeki nesneler arasında çarpışma kontrolü yapılır.
+**Kullanım Alanları:**
 
-- **Sleep State:**  
-  Hareket etmeyen veya düşük hızdaki nesneler hesaplama dışı bırakılır.
+- Gözyaşı damlaları
+- Küresel efekt objeleri
+- Avatar ve zemin etkileşimleri
 
-- **Hafifletilmiş Çarpışma Geometrileri:**  
-  Yüksek poligonlu modeller yerine daha basit proxy geometriler kullanılır.
+### 3.3 Ray Casting
 
----
+Yönetici panelinde kullanıcı etkileşimini desteklemek amacıyla ışın izleme yöntemi kullanılmıştır.
 
-## 5. KULLANILAN TEKNOLOJİLER
+**Amaçları:**
 
-- **Motor Altyapısı:** JavaScript tabanlı fizik kütüphaneleri ve özel matematiksel fonksiyonlar  
-- **Veri Yapıları:** JSON tabanlı nesne tanımları ve vektör matematiği sınıfları  
-- **Görselleştirme:** Web tabanlı 3D render motorları ile senkronize çalışma  
+- Fare ile nesne seçimi
+- Avatar etkileşimi
+- Hassas kesişim testleri
 
 ---
 
-## 6. SONUÇ VE DEĞERLENDİRME
+## 4. Fizik Motoru Entegrasyonu ve Optimizasyon Stratejileri
 
-Çarpışma algılama ve fizik motoru entegrasyonu, sistemi statik bir görsel yapıdan çıkararak dinamik ve etkileşimli bir simülasyon ortamına dönüştürmüştür.
+Fizik motoru her karede (Frame) aşağıdaki işlemleri gerçekleştirmektedir:
 
-Yapılan testlerde:
+### Entegrasyon (Integration)
 
-- Nesne etkileşimlerinin kararlı çalıştığı  
-- Fizik hesaplamalarının sistem performansını olumsuz etkilemediği  
+Nesnelerin ivme ve hız değerlerine göre yeni konumları hesaplanır.
 
-gözlemlenmiştir.
+### Kesişim Testleri (Collision Tests)
 
-Gelecek aşamalarda:
+Sahnedeki diğer nesnelerle çakışma olup olmadığı kontrol edilir.
 
-- Soft body (yumuşak cisim) simülasyonları  
-- Dinamik yerçekimi ve çevresel etkiler  
+### Çözümleme (Collision Resolution)
 
-üzerine geliştirmeler planlanmaktadır.
+Momentum korunumu yasalarına göre nesneler geri itilerek yeni hız vektörleri atanır.
 
 ---
 
-# KAMERA KONTROLLERİ VE KULLANICI ARAYÜZÜ ENTEGRASYONU RAPORU (HAFTA 4)
+### 4.1 Performans Optimizasyonları
+
+Gerçek zamanlı çalışan PyTorch model çıkarım süreçlerinin oluşturduğu CPU/GPU yüklerini dengelemek amacıyla aşağıdaki optimizasyon teknikleri uygulanmıştır.
+
+#### Uzamsal Bölümleme (Spatial Partitioning)
+
+3D sahne mantıksal grid hücrelerine bölünmüştür.
+
+Bu sayede:
+
+- Yalnızca aynı bölgede bulunan nesneler arasında çarpışma kontrolü yapılır.
+- Gereksiz hesaplamalar azaltılır.
+- Büyük sahnelerde performans korunur.
+
+#### Uyku Durumu (Sleep State)
+
+Kullanıcının duygu durumu **"Nötr"** olduğunda ve sahnede hareket etmeyen nesneler bulunduğunda fizik motoru geçici olarak devre dışı bırakılır.
+
+**Sağlanan Kazanımlar:**
+
+- İstemci tarafında işlemci kullanımının azaltılması
+- Enerji tüketiminin düşürülmesi
+- Daha stabil FPS değerleri
+
+---
+
+## 5. Sonuç ve Darboğaz Tespiti
+
+Çarpışma algılama ve fizik motoru entegrasyonu sayesinde sistem, statik bir görselleştirme yapısından çıkarılarak dinamik ve etkileşimli bir **3D simülasyon ortamına** dönüştürülmüştür.
+
+Yapılan ilk testlerde:
+
+- Nesne etkileşimlerinin kararlı çalıştığı,
+- Çarpışmaların doğru şekilde çözümlendiği,
+- Fiziksel davranışların beklenen sonuçları verdiği gözlemlenmiştir.
+
+### Tespit Edilen Darboğaz
+
+Yapılan analizlerde, fiziksel hesaplamaların web tarayıcısındaki **JavaScript Main Thread** üzerinde çalışmasının, **FastAPI** üzerinden gelen yoğun **WebSocket** veri akışıyla birleştiğinde zaman zaman arayüzde gecikmelere (**Render Latency**) neden olduğu görülmüştür.
+
+Bu durum:
+
+- Yapay zeka modelinin çalışmasını etkilememektedir.
+- Ancak kullanıcı arayüzünün akıcılığını olumsuz etkileyebilmektedir.
+
+### Sonraki Adım (Hafta 5)
+
+Bu darboğazı gidermek amacıyla aşağıdaki çalışmalar planlanmıştır:
+
+- Web Worker entegrasyonu
+- Kod optimizasyonları
+- Main Thread yükünün azaltılması
+- 30 FPS hedefinin kararlı şekilde korunması
+
+---
+
+## Genel Değerlendirme
+
+Hafta 4 kapsamında gerçekleştirilen çarpışma algılama ve fizik motoru entegrasyonu, projenin görselleştirme katmanını önemli ölçüde geliştirmiş ve duygu analiz sonuçlarının etkileşimli 3D simülasyonlar aracılığıyla kullanıcıya aktarılabilmesini mümkün hale getirmiştir.
+
+Bu çalışma, projenin dijital ikiz yaklaşımına geçiş sürecindeki temel altyapı bileşenlerinden biri olarak değerlendirilmektedir.
+
+
+---
+
+
+
+# Kamera Kontrolleri ve Kullanıcı Arayüzü Entegrasyonu Raporu (Hafta 4)
 
 **Hazırlayan:** Mehmet Berat Uygur  
 **Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
-**Proje Görevi:** Kamera Kontrolleri ve Kullanıcı Arayüzü Entegrasyonu  
+**Görev:** Kamera Kontrolleri ve Kullanıcı Arayüzü Entegrasyonu
 
 ---
 
-## 1. GİRİŞ
+## 1. Giriş ve Vizyon
 
-Bu çalışma kapsamında, gerçek zamanlı yüz tanıma ve duygu analizi sistemi içerisinde kullanılan kamera yönetim mekanizmaları geliştirilmiş ve kullanıcı arayüzüne (UI) entegre edilmiştir.
+Bu çalışma kapsamında, gerçek zamanlı yüz tanıma ve duygu analizi sisteminin web tabanlı yönetim paneline (**Dashboard**) yenilikçi bir özellik olarak eklenen **"3 Boyutlu Etkileşimli Duygu Simülasyonu (Dijital İkiz)"** alanı için kamera yönetim mekanizmaları geliştirilmiştir.
 
-Temel amaç, son kullanıcının iki veya üç boyutlu sahne üzerindeki kontrolünü maksimize ederek analiz süreçlerini daha sezgisel ve hızlı hale getirmektir.
-
----
-
-## 2. PROJENİN AMACI
-
-Kamera ve arayüz entegrasyonu sürecinde aşağıdaki hedeflere odaklanılmıştır:
-
-- Kullanıcı deneyimini (UX) iyileştirerek sistem karmaşıklığını azaltmak  
-- Kamera hareketlerini doğal ve sezgisel hale getirmek  
-- Gerçek zamanlı veri akışı sırasında operatörlere kullanım kolaylığı sağlamak  
-- Arayüz bileşenleri ile kamera donanım/yazılım katmanları arasında tam uyum oluşturmak  
+Temel amaç; arka planda çalışan **PyTorch** tabanlı yapay zeka modelinin tespit ettiği duygu durumlarına göre değişen üç boyutlu sahnenin ve duygu avatarının, son kullanıcı (operatör) tarafından her açıdan serbestçe incelenebilmesini sağlayacak **WebGL kamera kontrollerini** kullanıcı arayüzüne entegre etmektir.
 
 ---
 
-## 3. TEKNİK KAMERA KONTROLLERİ
+## 2. Projenin Amacı ve Hedefleri
 
-Sistem üzerinde üç temel hareket mekanizması yapılandırılmıştır:
+3D kamera kontrolleri ve kullanıcı arayüzü entegrasyonu sürecinde aşağıdaki hedeflere odaklanılmıştır:
 
-### 3.1. Zoom (Yakınlaştırma / Uzaklaştırma)
-
-Kullanıcının detaylara odaklanmasını veya genel perspektifi görmesini sağlar. Özellikle mikro yüz ifadelerinin incelenmesinde kritik rol oynar.
-
-- **Uygulama Metodu:**  
-  Mouse tekerleği ve arayüz üzerindeki (+ / -) butonları  
-
----
-
-### 3.2. Pan (Kaydırma)
-
-Kameranın yatay ve dikey düzlemde hareket etmesini sağlayarak sahne içindeki farklı noktaların incelenmesine imkan tanır.
-
-- **Uygulama Metodu:**  
-  Mouse sürükleme (drag) ve yön butonları  
+- Yönetim panelindeki 3D duygu avatarı üzerindeki kontrolleri doğal ve sezgisel hale getirmek.
+- Zoom, Pan ve Rotate gibi temel üç boyutlu kamera hareketlerini HTML5/JavaScript tabanlı kullanıcı arayüzü üzerinden erişilebilir kılmak.
+- Arayüz bileşenleri ile WebGL render katmanı arasında kayıpsız ve akıcı bir etkileşim oluşturmak.
+- Operatörlerin duygu simülasyonunu farklı açılardan inceleyebilmesini sağlamak.
+- Kullanıcı deneyimini artıracak modern ve erişilebilir kontrol mekanizmaları geliştirmek.
 
 ---
 
-### 3.3. Rotate (Döndürme)
+## 3. Teknik Kamera Kontrolleri (3D Navigasyon)
 
-Sahnenin farklı açılardan görüntülenmesini sağlayarak derinlik ve perspektif analizine katkı sağlar.
+Operatörlerin tespit edilen duyguları görselleştiren 3D sahneyi tam kontrollü olarak inceleyebilmesi için üç temel kamera hareket mekanizması geliştirilmiştir.
 
-- **Uygulama Metodu:**  
-  Mouse sağ tık kombinasyonu ve arayüz rotasyon araçları  
+### 3.1 Zoom (Yakınlaştırma / Uzaklaştırma)
 
----
+Zoom işlevi, operatörün 3D yüz modeli üzerindeki duygu yansımalarını ve mikro mimikleri daha detaylı inceleyebilmesini sağlar.
 
-## 4. KULLANICI ARAYÜZÜ (UI) ENTEGRASYONU
+**Kontrol Yöntemleri:**
 
-Kamera kontrolleri, sistemin genel tasarım diliyle uyumlu şekilde arayüz katmanına entegre edilmiştir.
+- Mouse tekerleği (Scroll)
+- Arayüz üzerindeki (+) ve (-) kontrol butonları
 
-### Temel Tasarım Prensipleri
+**Kullanım Amaçları:**
 
-- **Basitlik:** Sade ve anlaşılır bileşenler  
-- **Erişilebilirlik:** Kontrollerin stratejik konumlandırılması  
-- **Sezgisellik:** Eğitim gerektirmeden kullanım  
-
----
-
-### 4.1. Arayüz Bileşenleri
-
-- Dijital zoom kontrol butonları  
-- Navigasyon (pan) araçları  
-- Üç eksenli döndürme (rotate) kontrol paneli  
-- **Reset (Sıfırla)** butonu (kamera başlangıç konumuna dönüş)  
+- Yüz detaylarının incelenmesi
+- Mikro mimik analizleri
+- Duygu değişimlerinin daha net gözlemlenmesi
 
 ---
 
-## 5. KULLANICI DENEYİMİ (UX) İYİLEŞTİRMELERİ
+### 3.2 Pan (Kaydırma)
 
-Yapılan geliştirmeler sonucunda:
+Pan özelliği, kameranın sahne içerisinde yatay ve dikey eksenlerde hareket etmesini sağlar.
 
-- Sahne kontrol hızı yaklaşık **%40 artırılmıştır**  
-- Kamera hareketleri daha akıcı hale getirilmiştir  
-- Esnek bakış açıları sayesinde analiz hata payı azaltılmıştır  
+**Sağladığı Avantajlar:**
 
----
+- Sahnedeki tüm nesnelerin görüntülenebilmesi
+- Dinamik olarak oluşturulan duygu objelerinin takip edilebilmesi
+- Fizik motoru tarafından yönetilen nesne hareketlerinin incelenebilmesi
 
-## 6. KULLANILAN TEKNOLOJİLER
+**İncelenebilen Örnek Nesneler:**
 
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+)  
-- **Kütüphaneler:** Kamera kontrol ve görüntüleme kütüphaneleri  
-- **Entegrasyon:** Gerçek zamanlı görüntü işleme sistemleri ve API katmanı  
-
----
-
-## 7. SONUÇ VE GELECEK PLANLAMASI
-
-Kamera kontrolleri kullanıcı dostu bir şekilde sisteme entegre edilmiş ve başarıyla test edilmiştir. Bu yapı sistem verimliliğini önemli ölçüde artırmıştır.
-
-### Gelecek Geliştirmeler
-
-- Dokunmatik cihazlar için **pinch-to-zoom** desteği  
-- Özelleştirilebilir klavye kısayolları  
-- Yapay zeka destekli **otomatik odaklama (autofocus)** sistemleri  
+- Kalpler
+- Gözyaşı damlaları
+- Duyguya bağlı oluşturulan diğer efekt objeleri
 
 ---
 
-# IŞIKLANDIRMA VE GÖLGE EFEKTLERİNİN GELİŞTİRİLMESİ RAPORU (HAFTA 4)
+### 3.3 Rotate (Döndürme)
+
+Rotate özelliği, duygu avatarının ve sahnenin farklı açılardan görüntülenebilmesini sağlar.
+
+**Kontrol Yöntemi:**
+
+- Mouse sağ tık + sürükleme
+
+**Sağladığı Avantajlar:**
+
+- Üç eksenli görüntüleme
+- Perspektif analizi
+- Avatarın farklı açılardan değerlendirilmesi
+- Duygu yansımalarının detaylı incelenmesi
+
+---
+
+## 4. Kullanıcı Arayüzü (UI) Entegrasyonu
+
+Geliştirilen WebGL tabanlı kamera kontrol sistemi, uygulamanın genel Frontend mimarisi ile bütünleşik şekilde tasarlanmıştır.
+
+### Kullanılan Teknolojiler
+
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+- WebGL
+
+### Arayüz Tasarım Yaklaşımı
+
+Kontrollerin Dashboard'un genel tasarım diliyle uyumlu olması amacıyla aşağıdaki kullanıcı deneyimi prensipleri uygulanmıştır:
+
+- Dark Mode uyumlu tasarım
+- Modern kontrol butonları
+- Sezgisel kullanıcı etkileşimleri
+- Minimal ve okunabilir arayüz bileşenleri
+
+### Geliştirilen Arayüz Bileşenleri
+
+- Zoom kontrol butonları
+- Kamera hareket kontrolleri
+- Etkileşimli fare hareketleri
+- Görsel geri bildirim mekanizmaları
+
+Bu entegrasyon sayesinde yöneticilerin simülasyonu izleme, analiz etme ve yorumlama kabiliyetleri artırılmıştır.
+
+---
+
+## 5. Sonuç ve Darboğaz Tespiti
+
+Kamera kontrolleri (**Zoom, Pan ve Rotate**) başarıyla kullanıcı arayüzüne entegre edilmiş ve 3D duygu simülasyonunun etkileşimli hale gelmesi sağlanmıştır.
+
+Yapılan testlerde:
+
+- Kamera hareketlerinin doğru çalıştığı,
+- Kullanıcı etkileşimlerinin başarılı şekilde işlendiği,
+- WebGL sahnesi ile arayüz arasındaki iletişimin kararlı olduğu gözlemlenmiştir.
+
+---
+
+### Tespit Edilen Performans Darboğazı
+
+Test süreçlerinde, kullanıcıların 3D sahne üzerinde yoğun şekilde **Pan** ve **Rotate** işlemleri gerçekleştirmesi durumunda tarayıcı tarafında ek işlem yükleri oluştuğu tespit edilmiştir.
+
+Özellikle:
+
+- Sürekli kamera hareketleri
+- Anlık WebGL yeniden çizim işlemleri (Re-render)
+- Yoğun WebSocket veri akışı
+
+bir araya geldiğinde istemci tarafında kısa süreli performans düşüşleri meydana gelmektedir.
+
+---
+
+### Gözlemlenen Etkiler
+
+- Render gecikmeleri (Render Latency)
+- Arayüzde kısa süreli takılmalar
+- Kamera hareketlerinde mikro gecikmeler
+
+Ancak bu durum:
+
+- Yapay zeka modelinin çalışmasını etkilememektedir.  
+- Duygu analizi süreçlerinde doğruluk kaybına neden olmamaktadır.  
+- FastAPI servislerinin işleyişini bozmamaktadır.
+
+Sorun yalnızca istemci tarafındaki görsel akıcılığı etkilemektedir.
+
+---
+
+## 6. Sonraki Adım (Hafta 5)
+
+Tespit edilen performans darboğazlarının giderilmesi amacıyla aşağıdaki geliştirmeler planlanmıştır:
+
+### Kullanıcı Arayüzü İyileştirmeleri
+
+- Gereksiz yeniden çizim işlemlerinin azaltılması
+- WebGL render optimizasyonları
+- Kamera hareketlerinin daha verimli işlenmesi
+
+### Asenkron Olay Yönetimi
+
+- Event yönetiminin optimize edilmesi
+- Kullanıcı girdilerinin daha verimli işlenmesi
+- Ana iş parçacığının (Main Thread) yükünün azaltılması
+
+### Performans Hedefleri
+
+- Dashboard tepki süresinin 200 ms altında tutulması
+- Daha akıcı kullanıcı deneyimi sağlanması
+- Kararlı FPS değerlerinin korunması
+
+Bu çalışmalar, **Eren Bilge Koçak** sorumluluğundaki **Kullanıcı Arayüzü (UI) İyileştirmeleri ve Asenkron Event Yönetimi** görevi kapsamında gerçekleştirilecektir.
+
+---
+
+## Genel Değerlendirme
+
+Hafta 4 kapsamında gerçekleştirilen kamera kontrol sistemi ve kullanıcı arayüzü entegrasyonu çalışmaları sonucunda, duygu analizi sistemine ait 3D simülasyon ortamı kullanıcılar tarafından etkileşimli şekilde kontrol edilebilir hale getirilmiştir.
+
+Geliştirilen Zoom, Pan ve Rotate mekanizmaları sayesinde operatörler, duygu avatarını ve sahne içerisindeki nesneleri farklı açılardan inceleyebilmekte, böylece sistemin sunduğu analiz sonuçlarını daha kapsamlı değerlendirebilmektedir.
+
+Bu çalışma, projenin dijital ikiz yaklaşımını destekleyen temel kullanıcı deneyimi bileşenlerinden biri olarak değerlendirilmektedir.
+
+---
+
+# Işıklandırma ve Gölge Efektlerinin Geliştirilmesi Raporu (Hafta 4)
 
 **Hazırlayan:** Muhammed Taha Gökdere  
 **Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
-**Proje Görevi:** Işıklandırma ve Gölge Efektlerinin Geliştirilmesi  
+**Görev:** Işıklandırma ve Gölge Efektlerinin Geliştirilmesi
 
 ---
 
-## 1. IŞIK KAYNAKLARININ STRATEJİK YERLEŞİMİ
+## 1. Giriş ve Vizyon
 
-Sahnede derinlik algısını artırmak ve modellerin formunu belirginleştirmek amacıyla **Üç Noktalı Işıklandırma (Three-Point Lighting)** prensibi uygulanmıştır:
+Bu çalışma kapsamında, gerçek zamanlı yüz tanıma ve duygu analizi sisteminin web tabanlı yönetim paneline eklenen **"3 Boyutlu Etkileşimli Duygu Simülasyonu (Dijital İkiz)"** alanının görsel derinliğini ve gerçekçiliğini artırmak amacıyla gelişmiş ışıklandırma mekanizmaları geliştirilmiştir.
 
-- **Ana Işık (Key Light):**  
-  Sahnenin birincil ışık kaynağıdır. Sert gölgeler oluşturarak modellerin temel yapısını belirler.
+Temel amaç; arka planda çalışan **PyTorch (Vision Transformer - ViT)** tabanlı yapay zeka modelinin tespit ettiği duygu durumlarını yalnızca metinsel veya grafiksel çıktılarla değil, aynı zamanda üç boyutlu sahnenin atmosferini ve aydınlatmasını dinamik olarak değiştirerek kullanıcıya aktarmaktır.
 
-- **Dolgu Işığı (Fill Light):**  
-  Ana ışığın oluşturduğu sert gölgeleri yumuşatarak detay kaybını önler.
+Örneğin:
 
-- **Arka Işık (Rim Light):**  
-  Objelerin kenarlarını aydınlatarak arka plandan ayrılmasını sağlar ve derinlik etkisi oluşturur.
+- Mutluluk durumunda daha parlak ve canlı ışıklandırma
+- Üzüntü durumunda daha düşük yoğunluklu ve kasvetli aydınlatma
+- Korku durumunda sis ve gölge ağırlıklı atmosferik efektler
 
----
-
-## 2. GÖLGE KALİTESİ VE YUMUŞATMA
-
-Gerçekçi gölge üretimi için aşağıdaki teknikler uygulanmıştır:
-
-- **Soft Shadows (Yumuşak Gölgeler):**  
-  Işık kaynağından uzaklaştıkça yumuşayan ve doğal geçişler sunan gölge yapısı.
-
-- **Contact Shadows:**  
-  Nesnelerin zeminle temas ettiği bölgelerde ince ve yoğun gölgeler oluşturarak gerçekçilik artırılmıştır.
-
-- **Shadow Cascades:**  
-  Kameraya yakın alanlarda yüksek, uzak alanlarda düşük çözünürlüklü gölge haritaları kullanılarak performans optimize edilmiştir.
+Bu sayede duygu analizi sonuçlarının görsel olarak daha etkileyici ve sezgisel biçimde aktarılması hedeflenmiştir.
 
 ---
 
-## 3. ATMOSFERİK EFEKTLER
+## 2. Projenin Amacı ve Hedefleri
 
-Işığın sahne içerisindeki etkisini güçlendirmek amacıyla hacimsel efektler entegre edilmiştir:
+3D avatar ve simülasyon sahnesine ışıklandırma entegrasyonu sürecinde aşağıdaki teknik hedeflere odaklanılmıştır:
 
-- **Volumetric Fog (Hacimsel Sis):**  
-  Işık hüzmelerinin görünür hale gelmesini sağlayarak derinlik algısını artırır.
-
-- **Ambient Occlusion (AO):**  
-  SSAO (Screen Space Ambient Occlusion) tekniği ile köşe ve birleşim noktalarında gölgelendirme yapılarak sahneye hacim kazandırılmıştır.
-
----
-
-## 4. OPTİMİZASYON VE PERFORMANS AYARLARI
-
-Görsel kaliteyi artırırken performansı korumak için şu yöntemler uygulanmıştır:
-
-- **Baked vs Real-time Lighting:**  
-  Statik nesneler için önceden hesaplanmış ışıklandırma (baking), dinamik nesneler için gerçek zamanlı ışıklandırma kullanılmıştır.
-
-- **Light Culling Mask:**  
-  Işık kaynaklarının yalnızca ilgili nesneleri etkilemesi sağlanarak gereksiz hesaplamalar azaltılmıştır.
-
-- **Indirect Multiplier / Global Illumination:**  
-  Işık yansımalarının optimize edilmesi ile minimum hesaplama ile maksimum gerçekçilik elde edilmiştir.
+- Duygu durumuna göre dinamik olarak renk ve yoğunluk değiştiren ışık kaynakları tasarlamak.
+- Avatarın yüz hatlarını ve mimik detaylarını daha belirgin hale getirmek.
+- Gerçekçi gölgelendirme teknikleri kullanarak sahnenin görsel kalitesini artırmak.
+- Atmosferik efektlerle duygu yansıtımını güçlendirmek.
+- WebGL tabanlı render işlemlerinin sistemin hedeflenen **200 ms maksimum yanıt süresi (NFR-1)** gereksinimini aşmamasını sağlamak.
 
 ---
 
-## 5. SONUÇ VE DEĞERLENDİRME
+## 3. Işık Kaynaklarının Stratejik Yerleşimi ve Efektler
 
-Geliştirilen ışıklandırma ve gölge modülü, sistemin görsel kalitesini profesyonel seviyeye taşımıştır.
+Avatarın formunu ve yüz ifadelerini en etkili şekilde yansıtabilmek amacıyla profesyonel görselleştirme sistemlerinde yaygın olarak kullanılan **Three-Point Lighting (Üç Noktalı Işıklandırma)** yaklaşımı uygulanmıştır.
 
-Bu modül:
+### 3.1 Ana Işık (Key Light)
 
-- Fizik motoru ile uyumlu çalışmakta  
-- Kamera kontrolleri ile entegre şekilde sahne yönetimini desteklemekte  
-- Yüz ve duygu analiz sonuçlarının daha net ve vurgulu şekilde gözlemlenmesini sağlamaktadır  
+Sahnedeki temel ışık kaynağıdır.
+
+**Görevleri:**
+
+- Avatarın yüz hatlarını belirginleştirmek
+- Ana gölgeleri oluşturmak
+- Duygu ifadelerinin görünürlüğünü artırmak
 
 ---
 
-# DOKU KAPLAMA OPTİMİZASYONU VE PERFORMANS İYİLEŞTİRMELERİ RAPORU (HAFTA 4)
+### 3.2 Dolgu Işığı (Fill Light)
+
+Ana ışığın oluşturduğu sert gölgeleri yumuşatmak amacıyla kullanılmıştır.
+
+**Avantajları:**
+
+- Mikro mimik detaylarını görünür hale getirir.
+- Yüz üzerindeki karanlık bölgelerde bilgi kaybını önler.
+- Daha doğal bir görünüm sağlar.
+
+---
+
+### 3.3 Arka Işık (Rim Light)
+
+Avatarın arka planla görsel olarak ayrışmasını sağlar.
+
+**Katkıları:**
+
+- Derinlik hissi oluşturur.
+- Üç boyutlu algıyı güçlendirir.
+- Karakterin siluetini belirginleştirir.
+
+---
+
+## 4. Atmosferik Efektler
+
+Duygu durumlarının sahne atmosferine daha güçlü yansıtılabilmesi amacıyla ek görsel efektler uygulanmıştır.
+
+### Volumetric Fog (Hacimsel Sis)
+
+Özellikle aşağıdaki duygular için kullanılmıştır:
+
+- Üzüntü
+- Korku
+- Kaygı
+
+**Sağladığı Etkiler:**
+
+- Ortama derinlik kazandırır.
+- Duygusal atmosferi güçlendirir.
+- Sahneye sinematik görünüm katar.
+
+---
+
+### SSAO (Screen Space Ambient Occlusion)
+
+Nesnelerin birleşim ve temas bölgelerinde doğal gölgeler oluşturarak sahnenin gerçekçilik seviyesini artırır.
+
+**Kullanım Amaçları:**
+
+- Köşe gölgeleri oluşturmak
+- Temas noktalarını belirginleştirmek
+- Hacim hissini artırmak
+
+---
+
+## 5. Gölge Kalitesi ve Uygulanan İlk Optimizasyonlar
+
+Işıklandırma ve gölge sistemi, kullanıcı arayüzünde çalışan **Three.js tabanlı WebGL altyapısı** üzerinde geliştirilmiştir.
+
+### Soft Shadows (Yumuşak Gölgeler)
+
+Işık kaynağından uzaklaştıkça gölge kenarlarının yumuşamasını sağlayan gölgelendirme tekniğidir.
+
+**Avantajları:**
+
+- Daha doğal görünüm
+- Sinematik kalite
+- Gerçekçi ışık davranışı
+
+---
+
+### Contact Shadows (Temas Gölgeleri)
+
+Nesnelerin zemine veya birbirlerine temas ettiği bölgelerde detaylı gölgeler oluşturur.
+
+**Katkıları:**
+
+- Nesnelerin sahneye oturmasını sağlar.
+- Yüzey temaslarını belirginleştirir.
+- Gerçekçilik algısını artırır.
+
+---
+
+## 6. Performans Optimizasyonları
+
+Yüksek görsel kalite ile performans arasında denge kurabilmek amacıyla çeşitli optimizasyon yöntemleri uygulanmıştır.
+
+### Baked Lighting (Önceden Hesaplanmış Aydınlatma)
+
+Sabit kullanıcı arayüzü elemanlarında gerçek zamanlı ışık hesaplamaları yerine önceden hesaplanmış ışık verileri kullanılmıştır.
+
+**Avantajları:**
+
+- GPU yükünü azaltır.
+- Daha kararlı FPS sağlar.
+- Gereksiz hesaplamaları ortadan kaldırır.
+
+---
+
+### Dinamik Işıklandırma
+
+Hareketli nesneler ve duygu efektleri için gerçek zamanlı ışıklandırma tercih edilmiştir.
+
+**Uygulanan Nesneler:**
+
+- Kalpler
+- Gözyaşı damlaları
+- Duygu efekt parçacıkları
+- Avatar yüz animasyonları
+
+---
+
+### Shadow Cascades
+
+Kameraya olan uzaklığa göre farklı çözünürlüklerde gölge hesaplamaları gerçekleştirilmiştir.
+
+**Sağladığı Faydalar:**
+
+- Yakın nesnelerde yüksek kalite
+- Uzak nesnelerde düşük maliyetli gölge üretimi
+- Daha verimli GPU kullanımı
+
+---
+
+## 7. Sonuç ve Darboğaz (Bottleneck) Tespiti
+
+Geliştirilen dinamik ışıklandırma ve gölge sistemi sayesinde 3D duygu simülasyonunun görsel kalitesi önemli ölçüde artırılmıştır.
+
+Testler sonucunda:
+
+- Duygu durumlarının atmosferik olarak başarılı şekilde yansıtıldığı,
+- Avatarın mimik detaylarının daha görünür hale geldiği,
+- Sahnenin derinlik ve gerçekçilik seviyesinin yükseldiği gözlemlenmiştir.
+
+---
+
+### Tespit Edilen Performans Sorunları
+
+Yapılan analizlerde aşağıdaki bileşenlerin istemci tarafında yüksek GPU yükü oluşturduğu belirlenmiştir:
+
+- Three-Point Lighting
+- Soft Shadows
+- Contact Shadows
+- Volumetric Fog
+- SSAO
+
+Bu bileşenlerin eş zamanlı çalışması sonucunda:
+
+- WebGL hesaplama maliyeti artmıştır.
+- GPU kullanım oranı yükselmiştir.
+- Render gecikmeleri oluşmuştur.
+- Hedeflenen 200 ms sistem yanıt süresi riske girmiştir.
+
+---
+
+### Etkilenmeyen Sistem Bileşenleri
+
+Performans darboğazının yalnızca istemci tarafında oluştuğu gözlemlenmiştir.
+
+Aşağıdaki bileşenler etkilenmemiştir:
+
+- PyTorch ViT duygu analizi modeli  
+- FastAPI servisleri  
+- WebSocket veri iletim altyapısı  
+- Backend çıkarım performansı
+
+Sorun yalnızca istemci tarafındaki grafik işleme süreçlerinde gözlemlenmiştir.
+
+---
+
+## 8. Sonraki Adım (Hafta 5)
+
+GPU darboğazının giderilmesi amacıyla aşağıdaki optimizasyon çalışmalarının gerçekleştirilmesi planlanmıştır.
+
+### Frustum Culling
+
+Kamera görüş alanı dışında kalan nesnelerin çizilmesini engellemek.
+
+**Beklenen Kazanım:**
+
+- Daha düşük draw call sayısı
+- Daha az GPU kullanımı
+
+---
+
+### Light Masking
+
+Işık kaynaklarının yalnızca gerekli nesneleri etkilemesini sağlamak.
+
+**Beklenen Kazanım:**
+
+- Gereksiz ışık hesaplamalarının azaltılması
+- Daha verimli render süreci
+
+---
+
+### Shadow Cascades İyileştirmeleri
+
+Gölge çözünürlüklerinin dinamik olarak optimize edilmesi.
+
+**Beklenen Kazanım:**
+
+- Daha kaliteli gölgeler
+- Daha düşük performans maliyeti
+
+---
+
+## Genel Değerlendirme
+
+Hafta 4 kapsamında gerçekleştirilen ışıklandırma ve gölge geliştirme çalışmaları, projenin görsel kalite seviyesini önemli ölçüde yükseltmiş ve duygu analizi sonuçlarının kullanıcıya daha etkileyici biçimde aktarılmasını sağlamıştır.
+
+Üç Noktalı Işıklandırma, SSAO, Volumetric Fog ve gelişmiş gölge teknikleri sayesinde oluşturulan atmosferik sahne yapısı, sistemin dijital ikiz yaklaşımını destekleyen temel görselleştirme bileşenlerinden biri haline gelmiştir.
+
+Tespit edilen GPU kaynaklı performans darboğazlarının giderilmesi amacıyla planlanan optimizasyon çalışmaları ise 5. haftadaki **Kod Optimizasyonu ve Darboğaz Analizi** görevine devredilmiştir.
+
+ ---
+
+# Doku Kaplama Optimizasyonu ve Performans İyileştirmeleri Raporu (Hafta 4)
 
 **Hazırlayan:** Hatice Kırmızıgül  
 **Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
-**Proje Görevi:** Doku Kaplama Optimizasyonu ve Performans İyileştirmeleri  
+**Görev:** Doku Kaplama Optimizasyonu ve Performans İyileştirmeleri
 
 ---
 
-## 1. AMAÇ VE KAPSAM
+## 1. Giriş ve Vizyon
 
-Bu çalışma, sistemin görselleştirme katmanında kullanılan üç boyutlu modellerin doku (*texture*) yapılarının optimize edilmesini amaçlamaktadır.
+Bu çalışma kapsamında, gerçek zamanlı yüz tanıma ve duygu analizi sisteminin web tabanlı yönetim paneline eklenen **"3 Boyutlu Etkileşimli Duygu Simülasyonu (Dijital İkiz)"** alanında kullanılan 3D duygu avatarının ve sahnede dinamik olarak oluşturulan nesnelerin (kalpler, gözyaşı damlaları vb.) doku (**Texture**) yapılarının optimize edilmesi amaçlanmıştır.
 
-Temel hedefler:
+Temel hedef; **Three.js (WebGL)** tabanlı görselleştirme katmanının GPU bellek (**VRAM**) kullanımını azaltmak, 3D modellerin yüklenme sürelerini iyileştirmek ve sistemin hedeflenen **200 ms maksimum yanıt süresi (NFR-1)** gereksinimini korumaktır.
 
-- GPU bellek kullanımını minimize etmek  
-- Veri yükleme sürelerini azaltmak  
-- FPS (saniye başına kare) değerini artırmak  
-- Gerçek zamanlı sistem performansını iyileştirmek  
+Bu doğrultuda modern doku sıkıştırma teknikleri, çözünürlük optimizasyonları ve GPU dostu veri yönetimi stratejileri uygulanmıştır.
 
 ---
 
-## 2. DOKU BOYUTU VE ÇÖZÜNÜRLÜK STRATEJİSİ
+## 2. Doku Boyutu ve Çözünürlük Stratejisi
 
-GPU kaynaklarının verimli kullanılması amacıyla aşağıdaki stratejiler uygulanmıştır:
+İstemci tarafındaki GPU kaynaklarının verimli kullanılabilmesi amacıyla sahnede kullanılan dokuların boyutları ve çözünürlükleri optimize edilmiştir.
 
-- **Çözünürlük Ölçeklendirme:**  
-  Gereksiz 4K dokular yerine sahne ihtiyacına göre 2K ve 1K dokular tercih edilmiştir.
+### 2.1 Çözünürlük Ölçeklendirme
 
-- **LOD (Level of Detail):**  
-  Kameraya uzak nesnelerde düşük çözünürlüklü dokular kullanılarak render maliyeti azaltılmıştır.
+Yüksek çözünürlüklü dokuların oluşturduğu gereksiz bellek tüketimini azaltmak amacıyla ihtiyaç odaklı çözünürlük politikası uygulanmıştır.
 
----
+#### Uygulanan Yaklaşım
 
-## 3. DOKU FORMATLARI VE KARŞILAŞTIRMALI ANALİZ
+| Doku Türü | Kullanılan Çözünürlük |
+|------------|----------------------|
+| Yakın plan avatar dokuları | 2K |
+| Orta mesafe nesneler | 1K – 2K |
+| Arka plan efektleri | 1K |
+| Küçük efekt parçacıkları | 512px – 1K |
 
-Kullanılan doku formatları performans kriterlerine göre değerlendirilmiştir:
+#### Sağlanan Kazanımlar
 
-| Format | Avantajı | Dezavantajı | Kullanım Alanı |
-|--------|----------|------------|----------------|
-| PNG | Kayıpsız kalite | Büyük dosya boyutu | UI ve ikonlar |
-| JPEG | Küçük boyut | Kayıplı sıkıştırma | Arka plan öğeleri |
-| DDS | GPU dostu, hızlı yükleme | Masaüstü bağımlılığı | Masaüstü (**Seçildi**) |
-| ASTC | Kalite/boyut dengesi | Sıkıştırma süresi | Mobil (**Seçildi**) |
-
----
-
-## 4. SIKIŞTIRMA ALGORİTMALARI
-
-Sistemde aşağıdaki GPU uyumlu sıkıştırma algoritmaları tercih edilmiştir:
-
-- **DXT1 / BC1:**  
-  Alfa kanalı gerektirmeyen dokular için
-
-- **DXT5 / BC3:**  
-  Şeffaflık içeren dokular için
-
-**Sonuç:**  
-Bu yöntemler sayesinde:
-
-- CPU yükü azaltılmış  
-- Bellek bant genişliği optimize edilmiş  
-- VRAM kullanımı yaklaşık **%70 oranında düşürülmüştür**  
+- Daha düşük VRAM kullanımı
+- Daha kısa yükleme süreleri
+- Daha hızlı sahne başlatma süreci
 
 ---
 
-## 5. PERFORMANS ARTIRMA STRATEJİLERİ
+### 2.2 LOD (Level of Detail)
 
-Daha akıcı bir sistem performansı için şu teknikler uygulanmıştır:
+Kameraya olan uzaklığa göre farklı çözünürlüklerde doku kullanımı sağlanmıştır.
 
-- **Mipmap Kullanımı:**  
-  Farklı mesafeler için optimize edilmiş doku seviyeleri
+#### Amaçlar
 
-- **Texture Atlas:**  
-  Birden fazla küçük dokunun tek bir büyük dokuda birleştirilmesi ile draw call azaltımı
+- Uzak nesnelerde gereksiz detay hesaplamalarını azaltmak
+- GPU üzerindeki render maliyetini düşürmek
+- FPS değerlerini korumak
 
-- **Streaming Texture:**  
-  Sadece görüş alanındaki dokuların dinamik olarak yüklenmesi
+#### Kullanım Alanları
 
----
-
-## 6. SİSTEM MİMARİSİ VE SINIF YAPISI
-
-Doku yönetimi için iki temel modül geliştirilmiştir:
-
-- **TextureManager:**  
-  Doku yükleme, sıkıştırma ve mipmap üretimi
-
-- **CompressionAnalyzer:**  
-  Format performans analizleri ve en uygun sıkıştırma yönteminin belirlenmesi
+- Arka plan nesneleri
+- Duygu efekt parçacıkları
+- Fizik motoru tarafından oluşturulan dinamik nesneler
 
 ---
 
-## 7. SONUÇ VE DEĞERLENDİRME
+## 3. Doku Formatları ve Sıkıştırma Algoritmaları
 
-Gerçekleştirilen doku optimizasyonları sonucunda:
+Web tabanlı simülasyonun hem masaüstü hem de mobil cihazlarda yüksek performansla çalışabilmesi amacıyla modern doku formatları tercih edilmiştir.
 
-- Karmaşık sahnelerde FPS değerleri stabil hale getirilmiştir  
-- DDS ve ASTC formatları sayesinde platform bağımsız performans sağlanmıştır  
-- Mipmap ve streaming teknikleri ile bellek yönetimi iyileştirilmiştir  
+### 3.1 KTX2 (Basis Universal)
 
-Bu iyileştirmeler, sistemdeki:
+Ana doku formatı olarak **KTX2 (Basis Universal)** seçilmiştir.
 
-- Fizik motoru  
-- Işıklandırma modülü  
+#### Avantajları
 
-gibi bileşenlerin daha verimli çalışabilmesi için donanım kaynaklarını serbest bırakmıştır.
+- Donanım hızlandırmalı çözümleme
+- Düşük VRAM tüketimi
+- Platform bağımsız çalışma
+- Hızlı yükleme süreleri
+- Mobil ve masaüstü uyumluluğu
+
+#### Kullanım Alanları
+
+- Avatar yüz dokuları
+- Sahne nesneleri
+- Ortam dokuları
 
 ---
 
-# MODEL YÜKLEME VE İŞLEME SÜREÇLERİNİN HIZLANDIRILMASI RAPORU (HAFTA 4)
+### 3.2 WebP ve PNG
+
+Şeffaflık gerektiren görsel efektlerde optimize edilmiş web formatları kullanılmıştır.
+
+#### Kullanım Alanları
+
+- Kalp efektleri
+- Gözyaşı damlaları
+- Parçacık sistemleri
+- UI destekleyici görselleri
+
+#### Avantajları
+
+- Küçük dosya boyutu
+- Alfa kanal desteği
+- Hızlı yükleme
+
+---
+
+### 3.3 GPU Destekli Sıkıştırma Algoritmaları
+
+KTX2 altyapısı üzerinden GPU tarafından doğrudan çözülebilen sıkıştırma formatları kullanılmıştır.
+
+#### DXT1 / BC1
+
+Alfa kanalı gerektirmeyen nesnelerde kullanılmıştır.
+
+**Avantajları:**
+
+- Daha düşük bellek kullanımı
+- Hızlı çözümleme
+- Düşük bant genişliği tüketimi
+
+---
+
+#### DXT5 / BC3
+
+Şeffaflık içeren duygu efektlerinde tercih edilmiştir.
+
+**Avantajları:**
+
+- Alfa kanal desteği
+- Görsel kalite korunumu
+- Donanım hızlandırmalı çözümleme
+
+---
+
+### Elde Edilen Sonuç
+
+Bu sıkıştırma teknikleri sayesinde:
+
+- CPU üzerindeki çözümleme yükü azaltılmıştır.
+- VRAM kullanımı yaklaşık **%70 oranında düşürülmüştür.**
+- Doku yükleme süreleri önemli ölçüde iyileştirilmiştir.
+
+---
+
+## 4. İleri Seviye Performans Artırma Stratejileri
+
+FastAPI backend'inden gelen asenkron veri akışının WebGL sahnesiyle sorunsuz çalışabilmesi için ek performans iyileştirmeleri uygulanmıştır.
+
+---
+
+### 4.1 Mipmap Kullanımı
+
+Farklı uzaklıklardan görüntülenen nesneler için önceden oluşturulmuş alternatif doku seviyeleri kullanılmıştır.
+
+#### Sağlanan Faydalar
+
+- Daha düşük örnekleme maliyeti
+- Daha az aliasing etkisi
+- Daha kararlı görüntü kalitesi
+
+#### Kullanım Senaryoları
+
+- Zoom işlemleri
+- Kamera hareketleri
+- Uzak sahne nesneleri
+
+---
+
+### 4.2 Texture Atlas
+
+Birden fazla küçük dokunun tek bir büyük doku içerisinde birleştirilmesi sağlanmıştır.
+
+#### Amaçlar
+
+- Draw call sayısını azaltmak
+- GPU durum değişikliklerini minimize etmek
+- Render performansını artırmak
+
+#### Atlas İçerisindeki Varlıklar
+
+- Kalp efektleri
+- Gözyaşı efektleri
+- Parçacık sistemleri
+- Küçük sahne nesneleri
+
+---
+
+### 4.3 Streaming Texture
+
+Dokuların tamamını başlangıçta yüklemek yerine yalnızca gerekli olanların dinamik olarak yüklenmesi sağlanmıştır.
+
+#### Avantajları
+
+- Daha düşük başlangıç yükleme süresi
+- Daha az bellek kullanımı
+- Daha hızlı sahne geçişleri
+
+#### Çalışma Prensibi
+
+- Görüş alanındaki dokular yüklenir.
+- Kullanılmayan dokular bellekten kaldırılır.
+- Kamera hareketlerine göre dinamik güncelleme yapılır.
+
+---
+
+## 5. Sonuç ve Darboğaz (Bottleneck) Değerlendirmesi
+
+Gerçekleştirilen optimizasyon çalışmaları sonucunda:
+
+- 3D avatar yükleme süreleri azaltılmıştır.
+- Duygu efektlerinin bellek tüketimi düşürülmüştür.
+- GPU üzerindeki doku kaynaklı yükler önemli ölçüde azaltılmıştır.
+- Fizik motoru ve ışıklandırma sistemleri için ek donanım kaynakları serbest bırakılmıştır.
+
+Özellikle KTX2 tabanlı sıkıştırma sistemi sayesinde VRAM kullanımında yaklaşık **%70 oranında iyileşme** sağlanmıştır.
+
+---
+
+### Tespit Edilen Kalan Darboğazlar
+
+Doku kaynaklı darboğazlar büyük ölçüde giderilmiş olsa da sistem analizlerinde aşağıdaki bileşenlerin performansı etkilemeye devam ettiği gözlemlenmiştir:
+
+#### Grafik İşleme Kaynaklı Sorunlar
+
+- Fazla ışık kaynağı kullanımı
+- Yüksek draw call sayıları
+- Dinamik gölge hesaplamaları
+- WebGL render yükü
+
+#### Arayüz Kaynaklı Sorunlar
+
+- Yoğun asenkron event yönetimi
+- Sürekli UI güncellemeleri
+- WebSocket veri akışının oluşturduğu istemci yükü
+
+Bu bileşenlerin birleşimi sonucunda:
+
+- Render gecikmeleri (Render Latency)
+- Kısa süreli FPS düşüşleri
+- 200 ms hedef yanıt süresine yaklaşan yük artışları
+
+gözlemlenmiştir.
+
+---
+
+### Etkilenmeyen Sistem Bileşenleri
+
+Performans sorunlarının yalnızca istemci tarafında oluştuğu belirlenmiştir.
+
+Aşağıdaki bileşenler etkilenmemiştir:
+
+- PyTorch tabanlı duygu analizi modeli  
+- FastAPI servisleri  
+- WebSocket veri aktarım altyapısı  
+- Backend çıkarım performansı
+
+---
+
+## 6. Sonraki Adım (Hafta 5)
+
+Kalan performans darboğazlarının tamamen ortadan kaldırılması amacıyla aşağıdaki çalışmalar planlanmıştır.
+
+### Frustum Culling Optimizasyonları
+
+**Sorumlu:** Muhammed Taha Gökdere
+
+#### Hedefler
+
+- Görüş alanı dışındaki nesnelerin çizilmesini engellemek
+- Draw call sayısını azaltmak
+- GPU kullanımını düşürmek
+
+---
+
+### Kullanıcı Arayüzü (UI) İyileştirmeleri
+
+**Sorumlu:** Eren Bilge Koçak
+
+#### Hedefler
+
+- Asenkron event yönetimini optimize etmek
+- Gereksiz arayüz güncellemelerini azaltmak
+- Kullanıcı deneyimini iyileştirmek
+
+---
+
+## Genel Değerlendirme
+
+Hafta 4 kapsamında gerçekleştirilen doku kaplama optimizasyonu ve performans iyileştirme çalışmaları, sistemin WebGL tabanlı görselleştirme katmanının daha verimli çalışmasını sağlamıştır.
+
+KTX2 tabanlı sıkıştırma, LOD mekanizması, Texture Atlas yapısı ve Streaming Texture yaklaşımı sayesinde GPU bellek kullanımı önemli ölçüde azaltılmış; sahne yükleme süreleri iyileştirilmiş ve sistem kaynakları daha verimli kullanılabilir hale getirilmiştir.
+
+Bu çalışmalar, projenin dijital ikiz yaklaşımını destekleyen performans altyapısının temel bileşenlerinden biri olarak değerlendirilmekte olup, 5. haftada gerçekleştirilecek optimizasyon çalışmalarına sağlam bir temel oluşturmuştur.
+
+---
+
+
+
+# Model Yükleme ve İşleme Süreçlerinin Hızlandırılması Raporu (Hafta 4)
 
 **Hazırlayan:** Eren Bilge Koçak  
 **Proje:** Gerçek Zamanlı Yüz Tanıma ve Duygu Analizi Sistemi  
-**Proje Görevi:** Model Yükleme ve İşleme Süreçlerinin Hızlandırılması  
+**Görev:** Model Yükleme ve İşleme Süreçlerinin Hızlandırılması
 
 ---
 
-## 1. GÖREVİN AMACI VE KAPSAMI
+## 1. Görevin Amacı ve Kapsamı
 
-Bu çalışma, duygu analizi sistemlerinde kullanılan derin öğrenme modellerinin (PyTorch tabanlı ViT - dima806 vb.) donanım üzerindeki işlem yükünü optimize etmeyi ve kullanıcı deneyimini iyileştirmeyi amaçlamaktadır.
+Bu çalışma kapsamında, 4. haftada web paneline entegre edilen **"3 Boyutlu Etkileşimli Duygu Simülasyonu (Dijital İkiz)"** sahnelerinde kullanılan 3D modeller ile arka planda çalışan derin öğrenme modellerinin (**PyTorch tabanlı Vision Transformer - ViT**) eş zamanlı çalışması sırasında oluşan işlem yükünün optimize edilmesi hedeflenmiştir.
 
-Projenin yüksek öncelikli yapısına uygun olarak:
+Çalışmanın temel amacı;
 
-- Sistem açılış süreleri azaltılmış  
-- FPS (saniye başına işlenen kare sayısı) artırılmış  
-- Gerçek zamanlı performans hedeflenmiştir  
+- Sistem açılış sürelerini azaltmak,
+- Yapay zeka modeli yükleme süreçlerini hızlandırmak,
+- 3D varlıkların (Assets) yüklenme maliyetini düşürmek,
+- FPS (Frames Per Second) değerlerini artırmak,
+- Sistemin kritik performans gereksinimi olan **200 ms maksimum yanıt süresi (NFR-1)** hedefini korumaktır.
 
----
-
-## 2. UYGULANAN OPTİMİZASYON TEKNİKLERİ
-
-Modellerin performansını artırmak amacıyla aşağıdaki yöntemler uygulanmıştır:
-
-### 2.1. Lifespan Async Loading (Asenkron Yükleme)
-
-* Transformer tabanlı derin öğrenme modellerinin (ör. ViT - dima806) sistem açılışını bloklaması engellenmiştir.
-* Lifespan event yönetimi ile modeller arka planda asenkron olarak yüklenmiştir.
-* API servisleri anında erişilebilir hale getirilmiştir.
-
+Bu doğrultuda hem backend hem de frontend bileşenlerinde performans odaklı optimizasyon teknikleri uygulanmıştır.
 
 ---
 
-### 2.2. NumPy Vektörizasyonu
+## 2. Uygulanan Optimizasyon Teknikleri
 
-- Döngü tabanlı işlemler yerine matris işlemleri tercih edilmiştir  
-- CPU çekirdekleri daha verimli kullanılmıştır  
-- İşlem süreleri milisaniye seviyesine düşürülmüştür  
+Sistemdeki 3D görselleştirme altyapısı ile yapay zeka modellerinin eş zamanlı performansını artırmak amacıyla çeşitli optimizasyon yöntemleri kullanılmıştır.
 
 ---
 
-### 2.3. Batch Processing (Toplu İşleme)
+### 2.1 Lifespan Async Loading (Asenkron Yükleme)
 
-- Görüntüler tek tek değil toplu olarak işlenmiştir  
-- Donanım gecikmesi (latency) minimize edilmiştir  
-- Yüksek throughput elde edilmiştir  
+Hem Three.js tabanlı 3D sahne bileşenlerinin hem de Transformer tabanlı derin öğrenme modellerinin sistem başlangıcında birbirlerini bloklamaması sağlanmıştır.
+
+#### Uygulanan Yaklaşım
+
+- Uygulama başlangıcında yüklenen ağır bileşenler ayrıştırılmıştır.
+- FastAPI Lifespan Event mekanizması kullanılmıştır.
+- Model yüklemeleri arka planda asenkron olarak gerçekleştirilmiştir.
+- API servisleri ve Dashboard bileşenleri bekleme süresi olmadan erişilebilir hale getirilmiştir.
+
+#### Sağlanan Kazanımlar
+
+- Daha hızlı sistem açılışı
+- Daha kısa ilk yanıt süresi
+- Kullanıcı deneyiminde iyileşme
+- Kaynakların paralel kullanımı
 
 ---
 
-## 3. PERFORMANS TESTLERİ
+### 2.2 NumPy Vektörizasyonu
 
-### 3.1. Sistem Açılış ve Model Hazırlık Testi
+Veri işleme süreçlerinde döngü (loop) tabanlı hesaplamalar yerine NumPy'nin optimize edilmiş matris işlemleri kullanılmıştır.
 
-Modelin RAM’e yüklenme süresi optimize edilmiştir.
+#### Uygulanan İyileştirmeler
 
-**Test Çıktısı:**
+- Tekrarlayan döngüler kaldırılmıştır.
+- Toplu matematiksel işlemler tercih edilmiştir.
+- Bellek erişimleri optimize edilmiştir.
+
+#### Sağlanan Kazanımlar
+
+- CPU çekirdeklerinin daha verimli kullanılması
+- Daha düşük işlem süresi
+- Milisaniye seviyesinde hesaplama performansı
+- Daha yüksek veri işleme kapasitesi
+
+---
+
+### 2.3 Batch Processing (Toplu İşleme)
+
+Görüntü işleme süreçlerinde tek kare yerine toplu veri işleme yaklaşımı benimsenmiştir.
+
+#### Uygulanan Yaklaşım
+
+- Görüntüler tek tek işlenmek yerine gruplar halinde değerlendirilmiştir.
+- GPU ve CPU kaynakları daha verimli kullanılmıştır.
+- Veri aktarım maliyetleri azaltılmıştır.
+
+#### Sağlanan Kazanımlar
+
+- Daha düşük gecikme süresi (Latency)
+- Daha yüksek throughput
+- Daha stabil performans
+- Kaynak kullanımında optimizasyon
+
+---
+
+## 3. Performans Testleri
+
+Uygulanan optimizasyonların etkilerini ölçmek amacıyla çeşitli performans testleri gerçekleştirilmiştir.
+
+---
+
+### 3.1 Sistem Açılış ve Model Hazırlık Testi
+
+3D sahne öğeleri ve yapay zeka model ağırlıklarının (Weights) belleğe yüklenme süresi ölçülmüştür.
+
+#### Test Sonucu
 
 ```json
 {
@@ -1637,26 +2194,156 @@ Modelin RAM’e yüklenme süresi optimize edilmiştir.
 }
 ```
 
-### 3.2. İşlem Verimliliği ve FPS Testi
-Toplu işleme algoritmaları sayesinde yüksek veri işleme kapasitesi elde edilmiştir
-Binlerce kareyi eş zamanlı işleyebilecek teorik altyapı oluşturulmuştur
-CPU kullanımı dengelenmiştir
+#### Değerlendirme
+
+Asenkron yükleme mekanizması sayesinde modeller uygulama başlangıcında önceden hazırlanmış ve kullanıcı erişimine hazır hale getirilmiştir.
+
+---
+
+### 3.2 İşlem Verimliliği ve FPS Testi
+
+Toplu işleme ve vektörizasyon tekniklerinin sistem performansına etkileri analiz edilmiştir.
+
+#### Elde Edilen Sonuçlar
+
+- Daha yüksek veri işleme kapasitesi
+- Dengeli CPU kullanımı
+- Daha stabil FPS değerleri
+- Büyük veri akışlarında ölçeklenebilir yapı
+
 <img width="1782" height="149" alt="Ekran Resmi 2026-04-22 20 13 45" src="https://github.com/user-attachments/assets/54b78a3d-9c88-4034-a7d1-9d6ed00a77d0" />
 
-### 3.3. Altyapı ve Kütüphane Doğrulaması
-Sistem performansını artırmak için aşağıdaki teknolojiler entegre edilmiştir:
-NumPy (vektörizasyon)
-ONNX Runtime (model hızlandırma)
-Yapılan doğrulamalarda:
-ONNX Runtime’ın aktif olarak hızlandırıcı (accelerator) olarak çalıştığı teyit edilmiştir
+---
+
+### 3.3 Altyapı ve Kütüphane Doğrulaması
+
+Sistem performansını artırmak amacıyla aşağıdaki teknolojiler aktif olarak kullanılmıştır.
+
+| Teknoloji | Amaç |
+|------------|-------|
+| NumPy | Vektörizasyon |
+| ONNX Runtime | Model hızlandırma |
+| FastAPI Lifespan | Asenkron yükleme |
+| Batch Processing | Toplu veri işleme |
+
+#### Doğrulama Sonuçları
+
+Yapılan testlerde:
+
+- ONNX Runtime entegrasyonunun başarılı şekilde çalıştığı,
+- Model çıkarımlarının hızlandırıldığı,
+- Donanım hızlandırıcılarının aktif olarak kullanıldığı
+
+teyit edilmiştir.
+
 <img width="2940" height="464" alt="Ekran Resmi 2026-04-22 20 31 54" src="https://github.com/user-attachments/assets/a7098bca-0963-40e6-bfaa-9ca74684d9a4" />
 
-## 4. ANALİZ VE SONUÇ
 
-Gerçekleştirilen optimizasyonlar sonucunda:
-* PyTorch (ViT) tabanlı modeller donanım darboğazı yaşamadan gerçek zamanlı çalışabilir hale getirilmiştir.
-* Düşük gecikme (latency) ile yüksek doğruluk elde edilmiştir.
-* Sistem, "in-the-wild" (gerçek dünya) senaryolarında stabil performans göstermektedir.
+---
+
+## 4. Analiz ve Sonuç
+
+Gerçekleştirilen optimizasyon çalışmaları sonucunda sistemin genel performansında önemli iyileştirmeler elde edilmiştir.
+
+### Sağlanan Kazanımlar
+
+#### Yapay Zeka Performansı
+
+- Daha hızlı model yükleme
+- Daha düşük çıkarım gecikmesi
+- Daha yüksek işlem kapasitesi
+
+#### Görselleştirme Performansı
+
+- 3D sahne ile AI süreçlerinin uyumlu çalışması
+- Kaynak paylaşımının optimize edilmesi
+- Daha akıcı kullanıcı deneyimi
+
+#### Sistem Performansı
+
+- 200 ms (NFR-1) yanıt süresi korunmuştur.
+- Düşük gecikme ile yüksek doğruluk sağlanmıştır.
+- Gerçek zamanlı veri akışı kararlı hale getirilmiştir.
+
+---
+
+### Gerçek Dünya Testleri
+
+Sistem;
+
+- Farklı aydınlatma koşullarında,
+- Değişken kullanıcı hareketlerinde,
+- Sürekli WebSocket veri akışı altında,
+
+test edilmiş ve **"in-the-wild"** senaryolarda stabil performans gösterdiği gözlemlenmiştir.
+
+---
+
+## 5. Kalan Darboğazların Değerlendirilmesi
+
+Backend tarafında elde edilen yüksek throughput ve başarılı ONNX optimizasyonlarına rağmen istemci tarafında bazı performans sınırlamaları gözlemlenmiştir.
+
+### Tespit Edilen Sorunlar
+
+#### Kullanıcı Arayüzü Kaynaklı Yükler
+
+- Asenkron veri birikmesi
+- Yoğun event yönetimi
+- Sürekli UI güncellemeleri
+- Render gecikmeleri (Render Latency)
+
+#### WebSocket Veri Akışı
+
+- Yüksek frekanslı veri güncellemeleri
+- Tarayıcı tarafında işleme yükü
+- Olay kuyruğu (Event Queue) yoğunluğu
+
+Bu sorunlar yapay zeka model performansını etkilememekte ancak kullanıcı arayüzünde zaman zaman gecikmelere neden olabilmektedir.
+
+---
+
+## 6. Sonraki Adım (Hafta 5)
+
+Tespit edilen istemci tarafı darboğazlarının giderilmesi amacıyla aşağıdaki çalışmalar planlanmıştır.
+
+### Kullanıcı Arayüzü (UI) İyileştirmeleri
+
+#### Hedefler
+
+- Render gecikmelerini azaltmak
+- Gereksiz yeniden çizimleri engellemek
+- Kullanıcı deneyimini iyileştirmek
+
+---
+
+### Asenkron Event Yönetimi
+
+#### Planlanan Çalışmalar
+
+- Event Queue optimizasyonu
+- Olay işleme önceliklendirmesi
+- Veri akışının dengelenmesi
+- WebSocket yükünün daha verimli yönetilmesi
+
+#### Beklenen Sonuçlar
+
+- Daha akıcı arayüz
+- Daha düşük istemci yükü
+- Daha kararlı FPS değerleri
+- Daha hızlı kullanıcı etkileşimi
+
+Bu çalışmalar, 5. hafta kapsamında **"Kullanıcı Arayüzü (UI) İyileştirmeleri ve Asenkron Event Yönetimi"** görevi altında gerçekleştirilecektir.
+
+---
+
+## Genel Değerlendirme
+
+Hafta 4 kapsamında gerçekleştirilen model yükleme ve işleme süreçlerinin hızlandırılması çalışmaları sonucunda, sistemin yapay zeka ve görselleştirme bileşenleri arasında daha dengeli ve yüksek performanslı bir çalışma ortamı oluşturulmuştur.
+
+Lifespan Async Loading, NumPy vektörizasyonu, Batch Processing ve ONNX Runtime entegrasyonu sayesinde model yükleme süreleri azaltılmış, işlem verimliliği artırılmış ve sistemin kritik performans gereksinimi olan **200 ms maksimum yanıt süresi (NFR-1)** başarıyla korunmuştur.
+
+Bu çalışmalar, projenin gerçek zamanlı ve ölçeklenebilir yapay zeka mimarisini destekleyen temel performans iyileştirme adımlarından biri olarak değerlendirilmektedir.
+
 
 ---
 
