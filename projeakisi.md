@@ -2478,7 +2478,7 @@ Görüntü ön işleme katmanına kontrast artırıcı algoritmalar eklenmiş, b
 
 ### Asenkron API Altyapısı
 
-FastAPI’nin asenkron mimarisi ve Uvicorn sunucusu kullanılarak arayüze veri aktarım gecikmesi yaklaşık **0.45 saniye** seviyesine düşürülmüştür.
+FastAPI’nin asenkron mimarisi, Uvicorn sunucusu ve profilleme bazlı optimizasyonlar kullanılarak arayüze veri aktarım gecikmesi, hedeflenen 200 ms (NFR-1) sınırının güvenle altına inmiş ve ortalama 0.14 saniye (140 ms - 165 ms) seviyesine düşürülmüştür.
 
 ---
 
@@ -2662,16 +2662,14 @@ Arayüzde gösterilen veriler, arka planda çalışan donanım dostu yüz tespit
 Hafta 4'te geliştirilen asenkron yükleme metotları sayesinde, arayüze veri aktarım gecikmesi başarıyla yaklaşık:
 
 ```text
-0.45 sn
+0.14 sn
 ```
 
 olarak raporlanmaktadır.
 
+<img width="692" height="1600" alt="WhatsApp Image 2026-06-07 at 23 45 31" src="https://github.com/user-attachments/assets/0a7a5783-4a7a-454c-918c-e7887abd6163" />
+
 ---
-
-
-<img width="554" height="1281" alt="Ekran Resmi 2026-05-15 18 54 07" src="https://github.com/user-attachments/assets/09e38f29-37bc-4541-b031-db46d9bb0c85" />
-
 
 
 **Açıklama:**  
