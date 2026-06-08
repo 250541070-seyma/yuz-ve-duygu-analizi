@@ -2646,7 +2646,8 @@ Arayüzün mobil, tablet ve masaüstü cihazlarda sorunsuz çalışması sağlan
 ---
 
 
-<img width="1717" height="916" alt="hafta5" src="https://github.com/user-attachments/assets/351db5e5-6d8b-4cf4-873f-85ace4d338f0" />
+<img width="2020" height="1078" alt="Ekran Resmi 2026-05-15 18 54 00" src="https://github.com/user-attachments/assets/bac093e0-f806-40f4-a3e8-d474e117fc64" />
+
 
 
 
@@ -2662,12 +2663,13 @@ Arayüzde gösterilen veriler, arka planda çalışan donanım dostu yüz tespit
 Hafta 4'te geliştirilen asenkron yükleme metotları sayesinde, arayüze veri aktarım gecikmesi başarıyla yaklaşık:
 
 ```text
-0.14 sn
+0.45 sn
 ```
 
 olarak raporlanmaktadır.
 
-<img width="692" height="1600" alt="WhatsApp Image 2026-06-07 at 23 45 31" src="https://github.com/user-attachments/assets/0a7a5783-4a7a-454c-918c-e7887abd6163" />
+<img width="554" height="1280" alt="d44b7080-3bae-4a91-8e92-7b33721c6150" src="https://github.com/user-attachments/assets/fd766bb5-c6e9-4894-a52e-dbe5b0425473" />
+
 
 ---
 
