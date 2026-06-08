@@ -2646,7 +2646,7 @@ Arayüzün mobil, tablet ve masaüstü cihazlarda sorunsuz çalışması sağlan
 ---
 
 
-<img width="2020" height="1078" alt="Ekran Resmi 2026-05-15 18 54 00" src="https://github.com/user-attachments/assets/9abfd70e-7e71-4c59-b4f8-d43fc817ff44" />
+<img width="1717" height="916" alt="hafta5" src="https://github.com/user-attachments/assets/351db5e5-6d8b-4cf4-873f-85ace4d338f0" />
 
 
 
