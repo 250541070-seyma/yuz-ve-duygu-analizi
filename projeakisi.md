@@ -1748,7 +1748,8 @@ sayesinde işlem yükü 10 kat azaltılmıştır.
 • Optimize Edilmiş Süre: 0.45 Saniye 
 • Performans Kazancı: %900
 
-<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/96a36646-79dd-461f-a1f2-bd09c1ab4833" />
+<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/9abdc92f-8c6e-47c8-88b8-a67f27ef7ee1" />
+
 
 ## SAYFA 5: DASHBOARD VE KULLANICI DENEYİMİ 
 5. Modern Dashboard Tasarımı Kullanıcı deneyimini (UX) en üst seviyeye çıkarmak için 
