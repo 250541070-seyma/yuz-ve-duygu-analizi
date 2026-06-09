@@ -1673,7 +1673,8 @@ Motorları olmak üzere üç ana kategoriye ayrılmıştır.
 * Responsive Tasarım: Arayüzün mobil, tablet ve masaüstü cihazlarda sorunsuz çalışması 
 sağlanmıştır.
 
-<img width="1277" height="688" alt="image" src="https://github.com/user-attachments/assets/6d08883e-9f99-44af-8b2e-6a4801828544" />
+<img width="1770" height="800" alt="image" src="https://github.com/user-attachments/assets/24777c4b-b222-4396-a08d-fcbd6dbee075" />
+
 
 
 
@@ -1684,7 +1685,8 @@ Arayüzde gösterilen veriler, arka planda çalışan derin öğrenme modellerin
 ) canlı olarak beslenmektedir. Hafta 4'te geliştirilen asenkron yükleme metotları, 
 arayüzde "0.45 sn" gecikme süresi olarak başarıyla raporlanmaktadır.
 
-<img width="280" height="647" alt="image" src="https://github.com/user-attachments/assets/62874bf7-5ab1-4bd3-bf68-50e8b6c6fe03" />
+<img width="280" height="647" alt="image" src="https://github.com/user-attachments/assets/0f87eebc-dc76-4160-9075-46a4c069be94" />
+
 
 
 Açıklama: Şekil 2. Arayüzün mobil uyumluluk (Responsive) testi sonucu.
