@@ -1683,7 +1683,7 @@ Açıklama: Şekil 1. Ana Dashboard tasarımı ve teknik metriklerin görsel sun
 ## 3. TEKNİK ENTEGRASYON VE DOĞRULAMA 
 Arayüzde gösterilen veriler, arka planda çalışan derin öğrenme modellerinden (OpenCV ve PyTorch (ViT)
 ) canlı olarak beslenmektedir. Hafta 4'te geliştirilen asenkron yükleme metotları, 
-arayüzde "0.45 sn" gecikme süresi olarak başarıyla raporlanmaktadır.
+arayüzde "0.14 sn" gecikme süresi olarak başarıyla raporlanmaktadır.
 
 <img width="280" height="647" alt="image" src="https://github.com/user-attachments/assets/0f87eebc-dc76-4160-9075-46a4c069be94" />
 
