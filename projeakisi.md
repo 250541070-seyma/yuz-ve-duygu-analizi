@@ -2645,7 +2645,8 @@ Arayüzün mobil, tablet ve masaüstü cihazlarda sorunsuz çalışması sağlan
 
 ---
 
-<img width="1770" height="800" alt="image" src="https://github.com/user-attachments/assets/24777c4b-b222-4396-a08d-fcbd6dbee075" /> />
+<img width="2020" height="1078" alt="Ekran Resmi 2026-05-15 18 54 00" src="https://github.com/user-attachments/assets/e24867b7-5eee-4346-a899-22c56dac3e71" />
+
 
 
 
@@ -2668,7 +2669,9 @@ Hafta 4'te geliştirilen asenkron yükleme metotları sayesinde, arayüze veri a
 
 olarak raporlanmaktadır.
 
-<img width="280" height="647" alt="image" src="https://github.com/user-attachments/assets/0f87eebc-dc76-4160-9075-46a4c069be94" />
+
+
+<img width="554" height="1280" alt="d44b7080-3bae-4a91-8e92-7b33721c6150" src="https://github.com/user-attachments/assets/73827a2b-902f-4b15-b274-72de86aa3cf1" />
 
 
 ---
@@ -2968,7 +2971,9 @@ Bu optimizasyonlar sayesinde işlem yükü yaklaşık:
 
 ---
 
-<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/9abdc92f-8c6e-47c8-88b8-a67f27ef7ee1" />
+
+
+<img width="1717" height="916" alt="rapor6" src="https://github.com/user-attachments/assets/60d17e63-bb1b-4bd8-b14b-033965437755" />
 
 
 ---
